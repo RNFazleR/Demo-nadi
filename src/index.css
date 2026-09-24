@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-body text-ink antialiased;
+  }
+
+  /* Di layar lebar, latar di luar "HP" sedikit lebih gelap supaya frame terlihat */
+  @media (min-width: 640px) {
+    body {
+      @apply bg-surface-sunken;
+    }
+  }
+}
