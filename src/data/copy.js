@@ -76,6 +76,11 @@ export const copy = {
     noNewAlert: 'Tidak ada pemberitahuan baru. Pola keseharian terlihat seperti biasanya.',
     todaySummary: 'Ringkasan hari ini',
     lastActivity: (minutes) => `Aktivitas terakhir terdeteksi: ${minutes} menit lalu`,
+    simulate: {
+      tag: 'Fitur demo',
+      button: 'Simulasikan anomali',
+      hint: 'Tampilkan layar konfirmasi di HP lansia',
+    },
   },
 
   nav: {
@@ -130,6 +135,35 @@ export const copy = {
   feedback: {
     title: 'Respons tercatat',
     body: 'NADI mencatat respons ini untuk memperbaiki penilaian berikutnya.',
+  },
+
+  // Layar konfirmasi di HP lansia. Kalimat pendek, maksimal 1 pertanyaan.
+  elderCheck: {
+    question: (panggilan) => `Halo ${panggilan}, apakah baik-baik saja?`,
+    yes: 'Ya, saya baik-baik saja',
+    help: 'Butuh bantuan',
+    secondsUnit: 'detik',
+    countdownAria: (s) => `Sisa waktu menjawab: ${s} detik`,
+    result: {
+      ok: {
+        title: (panggilan) => `Terima kasih, ${panggilan}.`,
+        body: 'Semoga harinya menyenangkan.',
+      },
+      // Dipakai untuk "Butuh bantuan" maupun waktu habis
+      help: {
+        title: 'Keluarga sedang dihubungi.',
+        body: 'Tunggu sebentar, ya.',
+      },
+    },
+    demoTag: 'Fitur demo',
+    backToFamily: 'Kembali ke app keluarga',
+    // Isi AlertEvent baru yang dibuat dari hasil konfirmasi
+    generated: {
+      ok: (nama) => `${nama} menjawab bahwa ia baik-baik saja lewat pertanyaan konfirmasi NADI.`,
+      help: (nama) => `${nama} menekan tombol "Butuh bantuan" di pertanyaan konfirmasi NADI. Coba hubungi sekarang.`,
+      timeout: (nama, detik) =>
+        `${nama} belum menjawab pertanyaan konfirmasi NADI dalam ${detik} detik. Coba hubungi sekarang.`,
+    },
   },
 
   callModal: {

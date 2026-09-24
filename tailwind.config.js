@@ -75,6 +75,11 @@ export default {
         title: ['1.375rem', { lineHeight: '1.875rem', fontWeight: '700' }], // 22px
         heading: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '800' }], // 28px
         display: ['2.25rem', { lineHeight: '2.625rem', fontWeight: '800' }], // 36px
+        // Khusus layar lansia: minimum 24px
+        'elder-body': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px
+        'elder-btn': ['1.75rem', { lineHeight: '2.125rem', fontWeight: '800' }], // 28px
+        'elder-title': ['2.25rem', { lineHeight: '2.75rem', fontWeight: '800' }], // 36px
+        'elder-count': ['4rem', { lineHeight: '4rem', fontWeight: '800' }], // 64px
       },
 
       borderRadius: {
@@ -100,6 +105,7 @@ export default {
 
       minHeight: {
         tap: '3rem', // 48px, target sentuh minimum
+        'tap-elder': '5.5rem', // 88px, tombol di layar lansia
       },
     },
   },

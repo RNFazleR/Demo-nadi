@@ -33,7 +33,7 @@ NADI adalah **AI wellness agent untuk lansia**, dijual operator telekomunikasi s
 - Kalau butuh teks/data baru, tambahkan dulu ke file tersebut, baru dipakai di komponen.
 - Teks yang berisi angka/variabel ditulis sebagai fungsi di `copy.js` (mis. `copy.dashboard.lastActivity(98)`), jangan dirangkai di komponen.
 - **Jangan pakai jam asli** (`new Date()` tanpa argumen). Waktu "sekarang" di demo = `demoNow` dari `dummy.js`, supaya cerita demo selalu sama.
-- **Status alert yang bisa berubah** (baru → dicek) dibaca/diubah lewat `useAlerts()` dari `src/state/AlertsContext.jsx`, bukan langsung dari `alertEvents` di dummy.js. Data dummy hanya nilai awal.
+- **Status alert yang bisa berubah** (baru → dicek, atau alert baru dari simulasi) dibaca/diubah lewat `useAlerts()` (`respond`, `addAlert`) dari `src/state/AlertsContext.jsx`, bukan langsung dari `alertEvents` di dummy.js. Data dummy hanya nilai awal.
 - Logika turunan dari data (status saat ini, rata-rata, perbandingan) ada di `src/lib/insights.js`; format angka/tanggal Indonesia di `src/lib/format.js`.
 
 ## Desain
@@ -45,6 +45,10 @@ NADI adalah **AI wellness agent untuk lansia**, dijual operator telekomunikasi s
   - Warna teks: `text-ink`, `text-ink-soft`; `text-ink-faint` hanya untuk teks ≥18px atau ikon.
   - Radius: `rounded-chip`, `rounded-btn`, `rounded-card`, `rounded-sheet`. Bayangan: `shadow-card`, `shadow-raised`.
   - Target sentuh minimal `min-h-tap` (48px). Padding samping layar `px-gutter`.
+- **Layar lansia** (`ElderCheck`, tampilan di HP lansia) punya aturan sendiri, berbeda dari app keluarga:
+  - Teks minimum 24px: pakai `text-elder-body`, `text-elder-btn`, `text-elder-title`, `text-elder-count`. Latar putih (`bg-surface`) + teks `text-ink` untuk kontras tinggi.
+  - Maksimal 1 kalimat pertanyaan, hanya 2 tombol besar (`min-h-tap-elder`, 88px), tanpa navigasi/menu.
+  - Kontrol demo (mis. "Kembali ke app keluarga") selalu diberi label "Fitur demo" dan dipisah garis putus-putus.
 - Grafik pakai **Recharts**. Untuk warna di Recharts, ambil hex dari `STATUS_STYLES[x].hex` atau import dari `tailwind.config.js`.
 
 ## Stack & perintah
@@ -58,10 +62,10 @@ NADI adalah **AI wellness agent untuk lansia**, dijual operator telekomunikasi s
 ```
 src/
   main.jsx            entry React
-  App.jsx             root: state tab aktif + BottomNav
+  App.jsx             root: state tab aktif, tampilan keluarga/lansia, BottomNav
   index.css           Tailwind + style dasar body
   components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, ...)
-  screens/            satu file per layar (Dashboard, Notifications, AlertDetail, PlaceholderScreen)
+  screens/            satu file per layar (Dashboard, Notifications, AlertDetail, ElderCheck, PlaceholderScreen)
   lib/                helper non-UI: status.js, insights.js, format.js, metrics.js
   state/              React Context bersama (AlertsContext: status alert + respons keluarga)
   data/

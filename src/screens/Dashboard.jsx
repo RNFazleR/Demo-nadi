@@ -15,7 +15,7 @@ const METRICS = [
   { key: 'wakeUps', field: 'jumlah_bangun_malam', icon: 'wake', display: (v) => formatNumber(v) },
 ]
 
-export default function Dashboard() {
+export default function Dashboard({ onSimulateAnomaly }) {
   const { alerts } = useAlerts()
   const { status, alert } = getCurrentStatus(alerts)
   const today = dailyMetrics[dailyMetrics.length - 1]
@@ -54,6 +54,22 @@ export default function Dashboard() {
       </p>
 
       <p className="text-center text-body text-ink-soft">{copy.app.disclaimer}</p>
+
+      {/* Kontrol khusus demo: membuka layar konfirmasi di HP lansia */}
+      <div className="flex flex-col items-center gap-2 rounded-card border-2 border-dashed border-line p-4">
+        <span className="rounded-full bg-surface-muted px-3 py-0.5 text-body font-semibold text-ink-soft">
+          {copy.dashboard.simulate.tag}
+        </span>
+        <button
+          type="button"
+          onClick={onSimulateAnomaly}
+          className="flex min-h-tap items-center gap-2 rounded-btn bg-ink px-5 text-body-lg font-bold text-surface"
+        >
+          <Icon name="phone" className="h-5 w-5" />
+          {copy.dashboard.simulate.button}
+        </button>
+        <p className="text-center text-body text-ink-soft">{copy.dashboard.simulate.hint}</p>
+      </div>
     </div>
   )
 }
