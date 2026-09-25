@@ -35,6 +35,21 @@ export function formatDateShort(iso) {
   }).format(new Date(iso))
 }
 
+// "Sel" (nama hari singkat) untuk label sumbu grafik
+export function formatWeekdayShort(iso) {
+  return new Intl.DateTimeFormat(LOCALE, { weekday: 'short', timeZone: TIME_ZONE }).format(new Date(iso))
+}
+
+// "Selasa, 22 September"
+export function formatDayDate(iso) {
+  return new Intl.DateTimeFormat(LOCALE, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: TIME_ZONE,
+  }).format(new Date(iso))
+}
+
 // "2026-09-24" menurut WIB, untuk mencocokkan dengan DailyMetric.tanggal
 export function toDateKey(iso) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(new Date(iso))

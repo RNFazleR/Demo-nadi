@@ -33,7 +33,8 @@ NADI adalah **AI wellness agent untuk lansia**, dijual operator telekomunikasi s
 - Kalau butuh teks/data baru, tambahkan dulu ke file tersebut, baru dipakai di komponen.
 - Teks yang berisi angka/variabel ditulis sebagai fungsi di `copy.js` (mis. `copy.dashboard.lastActivity(98)`), jangan dirangkai di komponen.
 - **Jangan pakai jam asli** (`new Date()` tanpa argumen). Waktu "sekarang" di demo = `demoNow` dari `dummy.js`, supaya cerita demo selalu sama.
-- **Status alert yang bisa berubah** (baru → dicek, atau alert baru dari simulasi) dibaca/diubah lewat `useAlerts()` (`respond`, `addAlert`) dari `src/state/AlertsContext.jsx`, bukan langsung dari `alertEvents` di dummy.js. Data dummy hanya nilai awal.
+- **State yang bisa berubah** dibaca/diubah lewat `useAlerts()` dari `src/state/AlertsContext.jsx`, bukan langsung dari dummy.js (data dummy hanya nilai awal): status alert & alert baru (`respond`, `addAlert`), urutan kontak (`contacts`, `moveContact`), jeda pemantauan (`monitoringPaused`), dan `resetDemo` untuk mengembalikan semuanya ke awal. State baru yang dibagi antar-screen ditambahkan di sini juga, dan ikut di-reset di `resetDemo`.
+- "Pola biasanya" untuk satu hari = rata-rata hari **lain** (tanpa hari itu), lewat `compareDayToUsual`. Aturan "berbeda jauh dari biasanya" per metrik ada di `deviation` di `src/lib/metrics.js`.
 - Logika turunan dari data (status saat ini, rata-rata, perbandingan) ada di `src/lib/insights.js`; format angka/tanggal Indonesia di `src/lib/format.js`.
 
 ## Desain
@@ -49,6 +50,7 @@ NADI adalah **AI wellness agent untuk lansia**, dijual operator telekomunikasi s
   - Teks minimum 24px: pakai `text-elder-body`, `text-elder-btn`, `text-elder-title`, `text-elder-count`. Latar putih (`bg-surface`) + teks `text-ink` untuk kontras tinggi.
   - Maksimal 1 kalimat pertanyaan, hanya 2 tombol besar (`min-h-tap-elder`, 88px), tanpa navigasi/menu.
   - Kontrol demo (mis. "Kembali ke app keluarga") selalu diberi label "Fitur demo" dan dipisah garis putus-putus.
+- Grafik: hari yang berbeda jauh dari biasanya diberi warna Waspada **dan** penanda "!" + legenda, jangan hanya warna.
 - Grafik pakai **Recharts**. Untuk warna di Recharts, ambil hex dari `STATUS_STYLES[x].hex` atau import dari `tailwind.config.js`.
 
 ## Stack & perintah
@@ -65,9 +67,9 @@ src/
   App.jsx             root: state tab aktif, tampilan keluarga/lansia, BottomNav
   index.css           Tailwind + style dasar body
   components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, ...)
-  screens/            satu file per layar (Dashboard, Notifications, AlertDetail, ElderCheck, PlaceholderScreen)
+  screens/            satu file per layar (Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
   lib/                helper non-UI: status.js, insights.js, format.js, metrics.js
-  state/              React Context bersama (AlertsContext: status alert + respons keluarga)
+  state/              React Context bersama (AlertsContext: alert, respons, kontak, jeda pemantauan, reset demo)
   data/
     dummy.js          SATU-SATUNYA sumber data dummy
     copy.js           SEMUA teks UI

@@ -1,7 +1,7 @@
-// State bersama untuk AlertEvent. Semua screen membaca & mengubah status alert lewat sini,
-// supaya perubahan (mis. ditandai "dicek") langsung terlihat di Dashboard dan Notifikasi.
+// State bersama app: AlertEvent, respons keluarga, urutan kontak, dan jeda pemantauan.
+// Semua screen membaca & mengubahnya lewat sini, supaya perubahan langsung terlihat di mana pun.
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
-import { alertEvents, demoNow } from '../data/dummy.js'
+import { alertEvents, demoNow, kontakKeluarga } from '../data/dummy.js'
 
 const AlertsContext = createContext(null)
 
@@ -9,6 +9,9 @@ export function AlertsProvider({ children }) {
   const [alerts, setAlerts] = useState(alertEvents)
   // id alert -> aksi yang dipilih keluarga ('markChecked' | 'callElder' | 'callEmergency')
   const [responses, setResponses] = useState({})
+  // Urutan = prioritas dihubungi saat Darurat
+  const [contacts, setContacts] = useState(kontakKeluarga)
+  const [monitoringPaused, setMonitoringPaused] = useState(false)
 
   // Mencatat respons keluarga; alert yang masih "baru" otomatis jadi "dicek".
   const respond = useCallback((id, action) => {
@@ -27,9 +30,40 @@ export function AlertsProvider({ children }) {
     return alert
   }, [])
 
+  // Geser kontak satu posisi (-1 = naik, +1 = turun)
+  const moveContact = useCallback((id, delta) => {
+    setContacts((prev) => {
+      const from = prev.findIndex((c) => c.id === id)
+      const to = from + delta
+      if (from < 0 || to < 0 || to >= prev.length) return prev
+      const next = [...prev]
+      ;[next[from], next[to]] = [next[to], next[from]]
+      return next
+    })
+  }, [])
+
+  // Kembalikan semua state ke nilai awal dari dummy.js (fitur demo)
+  const resetDemo = useCallback(() => {
+    setAlerts(alertEvents)
+    setResponses({})
+    setContacts(kontakKeluarga)
+    setMonitoringPaused(false)
+    nextId.current = 1
+  }, [])
+
   const value = useMemo(
-    () => ({ alerts, responses, respond, addAlert }),
-    [alerts, responses, respond, addAlert],
+    () => ({
+      alerts,
+      responses,
+      respond,
+      addAlert,
+      contacts,
+      moveContact,
+      monitoringPaused,
+      setMonitoringPaused,
+      resetDemo,
+    }),
+    [alerts, responses, respond, addAlert, contacts, moveContact, monitoringPaused, resetDemo],
   )
 
   return <AlertsContext.Provider value={value}>{children}</AlertsContext.Provider>

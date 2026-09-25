@@ -27,6 +27,12 @@ export function compareDayToUsual(metrics, dateKey, field) {
   return { value: day[field], usual, trend: compareToAverage(day[field], usual) }
 }
 
+// Apakah hasil compareDayToUsual menyimpang jauh sesuai aturan `deviation` metrik.
+export function isDeviation({ value, usual }, { direction, threshold }) {
+  const change = (value - usual) / usual
+  return direction === 'lower' ? change <= -threshold : change >= threshold
+}
+
 export function average(metrics, key) {
   return metrics.reduce((sum, m) => sum + m[key], 0) / metrics.length
 }

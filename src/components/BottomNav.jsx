@@ -5,12 +5,13 @@ export const TABS = [
   { id: 'home', icon: 'home' },
   { id: 'history', icon: 'history' },
   { id: 'notifications', icon: 'bell' },
+  { id: 'settings', icon: 'settings' },
 ]
 
 export default function BottomNav({ active, onChange }) {
   return (
     <nav className="sticky bottom-0 z-10 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-4">
         {TABS.map((tab) => {
           const isActive = tab.id === active
           return (

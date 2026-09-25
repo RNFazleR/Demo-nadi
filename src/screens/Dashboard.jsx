@@ -5,6 +5,7 @@ import { getCurrentStatus, average, compareToAverage } from '../lib/insights.js'
 import { formatNumber, minutesBetween } from '../lib/format.js'
 import ProfileHeader from '../components/ProfileHeader.jsx'
 import StatusCard from '../components/StatusCard.jsx'
+import PausedCard from '../components/PausedCard.jsx'
 import MetricCard from '../components/MetricCard.jsx'
 import Icon from '../components/Icon.jsx'
 
@@ -16,7 +17,7 @@ const METRICS = [
 ]
 
 export default function Dashboard({ onSimulateAnomaly }) {
-  const { alerts } = useAlerts()
+  const { alerts, monitoringPaused } = useAlerts()
   const { status, alert } = getCurrentStatus(alerts)
   const today = dailyMetrics[dailyMetrics.length - 1]
   const minutesSinceActivity = minutesBetween(aktivitasTerakhir, demoNow)
@@ -25,7 +26,10 @@ export default function Dashboard({ onSimulateAnomaly }) {
     <div className="flex flex-col gap-6 px-gutter pb-8 pt-6">
       <ProfileHeader profile={elderProfile} />
 
-      <StatusCard status={status} alert={alert} />
+      {/* Saat dijeda, status "Normal" menyesatkan, jadi diganti kartu jeda. Alert yang
+          belum ditanggapi tetap ditampilkan supaya tidak tersembunyi. */}
+      {monitoringPaused && <PausedCard />}
+      {(!monitoringPaused || status !== 'normal') && <StatusCard status={status} alert={alert} />}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-title text-ink">{copy.dashboard.todaySummary}</h2>

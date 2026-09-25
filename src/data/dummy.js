@@ -54,6 +54,13 @@ export const kontakDarurat = {
   nomor: '112',
 }
 
+// Kontak keluarga, urutan awal = urutan prioritas saat Darurat. Nomor fiktif.
+export const kontakKeluarga = [
+  { id: 'kontak-1', nama: 'Rina Wahyuni', hubungan: 'Anak', nomor: '0813-2468-1357' },
+  { id: 'kontak-2', nama: 'Budi Santoso', hubungan: 'Menantu', nomor: '0857-1122-3344' },
+  { id: 'kontak-3', nama: 'Bu Darmi', hubungan: 'Tetangga', nomor: '0821-9988-7766' },
+]
+
 /** @type {DailyMetric[]} urut dari terlama ke terbaru */
 export const dailyMetrics = [
   { tanggal: '2026-09-18', durasi_tidur_jam: 7.2, rasio_aktif: 0.52, jumlah_bangun_malam: 1 },

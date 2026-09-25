@@ -87,6 +87,7 @@ export const copy = {
     home: 'Beranda',
     history: 'Riwayat',
     notifications: 'Notifikasi',
+    settings: 'Pengaturan',
   },
 
   placeholder: {
@@ -135,6 +136,87 @@ export const copy = {
   feedback: {
     title: 'Respons tercatat',
     body: 'NADI mencatat respons ini untuk memperbaiki penilaian berikutnya.',
+  },
+
+  history: {
+    title: 'Riwayat',
+    subtitle: '7 hari terakhir',
+    intro: 'NADI membandingkan pola beliau dengan kebiasaannya sendiri, bukan dengan standar umum.',
+    metricTabs: {
+      sleep: 'Durasi tidur',
+      activity: 'Rasio aktif',
+      wakeUps: 'Bangun malam',
+    },
+    metricTabsAria: 'Pilih metrik',
+    chartAria: (label) => `Grafik batang ${label} selama 7 hari terakhir`,
+    legendBaseline: (value) => `Pola biasanya: ${value} (rata-rata hari lain)`,
+    legendDeviation: 'Berbeda jauh dari biasanya',
+    deviationMark: '!', // simbol di atas batang yang menyimpang
+    tapHint: 'Ketuk salah satu batang untuk melihat detail hari itu.',
+    deviationBadge: 'Berbeda jauh dari biasanya',
+    // Selisih nilai dengan satuannya
+    diffWithUnit: {
+      sleep: (d) => `${d} jam`,
+      activity: (d) => `${d} poin persen`,
+      wakeUps: (d) => `${d} kali`,
+    },
+    // Kalimat netral: (nilai, biasanya, selisih) sudah diformat dengan satuan
+    sentence: {
+      sleep: {
+        lower: (v, u, d) => `Tidur ${d} lebih sedikit dari biasanya`,
+        higher: (v, u, d) => `Tidur ${d} lebih lama dari biasanya`,
+        same: () => 'Lama tidur sama seperti biasanya',
+      },
+      activity: {
+        lower: (v, u, d) => `Waktu aktif ${d} lebih rendah dari biasanya`,
+        higher: (v, u, d) => `Waktu aktif ${d} lebih tinggi dari biasanya`,
+        same: () => 'Waktu aktif sama seperti biasanya',
+      },
+      wakeUps: {
+        lower: (v, u) => `Terbangun ${v}, lebih jarang dari biasanya (sekitar ${u})`,
+        higher: (v, u) => `Terbangun ${v}, lebih sering dari biasanya (sekitar ${u})`,
+        same: () => 'Terbangun malam sama seperti biasanya',
+      },
+    },
+    alertsTitle: 'Catatan NADI di hari ini',
+    noAlerts: 'Tidak ada catatan di tanggal ini.',
+  },
+
+  settings: {
+    title: 'Pengaturan',
+    contacts: {
+      title: 'Kontak keluarga',
+      explainer: 'Saat Darurat, NADI menghubungi kontak sesuai urutan ini, mulai dari nomor 1.',
+      priority: (n) => `Prioritas ${n}`,
+      moveUp: (nama) => `Naikkan prioritas ${nama}`,
+      moveDown: (nama) => `Turunkan prioritas ${nama}`,
+    },
+    privacy: {
+      title: 'Privasi & Data',
+      intro: 'Cara NADI menjaga privasi beliau:',
+      points: {
+        noCamera: 'Tidak memakai kamera dan tidak merekam suara.',
+        wifiOnly: 'Hanya membaca pola gerak dan istirahat dari sinyal WiFi di rumah.',
+        wellness: 'NADI adalah pemantau kesejahteraan, bukan alat diagnosis medis.',
+      },
+      pauseTitle: 'Jeda pemantauan',
+      pauseHint: 'Misalnya saat ada tamu menginap. NADI berhenti membaca pola sampai diaktifkan lagi.',
+      pauseOn: 'Pemantauan sedang dijeda',
+      pauseOff: 'Pemantauan aktif',
+    },
+    reset: {
+      tag: 'Fitur demo',
+      button: 'Reset data demo',
+      hint: 'Kembalikan semua notifikasi, status, kontak, dan pengaturan pemantauan ke kondisi awal.',
+      done: 'Data demo sudah dikembalikan ke kondisi awal.',
+    },
+  },
+
+  // Status di Dashboard saat pemantauan dijeda
+  paused: {
+    label: 'Dijeda',
+    title: 'Pemantauan dijeda',
+    body: 'NADI sedang tidak membaca pola keseharian. Aktifkan lagi lewat Pengaturan kapan saja.',
   },
 
   // Layar konfirmasi di HP lansia. Kalimat pendek, maksimal 1 pertanyaan.

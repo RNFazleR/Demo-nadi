@@ -3,10 +3,10 @@ import PhoneFrame from './components/PhoneFrame.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import Dashboard from './screens/Dashboard.jsx'
 import Notifications from './screens/Notifications.jsx'
-import PlaceholderScreen from './screens/PlaceholderScreen.jsx'
+import History from './screens/History.jsx'
+import Settings from './screens/Settings.jsx'
 import ElderCheck from './screens/ElderCheck.jsx'
 import { AlertsProvider } from './state/AlertsContext.jsx'
-import { copy } from './data/copy.js'
 
 export default function App() {
   const [tab, setTab] = useState('home')
@@ -36,7 +36,8 @@ export default function App() {
             <main ref={mainRef} className="flex flex-1 flex-col">
               {tab === 'home' && <Dashboard onSimulateAnomaly={() => setView('elder')} />}
               {tab === 'notifications' && <Notifications />}
-              {tab === 'history' && <PlaceholderScreen title={copy.nav.history} />}
+              {tab === 'history' && <History />}
+              {tab === 'settings' && <Settings />}
             </main>
             <BottomNav active={tab} onChange={setTab} />
           </>
