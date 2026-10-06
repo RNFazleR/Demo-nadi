@@ -1,6 +1,6 @@
-# NADI — Prototipe UI Demo
+# NADI — Prototipe Interaktif FP HMI
 
-Demo visual NADI, AI wellness agent untuk lansia (add-on layanan broadband). Semua data dummy, tidak terhubung ke backend atau sensor.
+Prototipe interaktif NADI, konsep AI wellness agent untuk lansia, untuk Final Project mata kuliah HMI. Fokus pada UI/UX. Semua data dummy, tidak terhubung ke backend atau sensor.
 
 ## Cara menjalankan
 
