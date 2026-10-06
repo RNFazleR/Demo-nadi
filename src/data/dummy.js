@@ -43,7 +43,7 @@ export const aktivitasTerakhir = '2026-09-24T07:42:00+07:00'
 export const elderProfile = {
   nama: 'Ibu Sri Wahyuni',
   panggilan: 'Bu Sri', // sapaan di layar HP lansia
-  foto: '/avatar-placeholder.svg',
+  foto: 'avatar-placeholder.svg',
   mulai_dipantau_sejak: '2026-03-02',
   telepon: '0812-3456-7890', // fiktif, hanya untuk modal simulasi panggilan
 }
