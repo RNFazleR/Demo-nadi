@@ -7,6 +7,7 @@ import History from './screens/History.jsx'
 import Settings from './screens/Settings.jsx'
 import ElderCheck from './screens/ElderCheck.jsx'
 import { AlertsProvider } from './state/AlertsContext.jsx'
+import { SensorProvider } from './state/SensorContext.jsx'
 
 export default function App() {
   const [tab, setTab] = useState('home')
@@ -26,23 +27,25 @@ export default function App() {
 
   return (
     <AlertsProvider>
-      <PhoneFrame>
-        {view === 'elder' ? (
-          <main ref={mainRef} className="flex flex-1 flex-col">
-            <ElderCheck onExit={backToFamily} />
-          </main>
-        ) : (
-          <>
+      <SensorProvider>
+        <PhoneFrame>
+          {view === 'elder' ? (
             <main ref={mainRef} className="flex flex-1 flex-col">
-              {tab === 'home' && <Dashboard onSimulateAnomaly={() => setView('elder')} />}
-              {tab === 'notifications' && <Notifications />}
-              {tab === 'history' && <History />}
-              {tab === 'settings' && <Settings />}
+              <ElderCheck onExit={backToFamily} />
             </main>
-            <BottomNav active={tab} onChange={setTab} />
-          </>
-        )}
-      </PhoneFrame>
+          ) : (
+            <>
+              <main ref={mainRef} className="flex flex-1 flex-col">
+                {tab === 'home' && <Dashboard onSimulateAnomaly={() => setView('elder')} />}
+                {tab === 'notifications' && <Notifications />}
+                {tab === 'history' && <History />}
+                {tab === 'settings' && <Settings />}
+              </main>
+              <BottomNav active={tab} onChange={setTab} />
+            </>
+          )}
+        </PhoneFrame>
+      </SensorProvider>
     </AlertsProvider>
   )
 }

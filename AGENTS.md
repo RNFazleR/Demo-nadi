@@ -1,6 +1,6 @@
 # NADI — Prototipe Interaktif FP HMI
 
-NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola keseharian dari sinyal WiFi di rumah dan mengabari keluarga. Project ini adalah **prototipe interaktif untuk Final Project mata kuliah HMI (Interaksi Manusia dan Komputer)**. Titik tekannya **UI/UX**: alur, tata letak, keterbacaan, dan aksesibilitas untuk keluarga dan lansia. Bukan produk, bukan untuk lomba. Data dummy, **tidak** terhubung ke backend atau sensor asli.
+NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola keseharian dari sinyal WiFi di rumah dan mengabari keluarga. Project ini adalah **prototipe interaktif untuk Final Project mata kuliah HMI (Interaksi Manusia dan Komputer)**. Titik tekannya **UI/UX**: alur, tata letak, keterbacaan, dan aksesibilitas untuk keluarga dan lansia. Bukan produk, bukan untuk lomba. **Mode demo** memakai data dummy. **Mode sensor langsung** (opsional) membaca ESP32-S3 lewat penghubung Python lokal di `sensor/` — lihat bagian "Mode sensor langsung".
 
 - Kontrol berlabel "Fitur demo" (simulasi anomali, reset data, kembali ke app keluarga) adalah kontrol fasilitator saat prototipe dicoba/diuji, bukan bagian dari produk.
 
@@ -74,11 +74,23 @@ Setiap perubahan UI dicek terhadap prinsip ini. Contoh penerapannya di NADI ada 
 - **Gestalt** – proximity (label, nilai, satuan, waktu berdekatan), similarity (warna status konsisten), common region (kartu & kelompok).
 - **"So what?"** – setiap angka disertai konteks: dibanding pola biasanya, definisinya, dan kalau perlu tindakan berikutnya.
 
+## Mode sensor langsung (ESP32-S3 + `sensor/csi_bridge.py`)
+
+- Sumber data dipilih di Pengaturan (`useSensor()` dari `src/state/SensorContext.jsx`): `demo` atau `live`. **Data sensor tidak pernah dicampur dengan cerita demo**: di mode langsung Beranda hanya menampilkan kartu sensor; Riwayat & Notifikasi menampilkan pemberitahuan `LiveModeNotice`; badge & simulasi demo disembunyikan.
+- Frontend hanya membaca JSON `GET /api/sensor/latest` (kontrak di `sensor/README.md`), terjemahkan lewat `describeSensor()` di `src/lib/sensor.js`. Jangan mengurai output terminal.
+- Waktu di mode langsung berasal dari sumber data (`received_at`, `last_motion_at`), bukan `demoNow` dan bukan jam browser.
+- Data tidak tersedia/basi (`stalled`, port bermasalah, API tak terjangkau) **tidak boleh** tampil sebagai "diam" atau "Normal".
+- Label gerak **bukan** status kesejahteraan: jangan ubah menjadi Waspada/Darurat dan jangan pakai warna status. Skor bukan persentase/probabilitas.
+- Tidur, waktu aktif harian, dan terbangun malam belum bisa dihitung dari sensor ini — tampilkan sebagai "belum tersedia", jangan diisi.
+- Kredensial WiFi firmware hanya di `firmware/csi_receiver/main/wifi_secrets.h` (di-.gitignore); tidak boleh masuk repository atau frontend.
+- Python: `csi_processing.py` tetap murni (tanpa serial/jaringan/jam) supaya bisa diuji; jalankan `python -m unittest test_csi` di `sensor/`.
+
 ## Stack & perintah
 
 - React + Vite, Tailwind CSS v3, Recharts.
 - `npm run dev` — jalankan dev server
 - `npm run build` — build produksi
+- `python sensor/csi_bridge.py --port COMx` — penghubung sensor (`--replay <file>` untuk uji tanpa perangkat)
 
 ## Struktur folder
 
@@ -89,10 +101,12 @@ src/
   index.css           Tailwind + style dasar body
   components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, ...)
   screens/            satu file per layar (Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
-  lib/                helper non-UI: status.js, insights.js, format.js, metrics.js
-  state/              React Context bersama (AlertsContext: alert, respons, kontak, jeda pemantauan, reset demo)
+  lib/                helper non-UI: status.js, insights.js, format.js, metrics.js, sensor.js, useDialogFocus.js
+  state/              React Context bersama (AlertsContext: alert, respons, kontak, jeda, reset demo; SensorContext: sumber data & polling sensor)
   data/
     dummy.js          SATU-SATUNYA sumber data dummy
     copy.js           SEMUA teks UI
 public/               aset statis (favicon, foto placeholder)
+sensor/               penghubung Python ESP32-S3 → API lokal (pengolahan, bridge, fixture, unit test)
+firmware/csi_receiver project ESP-IDF v6.1 untuk ESP32-S3 (kredensial di main/wifi_secrets.h, tidak di-commit)
 ```

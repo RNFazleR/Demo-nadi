@@ -252,6 +252,99 @@ export const copy = {
     body: 'NADI sedang tidak membaca pola keseharian. Aktifkan lagi lewat Pengaturan kapan saja.',
   },
 
+  // Mode "Sensor langsung" (ESP32-S3 + penghubung Python). Bahasa netral: sensor hanya membaca
+  // perubahan sinyal WiFi sebagai tanda gerakan, bukan tidur, identitas, atau kondisi darurat.
+  sensor: {
+    modeChip: 'Sensor langsung',
+    replayChip: 'Rekaman uji',
+    cardTitle: 'Sensor gerak',
+    states: {
+      connecting: { title: 'Menghubungkan ke penghubung sensor…', body: 'Mengambil data pertama dari laptop.' },
+      starting: { title: 'Penghubung sedang dimulai…', body: 'Sebentar lagi data sensor dibaca.' },
+      unreachable: {
+        title: 'Penghubung sensor tidak terjangkau',
+        body: 'Pastikan program penghubung berjalan di laptop dan alamatnya benar.',
+      },
+      port_not_found: {
+        title: 'Perangkat sensor tidak ditemukan',
+        body: 'Periksa kabel USB dan nama port. Penghubung akan mencoba lagi.',
+      },
+      port_busy: {
+        title: 'Port sensor sedang dipakai program lain',
+        body: 'Tutup serial monitor atau program lain yang membuka port ini.',
+      },
+      disconnected: {
+        title: 'Sensor terputus',
+        body: 'Kabel USB terlepas atau perangkat mati. Penghubung akan mencoba menyambung lagi.',
+      },
+      error: { title: 'Sensor tidak bisa dibaca', body: 'Lihat detail teknis di bawah untuk pesan kesalahannya.' },
+      waiting_data: {
+        title: 'Perangkat tersambung, belum ada data sinyal',
+        body: 'Port sudah terbuka, tapi belum ada data WiFi. Periksa hotspot 2,4 GHz perangkat.',
+      },
+      stalled: {
+        title: 'Data sensor berhenti masuk',
+        body: 'Port masih terbuka, tapi tidak ada data baru. Periksa hotspot HP (2,4 GHz) masih menyala. Status gerak tidak ditampilkan sampai data kembali.',
+      },
+      calibration_failed: {
+        title: 'Kalibrasi belum berhasil, mencoba lagi',
+        body: 'Sinyal yang terbaca belum cukup. Pastikan perangkat dan hotspot menyala dan berdekatan.',
+      },
+      calibrating_format: { title: 'Menyiapkan pembacaan sinyal…', body: 'Mengenali format data dari perangkat.' },
+      calibrating_baseline: {
+        title: 'Kalibrasi: mohon jangan bergerak di area pemantauan',
+        body: 'NADI sedang mempelajari sinyal saat ruangan tenang, kira-kira 10 detik.',
+      },
+      processing: { title: 'Membaca sinyal…', body: 'Menunggu hasil pembacaan berikutnya.' },
+      motion: { title: 'Gerakan terdeteksi di area pemantauan', body: 'Sinyal WiFi berubah melebihi batas hasil kalibrasi.' },
+      still: {
+        title: 'Belum ada gerakan terdeteksi',
+        body: 'Ini tidak selalu berarti ruangan kosong atau beliau sedang tidur.',
+      },
+    },
+    progress: (pct) => `Kalibrasi ${pct}%`,
+    lastMotion: 'Gerakan terakhir',
+    noMotionYet: 'Belum ada sejak kalibrasi',
+    lastUpdate: 'Data terakhir diterima',
+    noDataYet: 'Belum ada',
+    unavailableTitle: 'Belum tersedia dari sensor ini',
+    unavailableBody:
+      'Durasi tidur, waktu aktif harian, dan terbangun malam belum bisa dihitung dari pembacaan gerak saat ini.',
+    technical: {
+      summary: 'Detail teknis',
+      score: 'Skor perubahan sinyal',
+      threshold: 'Batas gerak (hasil kalibrasi)',
+      rssi: 'Kekuatan sinyal (RSSI)',
+      rssiValue: (v) => `${v} dBm`,
+      packets: 'Paket dalam 1 detik terakhir',
+      dropped: 'Paket hilang di perangkat',
+      invalid: 'Baris data tidak valid',
+      port: 'Port',
+      source: 'Sumber',
+      sourceLive: 'Perangkat (serial)',
+      sourceReplay: 'Rekaman uji (bukan pengukuran langsung)',
+      api: 'Alamat penghubung',
+      error: 'Pesan kesalahan',
+      deviceLog: (time) => `Pesan perangkat terakhir (${time})`,
+      note: 'Skor bukan persentase aktivitas dan bukan probabilitas. Batas berlaku untuk sesi kalibrasi ini saja.',
+      empty: '–',
+    },
+    // Riwayat & Notifikasi masih berbasis data demo, jadi tidak ditampilkan di mode sensor
+    notice: {
+      title: 'Belum tersedia di mode sensor langsung',
+      body: (page) =>
+        `${page} masih memakai data demo, jadi disembunyikan agar tidak tercampur dengan data sensor.`,
+      backToDemo: 'Beralih ke mode demo',
+    },
+    source: {
+      title: 'Sumber data',
+      hint: 'Mode demo memakai cerita contoh. Sensor langsung membaca perangkat ESP32 lewat penghubung di laptop.',
+      demo: 'Demo (data contoh)',
+      live: 'Sensor langsung (ESP32)',
+      apiLabel: (url) => `Penghubung: ${url}`,
+    },
+  },
+
   // Layar konfirmasi di HP lansia. Kalimat pendek, maksimal 1 pertanyaan.
   elderCheck: {
     question: (panggilan) => `Halo ${panggilan}, apakah baik-baik saja?`,

@@ -1,5 +1,6 @@
 import { copy } from '../data/copy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
+import { useSensor } from '../state/SensorContext.jsx'
 import Icon from './Icon.jsx'
 
 export const TABS = [
@@ -11,7 +12,9 @@ export const TABS = [
 
 export default function BottomNav({ active, onChange }) {
   const { alerts } = useAlerts()
-  const newCount = alerts.filter((a) => a.status === 'baru').length
+  const { isLive } = useSensor()
+  // Badge berasal dari alert demo, jadi tidak ditampilkan di mode sensor langsung
+  const newCount = isLive ? 0 : alerts.filter((a) => a.status === 'baru').length
 
   return (
     <nav className="sticky bottom-0 z-10 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">

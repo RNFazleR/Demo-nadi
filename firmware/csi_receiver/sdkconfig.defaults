@@ -1,0 +1,6 @@
+# CSI wajib diaktifkan supaya esp_wifi_set_csi() bisa dipakai
+CONFIG_ESP_WIFI_CSI_ENABLED=y
+# Konsol langsung ke USB Serial/JTAG (port COM yang dibaca penghubung). Tanpa ini, output juga
+# dicetak ke UART0 115200 baud yang terlalu lambat untuk aliran CSI -> antrean penuh -> paket hilang.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y

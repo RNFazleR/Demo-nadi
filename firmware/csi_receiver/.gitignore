@@ -1,0 +1,4 @@
+build/
+sdkconfig
+sdkconfig.old
+main/wifi_secrets.h

@@ -15,6 +15,8 @@ import tw from '../../tailwind.config.js'
 import { copy } from '../data/copy.js'
 import { dailyMetrics } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
+import { useSensor } from '../state/SensorContext.jsx'
+import LiveModeNotice from '../components/LiveModeNotice.jsx'
 import { METRICS } from '../lib/metrics.js'
 import { STATUS_STYLES } from '../lib/status.js'
 import { compareDayToUsual, isDeviation, sortNewestFirst } from '../lib/insights.js'
@@ -43,11 +45,13 @@ const CHART = {
 // Tab Riwayat: grafik 7 hari per metrik + detail hari yang dipilih.
 export default function History() {
   const { alerts } = useAlerts()
+  const { isLive } = useSensor()
   const [metricKey, setMetricKey] = useState('sleep')
   const [selectedDate, setSelectedDate] = useState(dailyMetrics[dailyMetrics.length - 1].tanggal)
   const [openAlertId, setOpenAlertId] = useState(null)
   const tabRefs = useRef([])
 
+  if (isLive) return <LiveModeNotice pageTitle={copy.history.title} />
   if (openAlertId) return <AlertDetail alertId={openAlertId} onBack={() => setOpenAlertId(null)} />
 
   const metric = METRICS.find((m) => m.key === metricKey)

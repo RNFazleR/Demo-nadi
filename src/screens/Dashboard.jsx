@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
+import { useSensor } from '../state/SensorContext.jsx'
+import SensorStatusCard from '../components/SensorStatusCard.jsx'
 import { getCurrentStatus, compareDayToUsual } from '../lib/insights.js'
 import { METRICS } from '../lib/metrics.js'
 import { formatTime, minutesBetween } from '../lib/format.js'
@@ -14,7 +16,26 @@ import AlertDetail from './AlertDetail.jsx'
 
 export default function Dashboard({ onSimulateAnomaly }) {
   const { alerts, monitoringPaused } = useAlerts()
+  const { isLive } = useSensor()
   const [openAlertId, setOpenAlertId] = useState(null)
+
+  // Mode sensor langsung: hanya data sensor, tanpa status/metrik/alert dari cerita demo
+  if (isLive) {
+    return (
+      <div className="flex flex-col gap-6 px-gutter pb-8 pt-6">
+        <ProfileHeader profile={elderProfile} />
+        <p className="-mt-3 self-start rounded-full bg-brand-700 px-3 py-0.5 text-body font-bold text-surface">
+          {copy.sensor.modeChip}
+        </p>
+        <SensorStatusCard />
+        <section className="rounded-card border border-line bg-surface p-4">
+          <h2 className="text-body-lg font-bold text-ink">{copy.sensor.unavailableTitle}</h2>
+          <p className="mt-1 text-body text-ink-soft">{copy.sensor.unavailableBody}</p>
+        </section>
+        <p className="text-center text-body text-ink-soft">{copy.app.disclaimer}</p>
+      </div>
+    )
+  }
 
   if (openAlertId) return <AlertDetail alertId={openAlertId} onBack={() => setOpenAlertId(null)} />
 

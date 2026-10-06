@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { copy } from '../data/copy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
+import { useSensor } from '../state/SensorContext.jsx'
 import Icon from '../components/Icon.jsx'
 
 const PRIVACY_POINTS = [
@@ -15,6 +16,7 @@ const ORDER_BTN =
 // Tab Pengaturan: urutan kontak keluarga, privasi & jeda pemantauan, reset demo.
 export default function Settings() {
   const { contacts, moveContact, monitoringPaused, setMonitoringPaused, resetDemo } = useAlerts()
+  const { mode, setMode, apiUrl } = useSensor()
   const [resetDone, setResetDone] = useState(false)
   const [orderNote, setOrderNote] = useState('') // diumumkan lewat aria-live
   // Tombol ▲▼ per kontak; dipakai untuk menjaga fokus keyboard setelah urutan berubah
@@ -155,6 +157,33 @@ export default function Settings() {
             {monitoringPaused ? t.privacy.pauseOn : t.privacy.pauseOff}
           </p>
         </div>
+      </section>
+
+      {/* Kontrol khusus demo: sumber data prototipe */}
+      <section className="rounded-card border-2 border-dashed border-line p-4">
+        <span className="rounded-full bg-surface-muted px-3 py-0.5 text-body font-semibold text-ink-soft">
+          {t.reset.tag}
+        </span>
+        <fieldset className="mt-3">
+          <legend className="text-body-lg font-bold text-ink">{copy.sensor.source.title}</legend>
+          <p className="text-body text-ink-soft">{copy.sensor.source.hint}</p>
+          <div className="mt-2 flex flex-col gap-1">
+            {['demo', 'live'].map((value) => (
+              <label key={value} className="flex min-h-tap cursor-pointer items-center gap-3 rounded-btn px-2 hover:bg-surface-muted">
+                <input
+                  type="radio"
+                  name="data-source"
+                  value={value}
+                  checked={mode === value}
+                  onChange={() => setMode(value)}
+                  className="h-5 w-5 shrink-0 accent-brand-600"
+                />
+                <span className="text-body-lg text-ink">{copy.sensor.source[value]}</span>
+              </label>
+            ))}
+          </div>
+          {mode === 'live' && <p className="mt-1 break-all text-body text-ink-soft">{copy.sensor.source.apiLabel(apiUrl)}</p>}
+        </fieldset>
       </section>
 
       {/* Kontrol khusus demo */}

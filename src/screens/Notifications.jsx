@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { copy } from '../data/copy.js'
 import { demoNow } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
+import { useSensor } from '../state/SensorContext.jsx'
+import LiveModeNotice from '../components/LiveModeNotice.jsx'
 import { sortNewestFirst } from '../lib/insights.js'
 import { daysAgo } from '../lib/format.js'
 import AlertListItem from '../components/AlertListItem.jsx'
@@ -28,8 +30,10 @@ function groupAlerts(alerts) {
 // Tab Notifikasi: daftar alert, atau detail saat salah satu item dibuka.
 export default function Notifications() {
   const { alerts } = useAlerts()
+  const { isLive } = useSensor()
   const [openId, setOpenId] = useState(null)
 
+  if (isLive) return <LiveModeNotice pageTitle={copy.notifications.title} />
   if (openId) return <AlertDetail alertId={openId} onBack={() => setOpenId(null)} />
 
   const groups = groupAlerts(alerts)

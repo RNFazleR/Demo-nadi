@@ -1,3 +1,15 @@
 node_modules
 dist
 *.local
+
+# Penghubung sensor (Python)
+__pycache__/
+*.pyc
+.venv/
+sensor/fixtures/
+
+# Firmware ESP32 (kredensial & hasil build tidak boleh masuk repo)
+firmware/**/build/
+firmware/**/sdkconfig
+firmware/**/sdkconfig.old
+firmware/**/wifi_secrets.h

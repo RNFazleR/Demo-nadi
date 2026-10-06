@@ -35,6 +35,16 @@ export function formatDateShort(iso) {
   }).format(new Date(iso))
 }
 
+// "14.30.05" — untuk data sensor langsung (waktu dari sumber data, bukan jam demo)
+export function formatTimeSeconds(iso) {
+  return new Intl.DateTimeFormat(LOCALE, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: TIME_ZONE,
+  }).format(new Date(iso))
+}
+
 // "Sel" (nama hari singkat) untuk label sumbu grafik
 export function formatWeekdayShort(iso) {
   return new Intl.DateTimeFormat(LOCALE, { weekday: 'short', timeZone: TIME_ZONE }).format(new Date(iso))
