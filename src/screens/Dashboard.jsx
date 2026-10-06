@@ -1,17 +1,23 @@
+import { useState } from 'react'
 import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
 import { getCurrentStatus, compareDayToUsual } from '../lib/insights.js'
 import { METRICS } from '../lib/metrics.js'
-import { minutesBetween } from '../lib/format.js'
+import { formatTime, minutesBetween } from '../lib/format.js'
 import ProfileHeader from '../components/ProfileHeader.jsx'
 import StatusCard from '../components/StatusCard.jsx'
 import PausedCard from '../components/PausedCard.jsx'
 import MetricCard from '../components/MetricCard.jsx'
 import Icon from '../components/Icon.jsx'
+import AlertDetail from './AlertDetail.jsx'
 
 export default function Dashboard({ onSimulateAnomaly }) {
   const { alerts, monitoringPaused } = useAlerts()
+  const [openAlertId, setOpenAlertId] = useState(null)
+
+  if (openAlertId) return <AlertDetail alertId={openAlertId} onBack={() => setOpenAlertId(null)} />
+
   const { status, alert } = getCurrentStatus(alerts)
   const today = dailyMetrics[dailyMetrics.length - 1]
   const minutesSinceActivity = minutesBetween(aktivitasTerakhir, demoNow)
@@ -23,10 +29,14 @@ export default function Dashboard({ onSimulateAnomaly }) {
       {/* Saat dijeda, status "Normal" menyesatkan, jadi diganti kartu jeda. Alert yang
           belum ditanggapi tetap ditampilkan supaya tidak tersembunyi. */}
       {monitoringPaused && <PausedCard />}
-      {(!monitoringPaused || status !== 'normal') && <StatusCard status={status} alert={alert} />}
+      {(!monitoringPaused || status !== 'normal') && <StatusCard status={status} alert={alert} onAct={setOpenAlertId} />}
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-title text-ink">{copy.dashboard.todaySummary}</h2>
+        <div>
+          <h2 className="text-title text-ink">{copy.dashboard.todaySummary}</h2>
+          {/* Provenance: kapan & dari mana data berasal, dekat dengan angkanya (Gestalt proximity) */}
+          <p className="text-body text-ink-soft">{copy.dashboard.provenance(formatTime(demoNow))}</p>
+        </div>
         {METRICS.map(({ key, field, icon, display }) => {
           // Sama dengan Riwayat & Detail Alert: hari ini vs rata-rata hari LAIN
           const { value, usual, trend } = compareDayToUsual(dailyMetrics, today.tanggal, field)

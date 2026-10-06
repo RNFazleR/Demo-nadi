@@ -1,14 +1,14 @@
-import { useEffect } from 'react'
+import { useRef } from 'react'
 import { copy } from '../data/copy.js'
+import { useDialogFocus } from '../lib/useDialogFocus.js'
 import Icon from './Icon.jsx'
 
 // Modal simulasi panggilan. Tidak ada panggilan sungguhan.
+// Fokus dikunci di dalam modal dan kembali ke tombol pemicu saat ditutup (useDialogFocus).
 export default function CallModal({ name, number, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  const dialogRef = useRef(null)
+  const endButtonRef = useRef(null)
+  useDialogFocus(dialogRef, endButtonRef, onClose)
 
   return (
     <div
@@ -16,6 +16,7 @@ export default function CallModal({ name, number, onClose }) {
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={name}
@@ -27,7 +28,7 @@ export default function CallModal({ name, number, onClose }) {
         </span>
 
         <div className="relative mx-auto mt-6 grid h-24 w-24 place-items-center">
-          <span className="absolute inset-0 animate-ping rounded-full bg-brand-300 opacity-50" />
+          <span className="absolute inset-0 motion-safe:animate-ping rounded-full bg-brand-300 opacity-50" />
           <span className="relative grid h-24 w-24 place-items-center rounded-full bg-brand-500 text-surface">
             <Icon name="phone" className="h-10 w-10" />
           </span>
@@ -41,8 +42,8 @@ export default function CallModal({ name, number, onClose }) {
 
         <button
           type="button"
+          ref={endButtonRef}
           onClick={onClose}
-          autoFocus
           className="mt-6 min-h-tap w-full rounded-btn bg-ink text-body-lg font-bold text-surface"
         >
           {copy.callModal.end}

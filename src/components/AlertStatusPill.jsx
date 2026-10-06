@@ -3,7 +3,7 @@ import Icon from './Icon.jsx'
 
 // Status tindak lanjut (baru/dicek/selesai). Sengaja tidak memakai warna status.
 const STYLES = {
-  baru: { className: 'bg-accent-500 text-surface', icon: null },
+  baru: { className: 'bg-accent-700 text-surface', icon: null }, // 4,78:1
   dicek: { className: 'bg-surface-muted text-ink-soft', icon: 'eye' },
   selesai: { className: 'bg-surface-muted text-ink-soft', icon: 'check' },
 }

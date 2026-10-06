@@ -10,16 +10,18 @@ import LevelBadge from '../components/LevelBadge.jsx'
 import AlertStatusPill from '../components/AlertStatusPill.jsx'
 import FeedbackNote from '../components/FeedbackNote.jsx'
 import CallModal from '../components/CallModal.jsx'
+import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import Icon from '../components/Icon.jsx'
 
 const PRIMARY_BTN =
-  'flex min-h-tap w-full items-center justify-center gap-2 rounded-btn bg-brand-500 px-4 text-body-lg font-bold text-surface transition-colors hover:bg-brand-600'
+  'flex min-h-tap w-full items-center justify-center gap-2 rounded-btn bg-brand-600 px-4 text-body-lg font-bold text-surface transition-colors hover:bg-brand-700'
 const SECONDARY_BTN =
   'flex min-h-tap w-full items-center justify-center gap-2 rounded-btn px-4 text-body-lg font-bold'
 
 export default function AlertDetail({ alertId, onBack }) {
   const { alerts, responses, respond } = useAlerts()
   const [call, setCall] = useState(null) // { name, number } saat modal simulasi terbuka
+  const [confirmEmergency, setConfirmEmergency] = useState(false)
   const topRef = useRef(null)
 
   // Buka detail dari atas (juga saat konten di-scroll di dalam PhoneFrame di laptop)
@@ -135,9 +137,7 @@ export default function AlertDetail({ alertId, onBack }) {
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  startCall('callEmergency', { name: kontakDarurat.nama, number: kontakDarurat.nomor })
-                }
+                onClick={() => setConfirmEmergency(true)}
                 className={`${SECONDARY_BTN} ${STATUS_STYLES.darurat.badge}`}
               >
                 <Icon name="siren" />
@@ -156,6 +156,22 @@ export default function AlertDetail({ alertId, onBack }) {
             )
           )}
         </section>
+      )}
+
+      {/* Error prevention: panggilan 112 dikonfirmasi dulu supaya tidak terpanggil karena salah ketuk */}
+      {confirmEmergency && (
+        <ConfirmDialog
+          title={copy.actions.confirmEmergency.title(kontakDarurat.nomor)}
+          body={copy.actions.confirmEmergency.body}
+          confirmLabel={copy.actions.confirmEmergency.confirm(kontakDarurat.nomor)}
+          cancelLabel={copy.actions.confirmEmergency.cancel}
+          confirmClassName={STATUS_STYLES.darurat.solid}
+          onCancel={() => setConfirmEmergency(false)}
+          onConfirm={() => {
+            setConfirmEmergency(false)
+            startCall('callEmergency', { name: kontakDarurat.nama, number: kontakDarurat.nomor })
+          }}
+        />
       )}
 
       {call && <CallModal name={call.name} number={call.number} onClose={() => setCall(null)} />}

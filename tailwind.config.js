@@ -38,26 +38,30 @@ export default {
         accent: {
           100: '#FCE6D8',
           300: '#F2B48E',
-          500: '#E08A5B', // peach/terracotta lembut untuk sorotan
+          500: '#E08A5B', // peach/terracotta lembut untuk sorotan (dekorasi, bukan latar teks)
+          700: '#B5582C', // latar teks putih (pill "Baru"), kontras 4,78:1
         },
 
         // Tiga tingkat status — pakai HANYA lewat token ini
         normal: {
           bg: '#E6F2EA',
           border: '#B9D9C4',
-          DEFAULT: '#3F8A5F',
+          DEFAULT: '#3F8A5F', // grafik/titik (bukan latar teks putih: 4,19:1)
+          strong: '#2F7550', // latar teks putih, kontras 5,55:1
           ink: '#24583A',
         },
         waspada: {
           bg: '#FDF1DC',
           border: '#F1D29A',
-          DEFAULT: '#D48A1F',
+          DEFAULT: '#D48A1F', // batang grafik (bukan latar teks putih: 2,82:1)
+          strong: '#A3600E', // latar teks putih, kontras 4,96:1
           ink: '#8A5510',
         },
         darurat: {
           bg: '#FBE4DF',
           border: '#EDB3A6',
           DEFAULT: '#C4513A',
+          strong: '#B0442F', // latar teks putih, kontras 5,65:1
           ink: '#8C2F1E',
         },
       },
@@ -79,7 +83,6 @@ export default {
         'elder-body': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px
         'elder-btn': ['1.75rem', { lineHeight: '2.125rem', fontWeight: '800' }], // 28px
         'elder-title': ['2.25rem', { lineHeight: '2.75rem', fontWeight: '800' }], // 36px
-        'elder-count': ['4rem', { lineHeight: '4rem', fontWeight: '800' }], // 64px
       },
 
       borderRadius: {

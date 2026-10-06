@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { copy } from '../data/copy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
 import Icon from '../components/Icon.jsx'
@@ -16,11 +16,32 @@ const ORDER_BTN =
 export default function Settings() {
   const { contacts, moveContact, monitoringPaused, setMonitoringPaused, resetDemo } = useAlerts()
   const [resetDone, setResetDone] = useState(false)
+  const [orderNote, setOrderNote] = useState('') // diumumkan lewat aria-live
+  // Tombol ▲▼ per kontak; dipakai untuk menjaga fokus keyboard setelah urutan berubah
+  const orderButtons = useRef({})
+  const [refocus, setRefocus] = useState(null) // kunci tombol yang perlu difokus ulang
+
+  const move = (contact, index, delta) => {
+    const newIndex = index + delta
+    moveContact(contact.id, delta)
+    setOrderNote(t.contacts.moved(contact.nama, newIndex + 1))
+    // Di ujung urutan tombol yang ditekan jadi nonaktif dan kehilangan fokus,
+    // jadi fokus dipindah ke tombol arah sebaliknya milik kontak yang sama.
+    if (newIndex === 0) setRefocus(`${contact.id}:down`)
+    else if (newIndex === contacts.length - 1) setRefocus(`${contact.id}:up`)
+  }
+
+  useEffect(() => {
+    if (!refocus) return
+    orderButtons.current[refocus]?.focus()
+    setRefocus(null)
+  }, [refocus, contacts])
   const t = copy.settings
 
   const handleReset = () => {
     resetDemo()
     setResetDone(true)
+    setOrderNote('')
   }
 
   return (
@@ -28,31 +49,35 @@ export default function Settings() {
       <h1 className="text-heading text-ink">{t.title}</h1>
 
       {/* Kontak keluarga */}
-      <section className="rounded-card bg-surface p-5 shadow-card">
+      <section className="rounded-card bg-surface p-4 shadow-card">
         <div className="flex items-center gap-2">
           <Icon name="users" className="h-6 w-6 text-brand-600" />
           <h2 className="text-title text-ink">{t.contacts.title}</h2>
         </div>
         <p className="mt-1 text-body text-ink-soft">{t.contacts.explainer}</p>
 
-        <ol className="mt-4 flex flex-col gap-3">
+        {/* Daftar ber-divider (bukan kartu di dalam kartu). Nama & nomor boleh membungkus,
+            tidak dipotong, supaya tetap terbaca di layar 320px. */}
+        <ol className="mt-3 divide-y divide-line">
           {contacts.map((c, i) => (
-            <li key={c.id} className="flex items-center gap-3 rounded-card border border-line p-3">
+            <li key={c.id} className="flex items-center gap-3 py-3 last:pb-0">
               <span
-                aria-label={t.contacts.priority(i + 1)}
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-50 text-body-lg font-extrabold text-brand-700"
+                aria-hidden="true"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-50 text-body font-extrabold text-brand-700"
               >
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-body-lg font-bold text-ink">{c.nama}</p>
+                <p className="sr-only">{t.contacts.priority(i + 1)}</p>
+                <p className="break-words text-body-lg font-bold text-ink">{c.nama}</p>
                 <p className="text-body text-ink-soft">{c.hubungan}</p>
-                <p className="text-body text-ink-soft tabular-nums">{c.nomor}</p>
+                <p className="whitespace-nowrap text-body text-ink-soft tabular-nums">{c.nomor}</p>
               </div>
               <div className="flex shrink-0 flex-col gap-1">
                 <button
                   type="button"
-                  onClick={() => moveContact(c.id, -1)}
+                  ref={(el) => (orderButtons.current[`${c.id}:up`] = el)}
+                  onClick={() => move(c, i, -1)}
                   disabled={i === 0}
                   aria-label={t.contacts.moveUp(c.nama)}
                   className={ORDER_BTN}
@@ -61,7 +86,8 @@ export default function Settings() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => moveContact(c.id, 1)}
+                  ref={(el) => (orderButtons.current[`${c.id}:down`] = el)}
+                  onClick={() => move(c, i, 1)}
                   disabled={i === contacts.length - 1}
                   aria-label={t.contacts.moveDown(c.nama)}
                   className={ORDER_BTN}
@@ -72,6 +98,9 @@ export default function Settings() {
             </li>
           ))}
         </ol>
+        <p aria-live="polite" className="sr-only">
+          {orderNote}
+        </p>
       </section>
 
       {/* Privasi & Data */}
@@ -90,28 +119,35 @@ export default function Settings() {
         </ul>
 
         <div className="mt-5 border-t border-line pt-5">
-          <div className="flex items-start gap-4">
+          <div className="flex items-center gap-4">
             <div className="min-w-0 flex-1">
               <p id="pause-label" className="text-body-lg font-bold text-ink">
                 {t.privacy.pauseTitle}
               </p>
-              <p className="text-body text-ink-soft">{t.privacy.pauseHint}</p>
+              <p id="pause-hint" className="text-body text-ink-soft">{t.privacy.pauseHint}</p>
             </div>
+            {/* Area tekan 48px (min-h-tap), bentuk switch tetap 32px di tengahnya */}
             <button
               type="button"
               role="switch"
               aria-checked={monitoringPaused}
               aria-labelledby="pause-label"
+              aria-describedby="pause-hint"
               onClick={() => setMonitoringPaused(!monitoringPaused)}
-              className={`relative mt-1 h-8 w-14 shrink-0 rounded-full transition-colors ${
-                monitoringPaused ? 'bg-brand-600' : 'bg-surface-sunken'
-              }`}
+              className="-mr-1 grid min-h-tap shrink-0 place-items-center rounded-btn px-1"
             >
               <span
-                className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-surface shadow-card transition-transform ${
-                  monitoringPaused ? 'translate-x-6' : ''
+                aria-hidden="true"
+                className={`relative block h-8 w-14 rounded-full transition-colors ${
+                  monitoringPaused ? 'bg-brand-600' : 'bg-ink-faint'
                 }`}
-              />
+              >
+                <span
+                  className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-surface shadow-card transition-transform ${
+                    monitoringPaused ? 'translate-x-6' : ''
+                  }`}
+                />
+              </span>
             </button>
           </div>
           <p className="mt-3 flex items-center gap-2 text-body font-semibold text-ink">

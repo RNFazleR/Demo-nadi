@@ -4,14 +4,19 @@ import { levelToStatus } from './status.js'
 // Selisih dari rata-rata di bawah ambang ini dianggap "sama seperti biasanya".
 const SAME_THRESHOLD = 0.1
 
-// Alert "baru" paling baru menentukan status; tanpa alert baru berarti normal.
+// Urutan keseriusan tingkat alert (makin besar makin serius)
+const SEVERITY = { info: 0, waspada: 1, darurat: 2 }
+
+// Status ditentukan alert "baru" yang PALING SERIUS (kalau setara, yang paling baru),
+// supaya Darurat yang belum ditanggapi tidak tertutup Waspada yang datang belakangan.
+// Tanpa alert baru berarti normal.
 export function getCurrentStatus(alerts) {
-  const latestNew = alerts
+  const top = alerts
     .filter((a) => a.status === 'baru')
-    .sort((a, b) => new Date(b.waktu) - new Date(a.waktu))[0]
+    .sort((a, b) => SEVERITY[b.tingkat] - SEVERITY[a.tingkat] || new Date(b.waktu) - new Date(a.waktu))[0]
   return {
-    status: latestNew ? levelToStatus[latestNew.tingkat] : 'normal',
-    alert: latestNew ?? null,
+    status: top ? levelToStatus[top.tingkat] : 'normal',
+    alert: top ?? null,
   }
 }
 

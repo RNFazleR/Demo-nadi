@@ -55,11 +55,14 @@ export function toDateKey(iso) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(new Date(iso))
 }
 
+// Selisih hari kalender (WIB): 0 = hari yang sama dengan `nowIso`, 1 = kemarin, dst.
+export function daysAgo(iso, nowIso) {
+  return Math.round((new Date(toDateKey(nowIso)) - new Date(toDateKey(iso))) / 86400000)
+}
+
 // "Hari ini, 09.12" / "Kemarin, 07.30" / "22 Sep, 15.00" relatif terhadap `nowIso`
 export function formatRelativeDayTime(iso, nowIso, labels) {
-  const dayDiff = Math.round(
-    (new Date(toDateKey(nowIso)) - new Date(toDateKey(iso))) / 86400000,
-  )
+  const dayDiff = daysAgo(iso, nowIso)
   const day = dayDiff === 0 ? labels.today : dayDiff === 1 ? labels.yesterday : formatDateShort(iso)
   return labels.dayAndTime(day, formatTime(iso))
 }

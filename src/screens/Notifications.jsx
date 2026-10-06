@@ -1,9 +1,29 @@
 import { useState } from 'react'
 import { copy } from '../data/copy.js'
+import { demoNow } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
 import { sortNewestFirst } from '../lib/insights.js'
+import { daysAgo } from '../lib/format.js'
 import AlertListItem from '../components/AlertListItem.jsx'
 import AlertDetail from './AlertDetail.jsx'
+
+// Kelompok daftar (Miller + Gestalt common region): yang perlu ditanggapi selalu di atas,
+// sisanya dipotong per hari supaya tidak jadi satu daftar panjang.
+const GROUPS = [
+  { key: 'needsResponse', match: (a) => a.status === 'baru' },
+  { key: 'today', match: (a) => daysAgo(a.waktu, demoNow) === 0 },
+  { key: 'yesterday', match: (a) => daysAgo(a.waktu, demoNow) === 1 },
+  { key: 'earlier', match: () => true },
+]
+
+function groupAlerts(alerts) {
+  const groups = GROUPS.map((g) => ({ key: g.key, items: [] }))
+  for (const alert of sortNewestFirst(alerts)) {
+    const i = GROUPS.findIndex((g) => g.match(alert))
+    groups[i].items.push(alert)
+  }
+  return groups.filter((g) => g.items.length > 0)
+}
 
 // Tab Notifikasi: daftar alert, atau detail saat salah satu item dibuka.
 export default function Notifications() {
@@ -12,31 +32,32 @@ export default function Notifications() {
 
   if (openId) return <AlertDetail alertId={openId} onBack={() => setOpenId(null)} />
 
-  const sorted = sortNewestFirst(alerts)
-  const newCount = alerts.filter((a) => a.status === 'baru').length
+  const groups = groupAlerts(alerts)
 
   return (
-    <div className="flex flex-col gap-4 px-gutter pb-8 pt-6">
+    <div className="flex flex-col gap-6 px-gutter pb-8 pt-6">
       <header>
         <h1 className="text-heading text-ink">{copy.notifications.title}</h1>
         <p className="text-body text-ink-soft">{copy.notifications.subtitle}</p>
-        {newCount > 0 && (
-          <p className="mt-2 inline-block rounded-full bg-accent-100 px-3 py-0.5 text-body font-semibold text-ink">
-            {copy.notifications.newCount(newCount)}
-          </p>
-        )}
       </header>
 
-      {sorted.length === 0 ? (
+      {groups.length === 0 ? (
         <p className="text-body text-ink-soft">{copy.notifications.empty}</p>
       ) : (
-        <ul className="flex flex-col gap-3">
-          {sorted.map((alert) => (
-            <li key={alert.id}>
-              <AlertListItem alert={alert} onOpen={setOpenId} />
-            </li>
-          ))}
-        </ul>
+        groups.map(({ key, items }) => (
+          <section key={key} aria-labelledby={`group-${key}`} className="flex flex-col gap-3">
+            <h2 id={`group-${key}`} className="text-body-lg font-bold text-ink">
+              {copy.notifications.groups[key](items.length)}
+            </h2>
+            <ul className="flex flex-col gap-3">
+              {items.map((alert) => (
+                <li key={alert.id}>
+                  <AlertListItem alert={alert} onOpen={setOpenId} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
       )}
     </div>
   )

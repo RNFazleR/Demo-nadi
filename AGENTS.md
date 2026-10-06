@@ -26,7 +26,9 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
 
 - Warna status **hanya** diambil lewat `src/lib/status.js` (`STATUS_STYLES`), jangan menulis kelas warna status sendiri-sendiri di komponen.
 - `AlertEvent.tingkat = 'info'` ditampilkan dengan warna Normal (lihat `levelToStatus`).
+- Status di Dashboard = alert berstatus "baru" yang **paling serius** (darurat > waspada > info); kalau setara, yang paling baru. Lihat `getCurrentStatus` di `src/lib/insights.js`.
 - Jangan pakai warna status untuk dekorasi lain, supaya maknanya tidak kabur.
+- **Kontras:** teks putih hanya di atas warna yang lolos ≥4,5:1: `*-strong` (lewat `STATUS_STYLES[x].solid`), `brand-600/700`, `accent-700`, `ink`. Warna status `DEFAULT` dan `accent-500` hanya untuk grafik/ikon/dekorasi, bukan latar teks.
 
 ## Aturan data & teks
 
@@ -49,12 +51,28 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
   - Radius: `rounded-chip`, `rounded-btn`, `rounded-card`, `rounded-sheet`. Bayangan: `shadow-card`, `shadow-raised`.
   - Target sentuh minimal `min-h-tap` (48px). Padding samping layar `px-gutter`.
 - **Layar lansia** (`ElderCheck`, tampilan di HP lansia) punya aturan sendiri, berbeda dari app keluarga:
-  - Teks minimum 24px: pakai `text-elder-body`, `text-elder-btn`, `text-elder-title`, `text-elder-count`. Latar putih (`bg-surface`) + teks `text-ink` untuk kontras tinggi.
+  - Teks minimum 24px: pakai `text-elder-body`, `text-elder-btn`, `text-elder-title`. Pertanyaan adalah elemen paling dominan; hitung mundur tetap terlihat tapi sekunder. Latar putih (`bg-surface`) + teks `text-ink` untuk kontras tinggi.
   - Maksimal 1 kalimat pertanyaan, hanya 2 tombol besar (`min-h-tap-elder`, 88px), tanpa navigasi/menu.
   - Kontrol demo (mis. "Kembali ke app keluarga") selalu diberi label "Fitur demo" dan dipisah garis putus-putus.
 - Grafik: hari yang berbeda jauh dari biasanya diberi warna Waspada **dan** penanda "!" + legenda, jangan hanya warna.
-- Interaksi di grafik (mis. memilih hari) wajib punya padanan yang bisa dipakai keyboard & pembaca layar. Di Riwayat: deretan tombol hari di bawah grafik (`aria-pressed`, label berisi nilai), SVG grafiknya `aria-hidden`.
+- Interaksi di grafik (mis. memilih hari) wajib punya padanan yang bisa dipakai keyboard & pembaca layar. Di Riwayat: deretan tombol hari di bawah grafik (`aria-pressed`, `aria-controls` ke kartu detail, label berisi nilai), SVG grafiknya `aria-hidden`. Pilihan metrik memakai pola tab WAI-ARIA (panah, Home/End, `tabpanel`).
+- **Fokus & gerak:** indikator `:focus-visible` global ada di `src/index.css`, jangan dihilangkan. Animasi berulang pakai `motion-safe:`; `prefers-reduced-motion` dihormati secara global.
+- Toggle/kontrol kecil tetap punya area tekan minimal 48px (`min-h-tap`), walau bentuk visualnya lebih kecil.
 - Grafik pakai **Recharts**. Untuk warna di Recharts, ambil hex dari `STATUS_STYLES[x].hex` atau import dari `tailwind.config.js`.
+
+## Prinsip UX (materi HMI: UX laws & teori)
+
+Setiap perubahan UI dicek terhadap prinsip ini. Contoh penerapannya di NADI ada di kurung.
+
+- **Jakob** – pakai pola yang sudah familiar (bottom nav, tombol Kembali kiri atas, daftar → detail, badge jumlah di Notifikasi).
+- **Fitts** – aksi utama besar & mudah dijangkau; target ≥48px, tombol lansia 88px di bawah layar.
+- **Hick** – satu langkah berikutnya yang direkomendasikan (tombol "Lihat & tindak lanjuti" di kartu Waspada/Darurat; layar lansia hanya 2 pilihan).
+- **Miller** – kelompokkan informasi (3 kartu metrik; Notifikasi dikelompokkan "Perlu ditanggapi / Hari ini / Kemarin / Sebelumnya").
+- **Norman** – affordance & signifier jelas (chevron, petunjuk ketuk), **feedback** setiap aksi ("Respons tercatat", pesan reset, pengumuman urutan kontak), **mapping** kontrol ↔ hasil (▲▼ = urutan).
+- **Nielsen** – visibilitas status (badge, kartu status, "Diperbarui … · dari sinyal WiFi"), bahasa sehari-hari, **error prevention** (112 dikonfirmasi dulu), recognition over recall (definisi metrik di Riwayat), penjelasan langkah aman berikutnya.
+- **Krug** – jawaban terpenting di bagian atas kartu; satu nama untuk satu hal (mis. selalu "Waktu aktif", bukan "Rasio aktif").
+- **Gestalt** – proximity (label, nilai, satuan, waktu berdekatan), similarity (warna status konsisten), common region (kartu & kelompok).
+- **"So what?"** – setiap angka disertai konteks: dibanding pola biasanya, definisinya, dan kalau perlu tindakan berikutnya.
 
 ## Stack & perintah
 

@@ -15,4 +15,4 @@ Buka alamat yang muncul di terminal (biasanya http://localhost:5173).
 
 ## Sebelum mengubah kode
 
-Baca **CLAUDE.md** dulu — isinya aturan project (copy non-medis, warna status, semua data di `src/data/dummy.js`, semua teks di `src/data/copy.js`).
+Baca **AGENTS.md** dulu — isinya aturan project (copy non-medis, warna status, semua data di `src/data/dummy.js`, semua teks di `src/data/copy.js`).

@@ -20,10 +20,6 @@ const OUTCOMES = {
   },
 }
 
-// Ring hitung mundur (SVG)
-const RADIUS = 54
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS
-
 // Layar di HP lansia: teks sangat besar, satu pertanyaan, dua tombol, tanpa navigasi.
 export default function ElderCheck({ onExit }) {
   const { addAlert } = useAlerts()
@@ -93,33 +89,22 @@ export default function ElderCheck({ onExit }) {
 
   return (
     <div className="flex flex-1 flex-col bg-surface px-6 pb-8 pt-12 text-ink">
-      <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
-        <div
-          className="relative grid h-36 w-36 place-items-center"
-          role="timer"
-          aria-label={copy.elderCheck.countdownAria(remaining)}
-        >
-          <svg viewBox="0 0 120 120" className="absolute inset-0 -rotate-90" aria-hidden="true">
-            <circle cx="60" cy="60" r={RADIUS} fill="none" strokeWidth="10" className="stroke-surface-sunken" />
-            <circle
-              cx="60"
-              cy="60"
-              r={RADIUS}
-              fill="none"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeDasharray={CIRCUMFERENCE}
-              strokeDashoffset={CIRCUMFERENCE * (1 - progress)}
-              className="stroke-brand-600 transition-[stroke-dashoffset] duration-1000 ease-linear"
+      {/* Pertanyaan = fokus utama. Hitung mundur tetap terlihat tapi sekunder (teks 24px +
+          bar tipis), tidak lagi angka besar yang lebih dominan dari pertanyaan. */}
+      <div className="flex flex-1 flex-col justify-center gap-8 text-center">
+        <h1 className="text-elder-title">{copy.elderCheck.question(elderProfile.panggilan)}</h1>
+
+        <div role="timer" aria-label={copy.elderCheck.countdownAria(remaining)} className="mx-auto w-full max-w-xs">
+          <p aria-hidden="true" className="text-elder-body text-ink-soft tabular-nums">
+            {copy.elderCheck.countdownLabel(remaining)}
+          </p>
+          <div aria-hidden="true" className="mt-2 h-3 overflow-hidden rounded-full bg-surface-sunken">
+            <div
+              className="h-full rounded-full bg-brand-600 transition-[width] duration-1000 ease-linear"
+              style={{ width: `${progress * 100}%` }}
             />
-          </svg>
-          <div className="flex flex-col items-center">
-            <span className="text-elder-count tabular-nums">{remaining}</span>
-            <span className="text-elder-body text-ink-soft">{copy.elderCheck.secondsUnit}</span>
           </div>
         </div>
-
-        <h1 className="text-elder-title">{copy.elderCheck.question(elderProfile.panggilan)}</h1>
       </div>
 
       <div className="mt-8 flex flex-col gap-4">

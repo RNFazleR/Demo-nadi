@@ -1,6 +1,6 @@
 // Semua teks UI NADI (Bahasa Indonesia). Komponen hanya boleh mengambil teks dari sini.
 // Untuk versi Inggris nanti: buat objek dengan struktur key yang sama.
-// Ingat aturan copy di CLAUDE.md: wellness, bukan medis. Hindari istilah diagnostik.
+// Ingat aturan copy di AGENTS.md: wellness, bukan medis. Hindari istilah diagnostik.
 
 export const copy = {
   app: {
@@ -13,7 +13,6 @@ export const copy = {
   status: {
     normal: {
       label: 'Normal',
-      summary: 'Semua terlihat seperti biasanya',
     },
     waspada: {
       label: 'Waspada',
@@ -40,9 +39,27 @@ export const copy = {
   },
 
   metrics: {
-    sleep: { label: 'Tidur semalam', shortLabel: 'Durasi tidur', unit: 'jam', withUnit: (v) => `${v} jam` },
-    activity: { label: 'Waktu aktif hari ini', shortLabel: 'Waktu aktif', unit: '%', withUnit: (v) => `${v}%` },
-    wakeUps: { label: 'Terbangun malam', shortLabel: 'Terbangun malam', unit: 'kali', withUnit: (v) => `${v} kali` },
+    sleep: {
+      label: 'Tidur semalam',
+      shortLabel: 'Durasi tidur',
+      definition: 'Total waktu tidur pada malam sebelumnya.',
+      unit: 'jam',
+      withUnit: (v) => `${v} jam`,
+    },
+    activity: {
+      label: 'Waktu aktif hari ini',
+      shortLabel: 'Waktu aktif',
+      definition: 'Porsi waktu bangun saat beliau terdeteksi bergerak aktif.',
+      unit: '%',
+      withUnit: (v) => `${v}%`,
+    },
+    wakeUps: {
+      label: 'Terbangun malam',
+      shortLabel: 'Terbangun malam',
+      definition: 'Berapa kali terbangun antara pukul 22.00 dan 05.00.',
+      unit: 'kali',
+      withUnit: (v) => `${v} kali`,
+    },
   },
 
   // Perbandingan nilai hari ini vs pola biasanya (rata-rata hari lain), per metrik
@@ -73,8 +90,11 @@ export const copy = {
     greeting: 'Kabar hari ini',
     statusCardTitle: 'Status saat ini',
     alertAt: (time) => `Tercatat pukul ${time}`,
-    noNewAlert: 'Tidak ada pemberitahuan baru. Pola keseharian terlihat seperti biasanya.',
+    statusAction: 'Lihat & tindak lanjuti',
+    // Satu kalimat ringkas untuk status Normal
+    normalSentence: 'Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.',
     todaySummary: 'Ringkasan hari ini',
+    provenance: (time) => `Diperbarui ${time} · dari sinyal WiFi di rumah`,
     lastActivity: (minutes) => `Aktivitas terakhir terdeteksi: ${minutes} menit lalu`,
     simulate: {
       tag: 'Fitur demo',
@@ -88,10 +108,7 @@ export const copy = {
     history: 'Riwayat',
     notifications: 'Notifikasi',
     settings: 'Pengaturan',
-  },
-
-  placeholder: {
-    comingSoon: 'Segera hadir',
+    withBadge: (label, n) => `${label}, ${n} belum ditanggapi`,
   },
 
   time: {
@@ -104,7 +121,12 @@ export const copy = {
     title: 'Notifikasi',
     subtitle: 'Semua catatan NADI, dari yang terbaru',
     empty: 'Belum ada notifikasi.',
-    newCount: (n) => `${n} belum ditanggapi`,
+    groups: {
+      needsResponse: (n) => `Perlu ditanggapi (${n})`,
+      today: () => 'Hari ini',
+      yesterday: () => 'Kemarin',
+      earlier: () => 'Sebelumnya',
+    },
   },
 
   alertDetail: {
@@ -129,6 +151,12 @@ export const copy = {
     markChecked: 'Tandai sudah dicek',
     callElder: (name) => `Hubungi ${name}`,
     callEmergency: 'Hubungi layanan darurat',
+    confirmEmergency: {
+      title: (nomor) => `Hubungi layanan darurat (${nomor})?`,
+      body: 'Gunakan saat beliau butuh pertolongan segera. Kalau belum yakin, coba hubungi beliau atau keluarga dulu.',
+      confirm: (nomor) => `Ya, hubungi ${nomor}`,
+      cancel: 'Batal',
+    },
     alreadyHandled: 'Notifikasi ini sudah ditanggapi. Terima kasih sudah memperhatikan.',
   },
 
@@ -144,12 +172,14 @@ export const copy = {
     intro: 'NADI membandingkan pola beliau dengan kebiasaannya sendiri, bukan dengan standar umum.',
     metricTabs: {
       sleep: 'Durasi tidur',
-      activity: 'Rasio aktif',
+      activity: 'Waktu aktif',
       wakeUps: 'Bangun malam',
     },
     metricTabsAria: 'Pilih metrik',
     chartAria: (label) => `Grafik batang ${label} selama 7 hari terakhir`,
-    legendBaseline: (value) => `Pola biasanya: ${value} (rata-rata hari lain)`,
+    legendBaseline: (date, value) => `Pola biasanya untuk ${date}: ${value}`,
+    baselineNote: (n, date) => `Rata-rata ${n} hari lainnya, tidak termasuk ${date}.`,
+    selectedDayChip: (weekday, date) => `Hari terpilih · ${weekday}, ${date}`,
     legendDeviation: 'Berbeda jauh dari biasanya',
     deviationMark: '!', // simbol di atas batang yang menyimpang
     tapHint: 'Ketuk salah satu batang atau tanggal untuk melihat detail hari itu.',
@@ -192,6 +222,7 @@ export const copy = {
       priority: (n) => `Prioritas ${n}`,
       moveUp: (nama) => `Naikkan prioritas ${nama}`,
       moveDown: (nama) => `Turunkan prioritas ${nama}`,
+      moved: (nama, n) => `${nama} sekarang prioritas ${n}`,
     },
     privacy: {
       title: 'Privasi & Data',
@@ -226,7 +257,7 @@ export const copy = {
     question: (panggilan) => `Halo ${panggilan}, apakah baik-baik saja?`,
     yes: 'Ya, saya baik-baik saja',
     help: 'Butuh bantuan',
-    secondsUnit: 'detik',
+    countdownLabel: (s) => `Sisa ${s} detik`,
     countdownAria: (s) => `Sisa waktu menjawab: ${s} detik`,
     result: {
       ok: {
