@@ -20,7 +20,8 @@ mengurai output terminal.
 ```bash
 pip install -r requirements.txt          # hanya pyserial
 python csi_bridge.py --list-ports        # cari port ESP32 di komputer INI (jangan asumsikan COM6)
-python csi_bridge.py --port COM6         # ganti dengan port hasil --list-ports
+python csi_bridge.py --port auto         # cari ESP32-S3 otomatis (USB VID 303A), ikut bila nomor COM berubah
+python csi_bridge.py --port COM6         # atau sebut port-nya langsung (hasil --list-ports)
 ```
 
 Lalu jalankan frontend (`npm run dev` di folder root), buka **Pengaturan → Sumber data → Sensor langsung**.
@@ -101,3 +102,18 @@ Temuan:
 - Saat bergerak, sebagian skor jatuh tepat di bawah batas (0,082–0,083) sehingga status berkedip
   GERAK/diam. Penghalusan (mis. menahan status gerak 2–3 dtk) belum diterapkan.
 - Akurasi belum diukur: belum ada pengamatan berlabel. Uji cabut USB & akses dari HP belum dilakukan.
+
+### Sesi kedua (6 Okt 2026, ±22.10, hotspot HP lain, 2,4 GHz ch 6)
+
+- **UI dengan data asli terverifikasi**: Beranda (mode Sensor langsung, sumber "Perangkat (serial)") berganti
+  "Gerakan terdeteksi" ↔ "Belum ada gerakan terdeteksi" mengikuti gerakan; waktu dari penghubung.
+- **Nomor COM berubah sendiri** (23 → 24 → 23) mengikuti lubang/jalur USB. Gunakan `--port auto`
+  (deteksi ESP32 lewat USB VID 303A, dicari ulang setiap tersambung kembali).
+- **Hotspot sempat tidak terlihat** dari laptop maupun ESP32 walau di HP tampak menyala (`reason 201`);
+  muncul kembali setelah hotspot dimatikan-nyalakan. Kemungkinan fitur hemat daya hotspot.
+- **Laju CSI naik ke ±160–167 pkt/dtk** (sesi pertama ±50): firmware menangkap CSI dari semua frame
+  hotspot, bukan hanya balasan ping. Akibatnya ±11% paket hilang dan baris rusak bertambah (235).
+  Deteksi tetap berjalan (berbasis jendela waktu 1 dtk). Saran: batasi laju CSI di firmware (mis. ≤ 1 per 20 ms).
+- **ESP32 sempat crash lalu restart sendiri** (log terakhir berupa backtrace `0x42088AFE:...`); penyebab
+  belum diselidiki, kemungkinan terkait beban tinggi.
+- Batas gerak hasil kalibrasi: 0,0815 dan 0,062 (dua kali kalibrasi), dekat dengan sesi pertama (0,085).

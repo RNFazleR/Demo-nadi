@@ -5,7 +5,9 @@ import unittest
 from datetime import datetime, timedelta, timezone
 
 import make_fixture
-from csi_bridge import SensorBridge, classify_open_error
+from types import SimpleNamespace
+
+from csi_bridge import SensorBridge, classify_open_error, find_esp_port
 from csi_processing import STALE_SEC, MotionDetector, ParseError, amplitudes, parse_csi_line
 
 WIB = timezone(timedelta(hours=7))
@@ -182,6 +184,15 @@ class BridgeStateTest(unittest.TestCase):
         self.bridge.port_failed("disconnected", "ClearCommError failed")
         self.bridge.port_opened()
         self.assertEqual(self.bridge.snapshot()["calibration"], "waiting")
+
+    def test_find_esp_port_by_vid(self):
+        ports = [
+            SimpleNamespace(device="COM6", vid=None),           # Bluetooth (tanpa VID)
+            SimpleNamespace(device="COM17", vid=0x067B),        # Prolific
+            SimpleNamespace(device="COM24", vid=0x303A),        # ESP32-S3 USB Serial/JTAG
+        ]
+        self.assertEqual(find_esp_port(ports), "COM24")
+        self.assertIsNone(find_esp_port(ports[:2]))
 
     def test_classify_open_error(self):
         cases = {

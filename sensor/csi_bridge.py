@@ -6,7 +6,8 @@ lalu menyediakan hasil terbaru sebagai JSON untuk frontend.
 
 Cara pakai:
     python csi_bridge.py --list-ports                 # cek nama port di komputer ini
-    python csi_bridge.py --port COM6                  # sensor sungguhan
+    python csi_bridge.py --port auto                  # sensor sungguhan, cari port ESP32 otomatis
+    python csi_bridge.py --port COM6                  # atau sebut port-nya langsung
     python csi_bridge.py --replay fixtures/sintetis.txt   # tanpa perangkat (fixture)
     python csi_bridge.py --port COM6 --host 0.0.0.0   # agar bisa diakses HP di jaringan yang sama
 
@@ -26,6 +27,16 @@ from csi_processing import MotionDetector, ParseError, parse_csi_line
 
 BAUDRATE = 921600
 RETRY_SEC = 2.0
+ESPRESSIF_VID = 0x303A  # USB Serial/JTAG bawaan ESP32-S3 (dan chip Espressif lain)
+
+
+def find_esp_port(ports) -> str | None:
+    """Pilih port ESP32 dari daftar pyserial list_ports.comports(). Dipakai untuk --port auto,
+    karena di Windows nomor COM bisa berganti saat board dicolok ulang / pindah lubang USB."""
+    for p in ports:
+        if getattr(p, "vid", None) == ESPRESSIF_VID:
+            return p.device
+    return None
 
 
 def iso(dt) -> str | None:
@@ -136,10 +147,20 @@ class SensorBridge:
 # ------------------------------------------------------------------ pembaca
 def run_serial(bridge: SensorBridge, port: str, stop: threading.Event) -> None:
     import serial  # pyserial; hanya dibutuhkan untuk mode sensor sungguhan
+    from serial.tools import list_ports
 
     while not stop.is_set():
+        target = port
+        if port == "auto":
+            # Cari ulang setiap percobaan: nomor COM bisa berubah setelah tersambung kembali
+            target = find_esp_port(list_ports.comports())
+            if target is None:
+                bridge.port_failed("port_not_found", "ESP32 (USB VID 303A) tidak terdeteksi")
+                stop.wait(RETRY_SEC)
+                continue
+            bridge.port_label = f"auto ({target})"
         ser = serial.Serial()
-        ser.port = port
+        ser.port = target
         ser.baudrate = BAUDRATE
         ser.timeout = 1
         ser.dtr = False   # DTR/RTS dimatikan sebelum dibuka supaya board tidak ke-reset
@@ -227,6 +248,9 @@ def run_status_printer(bridge: SensorBridge, stop: threading.Event, heartbeat_se
     last_log_seq = 0
     while not stop.wait(0.5):
         s = bridge.snapshot()
+        if s["port"] != getattr(run_status_printer, "_last_port", None):
+            run_status_printer._last_port = s["port"]
+            print(f"[{datetime.now():%H:%M:%S}] port: {s['port']}", flush=True)
         if bridge.device_log_seq != last_log_seq:
             last_log_seq = bridge.device_log_seq
             print(f"[{datetime.now():%H:%M:%S}] [log ESP] {s['device_log']}", flush=True)
@@ -277,7 +301,7 @@ def make_handler(bridge: SensorBridge):
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description="Penghubung CSI ESP32 -> API lokal NADI")
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--port", help="port serial ESP32, mis. COM6 atau /dev/ttyACM0")
+    src.add_argument("--port", help="port serial ESP32, mis. COM6, /dev/ttyACM0, atau 'auto' (cari ESP32 otomatis)")
     src.add_argument("--replay", help="file log serial untuk diputar ulang (tanpa perangkat)")
     src.add_argument("--list-ports", action="store_true", help="tampilkan port serial yang tersedia")
     ap.add_argument("--rate", type=float, default=33.0, help="paket/detik saat --replay (default 33)")
