@@ -1,20 +1,14 @@
 import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
-import { getCurrentStatus, average, compareToAverage } from '../lib/insights.js'
-import { formatNumber, minutesBetween } from '../lib/format.js'
+import { getCurrentStatus, compareDayToUsual } from '../lib/insights.js'
+import { METRICS } from '../lib/metrics.js'
+import { minutesBetween } from '../lib/format.js'
 import ProfileHeader from '../components/ProfileHeader.jsx'
 import StatusCard from '../components/StatusCard.jsx'
 import PausedCard from '../components/PausedCard.jsx'
 import MetricCard from '../components/MetricCard.jsx'
 import Icon from '../components/Icon.jsx'
-
-// Metrik yang diringkas: key copy -> field DailyMetric + cara menampilkan angkanya.
-const METRICS = [
-  { key: 'sleep', field: 'durasi_tidur_jam', icon: 'moon', display: (v) => formatNumber(v) },
-  { key: 'activity', field: 'rasio_aktif', icon: 'walk', display: (v) => formatNumber(v * 100, 0) },
-  { key: 'wakeUps', field: 'jumlah_bangun_malam', icon: 'wake', display: (v) => formatNumber(v) },
-]
 
 export default function Dashboard({ onSimulateAnomaly }) {
   const { alerts, monitoringPaused } = useAlerts()
@@ -34,19 +28,19 @@ export default function Dashboard({ onSimulateAnomaly }) {
       <section className="flex flex-col gap-3">
         <h2 className="text-title text-ink">{copy.dashboard.todaySummary}</h2>
         {METRICS.map(({ key, field, icon, display }) => {
-          const avg = average(dailyMetrics, field)
-          const trend = compareToAverage(today[field], avg)
+          // Sama dengan Riwayat & Detail Alert: hari ini vs rata-rata hari LAIN
+          const { value, usual, trend } = compareDayToUsual(dailyMetrics, today.tanggal, field)
           const { label, unit, withUnit } = copy.metrics[key]
           return (
             <MetricCard
               key={key}
               icon={icon}
               label={label}
-              value={display(today[field])}
+              value={display(value)}
               unit={unit}
               trend={trend}
               trendText={copy.comparison[key][trend]}
-              averageText={copy.comparison.average(withUnit(display(avg)))}
+              averageText={copy.comparison.average(withUnit(display(usual)))}
             />
           )
         })}

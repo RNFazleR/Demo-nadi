@@ -24,6 +24,10 @@ import Icon from '../components/Icon.jsx'
 import AlertDetail from './AlertDetail.jsx'
 
 const colors = tw.theme.extend.colors
+// Lebar sumbu Y & margin kanan plot. Deretan tombol hari di bawah grafik memakai padding
+// yang sama, supaya tiap tombol sejajar dengan batangnya.
+const Y_AXIS_WIDTH = 32
+const PLOT_RIGHT = 4
 const CHART = {
   bar: colors.brand[500],
   deviation: STATUS_STYLES.waspada.hex,
@@ -97,26 +101,24 @@ export default function History() {
       <section className="rounded-card bg-surface p-4 shadow-card">
         <p className="text-body text-ink">{copy.history.intro}</p>
 
-        <div className="mt-4 h-60" role="img" aria-label={copy.history.chartAria(copy.history.metricTabs[metricKey])}>
+        {/* Grafik hanya visual (disembunyikan dari pembaca layar); informasi & pemilihan hari
+            yang bisa diakses keyboard/pembaca layar ada di deretan tombol hari di bawahnya. */}
+        <div className="mt-4 h-52" aria-hidden="true">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={days}
-              margin={{ top: 8, right: 4, bottom: 0, left: -16 }}
+              accessibilityLayer={false}
+              margin={{ top: 8, right: PLOT_RIGHT, bottom: 10, left: 0 }}
               barCategoryGap="22%"
               onClick={(state) => selectAt(state?.activeTooltipIndex != null ? Number(state.activeTooltipIndex) : null)}
             >
               <CartesianGrid vertical={false} stroke={CHART.grid} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={{ stroke: CHART.grid }}
-                interval={0}
-                height={44}
-                tick={<DayTick selectedDate={selectedDate} />}
-              />
+              <XAxis dataKey="date" tick={false} tickLine={false} axisLine={{ stroke: CHART.grid }} height={1} />
               <YAxis
+                width={Y_AXIS_WIDTH}
                 domain={[0, yTicks[yTicks.length - 1]]}
                 ticks={yTicks}
+                interval={0}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v) => formatNumber(v, 0)}
@@ -157,6 +159,37 @@ export default function History() {
           </ResponsiveContainer>
         </div>
 
+        {/* Tombol hari = label sumbu X. Bisa difokus (Tab) dan dipilih (Enter/Spasi). */}
+        <div
+          role="group"
+          aria-label={copy.history.chartAria(copy.history.metricTabs[metricKey])}
+          className="grid grid-cols-7"
+          style={{ paddingLeft: Y_AXIS_WIDTH, paddingRight: PLOT_RIGHT }}
+        >
+          {days.map((d) => {
+            const isSelected = d.date === selectedDate
+            return (
+              <button
+                key={d.date}
+                type="button"
+                onClick={() => setSelectedDate(d.date)}
+                aria-pressed={isSelected}
+                aria-label={copy.history.dayButtonLabel(
+                  formatDayDate(d.date),
+                  withUnit(metric.display(d.result.value)),
+                  d.deviates ? copy.history.deviationBadge : null,
+                )}
+                className={`flex min-h-tap flex-col items-center justify-center rounded-chip text-caption leading-tight transition-colors ${
+                  isSelected ? 'bg-surface-muted font-extrabold text-ink' : 'font-semibold text-ink-soft hover:bg-surface-muted'
+                }`}
+              >
+                <span>{formatWeekdayShort(d.date)}</span>
+                <span>{formatDateShort(d.date).split(' ')[0]}</span>
+              </button>
+            )
+          })}
+        </div>
+
         {/* Legenda */}
         <ul className="mt-3 flex flex-col gap-1.5">
           <li className="flex items-center gap-2 text-body text-ink-soft">
@@ -177,21 +210,6 @@ export default function History() {
         </ul>
         <p className="mt-3 text-body text-ink-soft">{copy.history.tapHint}</p>
 
-        {/* Versi tabel untuk pembaca layar */}
-        <div className="sr-only">
-          <table>
-            <caption>{copy.history.chartAria(copy.history.metricTabs[metricKey])}</caption>
-            <tbody>
-              {days.map((d) => (
-                <tr key={d.date}>
-                  <th scope="row">{formatDayDate(d.date)}</th>
-                  <td>{withUnit(metric.display(d.result.value))}</td>
-                  <td>{d.deviates ? copy.history.deviationBadge : ''}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </section>
 
       <DayDetail
@@ -263,23 +281,6 @@ function DayDetail({ day, metric, dayAlerts, onOpenAlert }) {
         </ul>
       )}
     </section>
-  )
-}
-
-// Label sumbu X: nama hari singkat + tanggal; hari terpilih ditebalkan
-function DayTick({ x, y, payload, selectedDate }) {
-  const isSelected = payload.value === selectedDate
-  const fill = isSelected ? CHART.selectedStroke : CHART.axisText
-  const weight = isSelected ? 800 : 600
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text dy={16} textAnchor="middle" fill={fill} fontSize={14} fontWeight={weight}>
-        {formatWeekdayShort(payload.value)}
-      </text>
-      <text dy={34} textAnchor="middle" fill={fill} fontSize={14} fontWeight={weight}>
-        {formatDateShort(payload.value).split(' ')[0]}
-      </text>
-    </g>
   )
 }
 

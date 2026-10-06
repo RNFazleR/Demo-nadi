@@ -53,6 +53,7 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
   - Maksimal 1 kalimat pertanyaan, hanya 2 tombol besar (`min-h-tap-elder`, 88px), tanpa navigasi/menu.
   - Kontrol demo (mis. "Kembali ke app keluarga") selalu diberi label "Fitur demo" dan dipisah garis putus-putus.
 - Grafik: hari yang berbeda jauh dari biasanya diberi warna Waspada **dan** penanda "!" + legenda, jangan hanya warna.
+- Interaksi di grafik (mis. memilih hari) wajib punya padanan yang bisa dipakai keyboard & pembaca layar. Di Riwayat: deretan tombol hari di bawah grafik (`aria-pressed`, label berisi nilai), SVG grafiknya `aria-hidden`.
 - Grafik pakai **Recharts**. Untuk warna di Recharts, ambil hex dari `STATUS_STYLES[x].hex` atau import dari `tailwind.config.js`.
 
 ## Stack & perintah

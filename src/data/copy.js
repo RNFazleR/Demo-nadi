@@ -45,7 +45,7 @@ export const copy = {
     wakeUps: { label: 'Terbangun malam', shortLabel: 'Terbangun malam', unit: 'kali', withUnit: (v) => `${v} kali` },
   },
 
-  // Perbandingan nilai hari ini vs rata-rata 7 hari, per metrik
+  // Perbandingan nilai hari ini vs pola biasanya (rata-rata hari lain), per metrik
   comparison: {
     sleep: {
       higher: 'Lebih lama dari biasanya',
@@ -62,7 +62,7 @@ export const copy = {
       same: 'Sama seperti biasanya',
       lower: 'Lebih jarang dari biasanya',
     },
-    average: (valueWithUnit) => `Rata-rata 7 hari: ${valueWithUnit}`,
+    average: (valueWithUnit) => `Pola biasanya: ${valueWithUnit}`,
   },
 
   profile: {
@@ -152,7 +152,9 @@ export const copy = {
     legendBaseline: (value) => `Pola biasanya: ${value} (rata-rata hari lain)`,
     legendDeviation: 'Berbeda jauh dari biasanya',
     deviationMark: '!', // simbol di atas batang yang menyimpang
-    tapHint: 'Ketuk salah satu batang untuk melihat detail hari itu.',
+    tapHint: 'Ketuk salah satu batang atau tanggal untuk melihat detail hari itu.',
+    // Label tombol hari untuk pembaca layar, mis. "Selasa, 22 September: 4,3 jam, berbeda jauh dari biasanya"
+    dayButtonLabel: (date, value, note) => (note ? `${date}: ${value}, ${note.toLowerCase()}` : `${date}: ${value}`),
     deviationBadge: 'Berbeda jauh dari biasanya',
     // Selisih nilai dengan satuannya
     diffWithUnit: {
