@@ -37,7 +37,6 @@ export default {
         },
         accent: {
           100: '#FCE6D8',
-          300: '#F2B48E',
           500: '#E08A5B', // peach/terracotta lembut untuk sorotan (dekorasi, bukan latar teks)
           700: '#B5582C', // latar teks putih (pill "Baru"), kontras 4,78:1
         },
@@ -78,7 +77,6 @@ export default {
         'body-lg': ['1.125rem', { lineHeight: '1.75rem' }], // 18px
         title: ['1.375rem', { lineHeight: '1.875rem', fontWeight: '700' }], // 22px
         heading: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '800' }], // 28px
-        display: ['2.25rem', { lineHeight: '2.625rem', fontWeight: '800' }], // 36px
         // Khusus layar lansia: minimum 24px
         'elder-body': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px
         'elder-btn': ['1.75rem', { lineHeight: '2.125rem', fontWeight: '800' }], // 28px

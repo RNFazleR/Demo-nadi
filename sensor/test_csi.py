@@ -73,7 +73,7 @@ class FixtureRunTest(unittest.TestCase):
 
     def run_fixture(self):
         clock = Clock()
-        bridge = SensorBridge("esp32-test", "replay", "fixture", clock=clock.mono, wall=clock.wall)
+        bridge = SensorBridge("replay", "fixture", clock=clock.mono, wall=clock.wall)
         bridge.port_opened()
         timeline = []  # (detik, snapshot)
         with open(self.path, encoding="utf-8") as f:
@@ -157,7 +157,7 @@ class DetectorEdgeTest(unittest.TestCase):
 class BridgeStateTest(unittest.TestCase):
     def setUp(self):
         self.clock = Clock()
-        self.bridge = SensorBridge("esp32-test", "live", "COM6", clock=self.clock.mono, wall=self.clock.wall)
+        self.bridge = SensorBridge("live", "COM6", clock=self.clock.mono, wall=self.clock.wall)
 
     def test_starting(self):
         self.assertEqual(self.bridge.snapshot()["connection"], "starting")

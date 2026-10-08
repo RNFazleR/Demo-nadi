@@ -10,7 +10,7 @@ import LevelBadge from '../components/LevelBadge.jsx'
 import AlertStatusPill from '../components/AlertStatusPill.jsx'
 import FeedbackNote from '../components/FeedbackNote.jsx'
 import CallModal from '../components/CallModal.jsx'
-import ConfirmDialog from '../components/ConfirmDialog.jsx'
+import ConfirmEmergencyDialog from '../components/ConfirmEmergencyDialog.jsx'
 import Icon from '../components/Icon.jsx'
 
 const PRIMARY_BTN =
@@ -160,12 +160,7 @@ export default function AlertDetail({ alertId, onBack }) {
 
       {/* Error prevention: panggilan 112 dikonfirmasi dulu supaya tidak terpanggil karena salah ketuk */}
       {confirmEmergency && (
-        <ConfirmDialog
-          title={copy.actions.confirmEmergency.title(kontakDarurat.nomor)}
-          body={copy.actions.confirmEmergency.body}
-          confirmLabel={copy.actions.confirmEmergency.confirm(kontakDarurat.nomor)}
-          cancelLabel={copy.actions.confirmEmergency.cancel}
-          confirmClassName={STATUS_STYLES.darurat.solid}
+        <ConfirmEmergencyDialog
           onCancel={() => setConfirmEmergency(false)}
           onConfirm={() => {
             setConfirmEmergency(false)

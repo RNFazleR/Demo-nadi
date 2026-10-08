@@ -12,7 +12,7 @@ export default function SensorStatusCard() {
   const { apiStatus, data, apiUrl } = useSensor()
   const view = describeSensor(apiStatus, data)
   const text = t.states[view.kind] ?? t.states.error
-  const icon = view.isProblem ? 'wifiOff' : view.kind === 'motion' ? 'activity' : 'wifi'
+  const icon = view.isProblem ? 'wifiOff' : view.kind === 'motion' ? 'pulse' : 'wifi'
   const pct = view.progress != null ? Math.round(view.progress * 100) : null
 
   return (

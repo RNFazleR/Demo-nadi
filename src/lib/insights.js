@@ -43,7 +43,7 @@ export function average(metrics, key) {
 }
 
 // 'higher' | 'same' | 'lower' dibanding rata-rata
-export function compareToAverage(value, avg) {
+function compareToAverage(value, avg) {
   const diff = (value - avg) / avg
   if (Math.abs(diff) < SAME_THRESHOLD) return 'same'
   return diff > 0 ? 'higher' : 'lower'

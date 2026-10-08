@@ -27,6 +27,7 @@ from csi_processing import MotionDetector, ParseError, parse_csi_line
 
 BAUDRATE = 921600
 RETRY_SEC = 2.0
+DEVICE_ID = "esp32-s3-01"
 ESPRESSIF_VID = 0x303A  # USB Serial/JTAG bawaan ESP32-S3 (dan chip Espressif lain)
 
 
@@ -56,9 +57,8 @@ def classify_open_error(exc: Exception) -> str:
 class SensorBridge:
     """Status bersama antara thread pembaca dan server HTTP (dijaga lock)."""
 
-    def __init__(self, device_id: str, source: str, port_label: str,
+    def __init__(self, source: str, port_label: str,
                  clock=time.monotonic, wall=lambda: datetime.now().astimezone()):
-        self.device_id = device_id
         self.source = source            # "live" (serial) atau "replay" (fixture)
         self.port_label = port_label
         self._clock = clock
@@ -130,7 +130,7 @@ class SensorBridge:
                 data.update(motion_detected=None, motion_score=None, rssi_dbm=None, packets_in_window=0)
             return {
                 "source": self.source,
-                "device_id": self.device_id,
+                "device_id": DEVICE_ID,
                 "port": self.port_label,
                 "connection": connection,
                 "error": self.error,
@@ -246,10 +246,11 @@ def run_status_printer(bridge: SensorBridge, stop: threading.Event, heartbeat_se
     prev_key, last_print = None, 0.0
     printed_ready = False
     last_log_seq = 0
+    last_port = None
     while not stop.wait(0.5):
         s = bridge.snapshot()
-        if s["port"] != getattr(run_status_printer, "_last_port", None):
-            run_status_printer._last_port = s["port"]
+        if s["port"] != last_port:
+            last_port = s["port"]
             print(f"[{datetime.now():%H:%M:%S}] port: {s['port']}", flush=True)
         if bridge.device_log_seq != last_log_seq:
             last_log_seq = bridge.device_log_seq
@@ -277,8 +278,6 @@ def make_handler(bridge: SensorBridge):
         def do_GET(self):  # noqa: N802
             if self.path.split("?")[0] == "/api/sensor/latest":
                 self._send(200, bridge.snapshot())
-            elif self.path == "/api/health":
-                self._send(200, {"ok": True})
             else:
                 self._send(404, {"error": "not_found"})
 
@@ -308,7 +307,6 @@ def main(argv=None) -> None:
     ap.add_argument("--loop", action="store_true", help="ulangi file --replay terus-menerus")
     ap.add_argument("--host", default="127.0.0.1", help="0.0.0.0 agar bisa diakses dari HP di jaringan yang sama")
     ap.add_argument("--http-port", type=int, default=8765)
-    ap.add_argument("--device-id", default="esp32-s3-01")
     args = ap.parse_args(argv)
 
     if args.list_ports:
@@ -318,7 +316,7 @@ def main(argv=None) -> None:
         return
 
     source = "replay" if args.replay else "live"
-    bridge = SensorBridge(args.device_id, source, args.replay or args.port)
+    bridge = SensorBridge(source, args.replay or args.port)
     stop = threading.Event()
     target = (run_replay, (bridge, args.replay, args.rate, args.loop, stop)) if args.replay \
         else (run_serial, (bridge, args.port, stop))

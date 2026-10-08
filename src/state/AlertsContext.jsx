@@ -27,7 +27,6 @@ export function AlertsProvider({ children }) {
   const addAlert = useCallback(({ tingkat, deskripsi, status }) => {
     const alert = { id: `sim-${nextId.current++}`, waktu: demoNow, tingkat, deskripsi, status }
     setAlerts((prev) => [alert, ...prev])
-    return alert
   }, [])
 
   // Geser kontak satu posisi (-1 = naik, +1 = turun)

@@ -5,7 +5,6 @@
 export const copy = {
   app: {
     name: 'NADI',
-    tagline: 'Teman setia menjaga keseharian orang tersayang',
     disclaimer: 'NADI memantau pola keseharian, bukan alat medis.',
   },
 
@@ -143,7 +142,6 @@ export const copy = {
     thatDay: 'Hari itu',
     usual: 'Biasanya',
     noMetric: 'Belum ada data harian untuk tanggal ini.',
-    statusLabel: 'Status',
     actionsTitle: 'Tindak lanjut',
   },
 

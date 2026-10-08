@@ -46,7 +46,7 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
 - Mobile-first, lebar acuan **390px**. Di laptop konten tetap di tengah dengan lebar maks `max-w-phone` (430px) di dalam `PhoneFrame`.
 - Nuansa hangat & menenangkan (krem, sage, peach), bukan kesan rumah sakit yang dingin.
 - Pakai **design token** dari `tailwind.config.js`; jangan pakai hex/px lepas di komponen.
-  - Teks: `text-body` (16px, minimum untuk teks isi), `text-body-lg`, `text-title`, `text-heading`, `text-display`. `text-caption` (14px) hanya untuk label sumbu grafik / keterangan non-esensial.
+  - Teks: `text-body` (16px, minimum untuk teks isi), `text-body-lg`, `text-title`, `text-heading`. `text-caption` (14px) hanya untuk label sumbu grafik / keterangan non-esensial.
   - Warna teks: `text-ink`, `text-ink-soft`; `text-ink-faint` hanya untuk teks ≥18px atau ikon.
   - Radius: `rounded-chip`, `rounded-btn`, `rounded-card`, `rounded-sheet`. Bayangan: `shadow-card`, `shadow-raised`.
   - Target sentuh minimal `min-h-tap` (48px). Padding samping layar `px-gutter`.

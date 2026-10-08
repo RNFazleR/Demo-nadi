@@ -1,9 +1,14 @@
 import { useRef } from 'react'
+import { copy } from '../data/copy.js'
+import { kontakDarurat } from '../data/dummy.js'
+import { STATUS_STYLES } from '../lib/status.js'
 import { useDialogFocus } from '../lib/useDialogFocus.js'
 
-// Dialog konfirmasi (error prevention) untuk aksi yang berisiko bila salah ketuk.
-// Fokus awal di tombol "Batal", supaya Enter yang tidak disengaja tidak langsung menjalankan aksi.
-export default function ConfirmDialog({ title, body, confirmLabel, cancelLabel, confirmClassName, onConfirm, onCancel }) {
+const t = copy.actions.confirmEmergency
+
+// Konfirmasi sebelum menghubungi layanan darurat (error prevention).
+// Fokus awal di tombol "Batal", supaya Enter yang tidak disengaja tidak langsung menelepon.
+export default function ConfirmEmergencyDialog({ onConfirm, onCancel }) {
   const dialogRef = useRef(null)
   const cancelRef = useRef(null)
   useDialogFocus(dialogRef, cancelRef, onCancel)
@@ -20,18 +25,18 @@ export default function ConfirmDialog({ title, body, confirmLabel, cancelLabel, 
         className="w-full max-w-phone rounded-t-sheet bg-surface px-gutter pb-8 pt-6 shadow-raised sm:rounded-sheet"
       >
         <h2 id="confirm-title" className="text-title text-ink">
-          {title}
+          {t.title(kontakDarurat.nomor)}
         </h2>
         <p id="confirm-body" className="mt-2 text-body-lg text-ink">
-          {body}
+          {t.body}
         </p>
         <div className="mt-6 flex flex-col gap-3">
           <button
             type="button"
             onClick={onConfirm}
-            className={`min-h-tap w-full rounded-btn px-4 text-body-lg font-bold ${confirmClassName}`}
+            className={`min-h-tap w-full rounded-btn px-4 text-body-lg font-bold ${STATUS_STYLES.darurat.solid}`}
           >
-            {confirmLabel}
+            {t.confirm(kontakDarurat.nomor)}
           </button>
           <button
             type="button"
@@ -39,7 +44,7 @@ export default function ConfirmDialog({ title, body, confirmLabel, cancelLabel, 
             onClick={onCancel}
             className="min-h-tap w-full rounded-btn border-2 border-line px-4 text-body-lg font-bold text-ink"
           >
-            {cancelLabel}
+            {t.cancel}
           </button>
         </div>
       </div>

@@ -12,8 +12,6 @@ export const STATUS_STYLES = {
     solid: 'bg-normal-strong text-surface', // teks putih >= 4,5:1
     dot: 'bg-normal',
     text: 'text-normal-ink',
-    hex: colors.normal.DEFAULT, // untuk Recharts (tidak bisa pakai kelas)
-    strongHex: colors.normal.strong, // penanda berteks putih di grafik
   },
   waspada: {
     badge: 'bg-waspada-bg text-waspada-ink border border-waspada-border',
@@ -21,8 +19,8 @@ export const STATUS_STYLES = {
     solid: 'bg-waspada-strong text-surface',
     dot: 'bg-waspada',
     text: 'text-waspada-ink',
-    hex: colors.waspada.DEFAULT,
-    strongHex: colors.waspada.strong,
+    hex: colors.waspada.DEFAULT, // batang grafik Riwayat (Recharts tidak bisa pakai kelas)
+    strongHex: colors.waspada.strong, // latar penanda "!" berteks putih di grafik
   },
   darurat: {
     badge: 'bg-darurat-bg text-darurat-ink border border-darurat-border',
@@ -30,8 +28,6 @@ export const STATUS_STYLES = {
     solid: 'bg-darurat-strong text-surface',
     dot: 'bg-darurat',
     text: 'text-darurat-ink',
-    hex: colors.darurat.DEFAULT,
-    strongHex: colors.darurat.strong,
   },
 }
 

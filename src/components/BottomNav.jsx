@@ -3,7 +3,7 @@ import { useAlerts } from '../state/AlertsContext.jsx'
 import { useSensor } from '../state/SensorContext.jsx'
 import Icon from './Icon.jsx'
 
-export const TABS = [
+const TABS = [
   { id: 'home', icon: 'home' },
   { id: 'history', icon: 'history' },
   { id: 'notifications', icon: 'bell' },
