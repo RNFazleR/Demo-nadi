@@ -14,6 +14,7 @@ mengurai output terminal.
 | `csi_bridge.py` | Pembaca serial (atau replay), status koneksi, server HTTP. |
 | `make_fixture.py` | Membuat log CSI **sintetis** untuk uji tanpa perangkat. |
 | `test_csi.py` | Unit test (tanpa perangkat). |
+| `csi_bench_compare.py` | Uji skor & ambang gerak pada rekaman publik CSI-Bench (ruang kosong/tidur/manusia/hewan/kipas). Opsional, butuh `h5py numpy`. |
 
 ## Menjalankan
 
@@ -35,6 +36,10 @@ Lalu jalankan frontend (`npm run dev` di folder root), buka **Pengaturan → Sum
 - Uji tanpa perangkat: `python make_fixture.py fixtures/sintetis.txt` lalu
   `python csi_bridge.py --replay fixtures/sintetis.txt` (tambah `--loop` untuk mengulang).
   UI menandainya **"Rekaman uji"**.
+- Data publik CSI-Bench (Kaggle `guozhenjennzhu/csi-bench`, CC BY-NC-ND 4.0): **jangan** di-commit.
+  Unduh file `.h5` seperlunya ke folder di luar repo (satu subfolder per label), lalu mis.
+  `python csi_bench_compare.py <folder>/breathing --rate 30 --baseline empty`.
+  Ambang dihitung dari satu rekaman ruangan kosong lalu diuji ke rekaman lain; detail di docstring skrip.
 
 ## Kontrak JSON `GET /api/sensor/latest`
 
