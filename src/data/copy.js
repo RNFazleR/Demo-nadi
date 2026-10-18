@@ -99,6 +99,11 @@ export const copy = {
       tag: 'Fitur demo',
       button: 'Simulasikan anomali',
       hint: 'Tampilkan layar konfirmasi di HP lansia',
+      waspadaButton: 'Simulasikan pola berubah',
+      waspadaHint: 'Kirim satu notifikasi Waspada ke app keluarga',
+      // Isi AlertEvent Waspada yang dibuat simulasi ini
+      waspadaAlert: (nama) =>
+        `Pagi ini gerakan ${nama} lebih jarang dari biasanya di jam yang sama. Belum tentu ada masalah, tapi ada baiknya ditanyakan kabarnya.`,
     },
   },
 
@@ -147,6 +152,8 @@ export const copy = {
 
   actions: {
     markChecked: 'Tandai sudah dicek',
+    markDone: 'Tandai selesai',
+    markDoneHint: 'Sudah ada yang mengecek. Tandai selesai kalau keadaan beliau sudah dipastikan baik.',
     callElder: (name) => `Hubungi ${name}`,
     callEmergency: 'Hubungi layanan darurat',
     confirmEmergency: {

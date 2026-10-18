@@ -146,10 +146,25 @@ export default function AlertDetail({ alertId, onBack }) {
             </>
           )}
 
+          {/* Langkah terakhir: alert yang sedang dicek bisa ditutup, supaya statusnya tidak menggantung */}
+          {alert.status === 'dicek' && (
+            <>
+              <p className="text-body text-ink-soft">{copy.actions.markDoneHint}</p>
+              <button
+                type="button"
+                onClick={() => respond(alert.id, 'markDone')}
+                className={`${SECONDARY_BTN} border-2 border-brand-500 text-brand-700`}
+              >
+                <Icon name="check" strokeWidth={2.4} />
+                {copy.actions.markDone}
+              </button>
+            </>
+          )}
+
           {responded ? (
             <FeedbackNote />
           ) : (
-            alert.status !== 'baru' && (
+            alert.status === 'selesai' && (
               <p className="rounded-card bg-surface-muted p-4 text-body text-ink-soft">
                 {copy.actions.alreadyHandled}
               </p>

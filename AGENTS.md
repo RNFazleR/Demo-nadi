@@ -2,7 +2,7 @@
 
 NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola keseharian dari sinyal WiFi di rumah dan mengabari keluarga. Project ini adalah **prototipe interaktif untuk Final Project mata kuliah HMI (Interaksi Manusia dan Komputer)**. Titik tekannya **UI/UX**: alur, tata letak, keterbacaan, dan aksesibilitas untuk keluarga dan lansia. Bukan produk, bukan untuk lomba. **Mode demo** memakai data dummy. **Mode sensor langsung** (opsional) membaca ESP32-S3 lewat penghubung Python lokal di `sensor/` — lihat bagian "Mode sensor langsung".
 
-- Kontrol berlabel "Fitur demo" (simulasi anomali, reset data, kembali ke app keluarga) adalah kontrol fasilitator saat prototipe dicoba/diuji, bukan bagian dari produk.
+- Kontrol berlabel "Fitur demo" (simulasi anomali, simulasi pola berubah, reset data, kembali ke app keluarga) adalah kontrol fasilitator saat prototipe dicoba/diuji, bukan bagian dari produk.
 
 ## Positioning (wajib dipegang)
 

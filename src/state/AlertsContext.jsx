@@ -7,16 +7,21 @@ const AlertsContext = createContext(null)
 
 export function AlertsProvider({ children }) {
   const [alerts, setAlerts] = useState(alertEvents)
-  // id alert -> aksi yang dipilih keluarga ('markChecked' | 'callElder' | 'callEmergency')
+  // id alert -> aksi terakhir yang dipilih keluarga ('markChecked' | 'callElder' | 'callEmergency' | 'markDone')
   const [responses, setResponses] = useState({})
   // Urutan = prioritas dihubungi saat Darurat
   const [contacts, setContacts] = useState(kontakKeluarga)
   const [monitoringPaused, setMonitoringPaused] = useState(false)
 
-  // Mencatat respons keluarga; alert yang masih "baru" otomatis jadi "dicek".
+  // Mencatat respons keluarga. 'markDone' menutup alert (-> "selesai"); aksi lain membuat
+  // alert yang masih "baru" jadi "dicek".
   const respond = useCallback((id, action) => {
     setAlerts((prev) =>
-      prev.map((a) => (a.id === id && a.status === 'baru' ? { ...a, status: 'dicek' } : a)),
+      prev.map((a) => {
+        if (a.id !== id) return a
+        if (action === 'markDone') return { ...a, status: 'selesai' }
+        return a.status === 'baru' ? { ...a, status: 'dicek' } : a
+      }),
     )
     setResponses((prev) => ({ ...prev, [id]: action }))
   }, [])

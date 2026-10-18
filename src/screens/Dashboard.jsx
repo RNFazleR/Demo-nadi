@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
@@ -15,9 +15,17 @@ import Icon from '../components/Icon.jsx'
 import AlertDetail from './AlertDetail.jsx'
 
 export default function Dashboard({ onSimulateAnomaly }) {
-  const { alerts, monitoringPaused } = useAlerts()
+  const { alerts, monitoringPaused, addAlert } = useAlerts()
   const { isLive } = useSensor()
   const [openAlertId, setOpenAlertId] = useState(null)
+  const topRef = useRef(null)
+
+  // Fitur demo: notifikasi Waspada langsung masuk, lalu gulir ke atas supaya kartu status
+  // yang berubah langsung terlihat (feedback)
+  const simulateWaspada = () => {
+    addAlert({ tingkat: 'waspada', status: 'baru', deskripsi: copy.dashboard.simulate.waspadaAlert(elderProfile.nama) })
+    topRef.current?.scrollIntoView({ block: 'start' })
+  }
 
   // Mode sensor langsung: hanya data sensor, tanpa status/metrik/alert dari cerita demo
   if (isLive) {
@@ -44,7 +52,7 @@ export default function Dashboard({ onSimulateAnomaly }) {
   const minutesSinceActivity = minutesBetween(aktivitasTerakhir, demoNow)
 
   return (
-    <div className="flex flex-col gap-6 px-gutter pb-8 pt-6">
+    <div ref={topRef} className="flex flex-col gap-6 px-gutter pb-8 pt-6">
       <ProfileHeader profile={elderProfile} />
 
       {/* Saat dijeda, status "Normal" menyesatkan, jadi diganti kartu jeda. Alert yang
@@ -98,6 +106,15 @@ export default function Dashboard({ onSimulateAnomaly }) {
           {copy.dashboard.simulate.button}
         </button>
         <p className="text-center text-body text-ink-soft">{copy.dashboard.simulate.hint}</p>
+        <button
+          type="button"
+          onClick={simulateWaspada}
+          className="mt-2 flex min-h-tap items-center gap-2 rounded-btn border-2 border-ink px-5 text-body-lg font-bold text-ink"
+        >
+          <Icon name="bell" className="h-5 w-5" />
+          {copy.dashboard.simulate.waspadaButton}
+        </button>
+        <p className="text-center text-body text-ink-soft">{copy.dashboard.simulate.waspadaHint}</p>
       </div>
     </div>
   )
