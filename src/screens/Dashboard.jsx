@@ -6,7 +6,7 @@ import { useSensor } from '../state/SensorContext.jsx'
 import SensorStatusCard from '../components/SensorStatusCard.jsx'
 import { getCurrentStatus, compareDayToUsual } from '../lib/insights.js'
 import { METRICS } from '../lib/metrics.js'
-import { formatTime, minutesBetween } from '../lib/format.js'
+import { formatDateLong, formatTime, minutesBetween } from '../lib/format.js'
 import ProfileHeader from '../components/ProfileHeader.jsx'
 import StatusCard from '../components/StatusCard.jsx'
 import PausedCard from '../components/PausedCard.jsx'
@@ -73,6 +73,11 @@ export default function Dashboard({ onSimulateAnomaly }) {
   return (
     <div ref={topRef} className="flex flex-col gap-6 px-gutter pb-8 pt-6">
       <ProfileHeader profile={elderProfile} />
+      {/* Sumber data terlihat sejak layar pertama (sama posisinya dengan chip "Sensor langsung"),
+          sengaja netral supaya tidak terbaca sebagai status */}
+      <p className="-mt-3 self-start rounded-full border border-line bg-surface-muted px-3 py-0.5 text-body font-semibold text-ink-soft">
+        {copy.dashboard.demoChip}
+      </p>
 
       {/* Saat dijeda, status "Normal" menyesatkan, jadi diganti kartu jeda. Alert yang
           belum ditanggapi tetap ditampilkan supaya tidak tersembunyi. */}
@@ -85,7 +90,9 @@ export default function Dashboard({ onSimulateAnomaly }) {
         <div>
           <h2 className="text-title text-ink">{copy.dashboard.todaySummary}</h2>
           {/* Provenance: kapan & dari mana data berasal, dekat dengan angkanya (Gestalt proximity) */}
-          <p className="text-body text-ink-soft">{copy.dashboard.provenance(formatTime(demoNow))}</p>
+          <p className="text-body text-ink-soft">
+            {copy.dashboard.provenance(formatDateLong(demoNow), formatTime(demoNow))}
+          </p>
         </div>
         {METRICS.map(({ key, field, icon, display }) => {
           // Sama dengan Riwayat & Detail Alert: hari ini vs rata-rata hari LAIN

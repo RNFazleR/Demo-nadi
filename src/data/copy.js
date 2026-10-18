@@ -99,7 +99,10 @@ export const copy = {
     // Satu kalimat ringkas untuk status Normal
     normalSentence: 'Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.',
     todaySummary: 'Ringkasan hari ini',
-    provenance: (time) => `Diperbarui ${time} · dari sinyal WiFi di rumah`,
+    // Tanggal cerita demo ikut ditulis, supaya jelas data ini bukan "hari ini" yang sebenarnya
+    provenance: (date, time) => `Diperbarui ${date}, ${time} · dari sinyal WiFi di rumah`,
+    // Penanda sumber data di mode demo (padanan copy.sensor.modeChip di mode sensor langsung)
+    demoChip: 'Demo · data contoh',
     lastActivity: (minutes) => `Aktivitas terakhir terdeteksi: ${minutes} menit lalu`,
     simulate: {
       tag: 'Fitur demo',
@@ -247,6 +250,8 @@ export const copy = {
       pauseHint: 'Misalnya saat ada tamu menginap. NADI berhenti membaca pola sampai diaktifkan lagi.',
       pauseOn: 'Pemantauan sedang dijeda',
       pauseOff: 'Pemantauan aktif',
+      // Mode sensor langsung belum bisa dijeda; jangan sampai tampil "dijeda" padahal sensor tetap membaca
+      pauseUnavailable: 'Jeda belum tersedia di mode sensor langsung. Pembacaan sensor tetap berjalan.',
     },
     reset: {
       tag: 'Fitur demo',

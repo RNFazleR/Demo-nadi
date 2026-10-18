@@ -16,7 +16,10 @@ const ORDER_BTN =
 // Tab Pengaturan: urutan kontak keluarga, privasi & jeda pemantauan, reset demo.
 export default function Settings() {
   const { contacts, moveContact, monitoringPaused, setMonitoringPaused, resetDemo } = useAlerts()
-  const { mode, setMode, apiUrl } = useSensor()
+  const { mode, setMode, apiUrl, isLive } = useSensor()
+  // Jeda hanya berlaku untuk cerita demo. Di mode sensor langsung pembacaan tetap berjalan,
+  // jadi switch dinonaktifkan dan tidak boleh tampil "dijeda".
+  const paused = monitoringPaused && !isLive
   const [resetDone, setResetDone] = useState(false)
   const [orderNote, setOrderNote] = useState('') // diumumkan lewat aria-live
   // Tombol ▲▼ per kontak; dipakai untuk menjaga fokus keyboard setelah urutan berubah
@@ -132,29 +135,33 @@ export default function Settings() {
             <button
               type="button"
               role="switch"
-              aria-checked={monitoringPaused}
+              aria-checked={paused}
               aria-labelledby="pause-label"
-              aria-describedby="pause-hint"
+              aria-describedby={isLive ? 'pause-hint pause-status' : 'pause-hint'}
+              disabled={isLive}
               onClick={() => setMonitoringPaused(!monitoringPaused)}
-              className="-mr-1 grid min-h-tap shrink-0 place-items-center rounded-btn px-1"
+              className="-mr-1 grid min-h-tap shrink-0 place-items-center rounded-btn px-1 disabled:cursor-not-allowed"
             >
               <span
                 aria-hidden="true"
                 className={`relative block h-8 w-14 rounded-full transition-colors ${
-                  monitoringPaused ? 'bg-brand-600' : 'bg-ink-faint'
-                }`}
+                  paused ? 'bg-brand-600' : 'bg-ink-faint'
+                } ${isLive ? 'opacity-40' : ''}`}
               >
                 <span
                   className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-surface shadow-card transition-transform ${
-                    monitoringPaused ? 'translate-x-6' : ''
+                    paused ? 'translate-x-6' : ''
                   }`}
                 />
               </span>
             </button>
           </div>
-          <p className="mt-3 flex items-center gap-2 text-body font-semibold text-ink">
-            <Icon name={monitoringPaused ? 'pause' : 'pulse'} className="h-5 w-5 text-brand-600" />
-            {monitoringPaused ? t.privacy.pauseOn : t.privacy.pauseOff}
+          <p id="pause-status" className="mt-3 flex items-start gap-2 text-body font-semibold text-ink">
+            <Icon
+              name={isLive ? 'wifi' : paused ? 'pause' : 'pulse'}
+              className="mt-0.5 h-5 w-5 shrink-0 text-brand-600"
+            />
+            {isLive ? t.privacy.pauseUnavailable : paused ? t.privacy.pauseOn : t.privacy.pauseOff}
           </p>
         </div>
       </section>
