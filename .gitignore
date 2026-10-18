@@ -13,3 +13,5 @@ firmware/**/build/
 firmware/**/sdkconfig
 firmware/**/sdkconfig.old
 firmware/**/wifi_secrets.h
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
