@@ -7,20 +7,24 @@ const SAME_THRESHOLD = 0.1
 // Urutan keseriusan tingkat alert (makin besar makin serius)
 const SEVERITY = { info: 0, waspada: 1, darurat: 2 }
 
-// Alert paling serius; kalau setara, yang paling baru
-const mostSerious = (list) =>
-  [...list].sort((a, b) => SEVERITY[b.tingkat] - SEVERITY[a.tingkat] || new Date(b.waktu) - new Date(a.waktu))[0]
-
-// Status ditentukan alert "baru" yang PALING SERIUS, supaya Darurat yang belum ditanggapi
-// tidak tertutup Waspada yang datang belakangan. Tanpa alert baru, Waspada/Darurat yang masih
-// "dicek" (belum ditandai selesai) tetap ditampilkan (`handling`), supaya Dashboard tidak
-// tampil "Normal" selagi keluarga masih memastikan keadaan beliau. Selain itu normal.
+// Status Dashboard = alert terbuka yang PALING SERIUS, dari gabungan "baru" dan Waspada/Darurat
+// yang masih "dicek" (belum ditandai selesai). Jadi Darurat yang sedang dicek tetap mengungguli
+// Waspada baru, dan Info baru tidak bisa menutupinya. Kalau setara: yang "baru" dulu (belum
+// ditanggapi siapa pun), lalu yang paling baru. `handling` = alert terpilih sudah ditanggapi.
+// Tanpa alert terbuka berarti normal.
 export function getCurrentStatus(alerts) {
-  const fresh = mostSerious(alerts.filter((a) => a.status === 'baru'))
-  if (fresh) return { status: levelToStatus[fresh.tingkat], alert: fresh, handling: false }
-  const open = mostSerious(alerts.filter((a) => a.status === 'dicek' && a.tingkat !== 'info'))
-  if (open) return { status: levelToStatus[open.tingkat], alert: open, handling: true }
-  return { status: 'normal', alert: null, handling: false }
+  const open = alerts.filter((a) => a.status === 'baru' || (a.status === 'dicek' && a.tingkat !== 'info'))
+  const top = [...open].sort(
+    (a, b) =>
+      SEVERITY[b.tingkat] - SEVERITY[a.tingkat] ||
+      (a.status === 'baru' ? 0 : 1) - (b.status === 'baru' ? 0 : 1) ||
+      new Date(b.waktu) - new Date(a.waktu),
+  )[0]
+  return {
+    status: top ? levelToStatus[top.tingkat] : 'normal',
+    alert: top ?? null,
+    handling: top?.status === 'dicek',
+  }
 }
 
 export function sortNewestFirst(alerts) {

@@ -14,7 +14,7 @@ const BTN = 'flex min-h-tap w-full items-center justify-center gap-2 rounded-btn
 // Waspada/Darurat baru: lengkap dan paling menonjol (ikon, judul, penjelasan, jam).
 // Sedang dicek (`handling`): alert sudah ditanggapi tapi belum selesai; netral, tapi tetap
 // menyebut tingkat alert-nya supaya tidak terbaca sebagai "Normal".
-export default function StatusCard({ status, alert, handling, onAct, onCall }) {
+export default function StatusCard({ status, alert, handling, onAct, onCall, actionRef }) {
   const style = STATUS_STYLES[status]
   const text = copy.status[status]
 
@@ -43,6 +43,7 @@ export default function StatusCard({ status, alert, handling, onAct, onCall }) {
         <p className="mt-2 text-body text-ink-soft">{copy.dashboard.handling.hint}</p>
 
         <button
+          ref={actionRef}
           type="button"
           onClick={() => onAct(alert.id)}
           className={`${BTN} mt-4 border-2 border-ink text-ink`}
@@ -103,7 +104,9 @@ export default function StatusCard({ status, alert, handling, onAct, onCall }) {
       <p className="mt-2 text-body text-ink-soft">{copy.dashboard.alertAt(formatTime(alert.waktu))}</p>
 
       {/* Hick + Fitts: satu langkah berikutnya yang direkomendasikan, besar & di dalam kartu.
-          Darurat: langsung menelepon (tanpa harus membuka detail dulu); detail jadi pilihan kedua. */}
+          Darurat: langsung menelepon (tanpa harus membuka detail dulu); detail jadi pilihan kedua.
+          `actionRef` (target fokus setelah modal panggilan ditutup) sengaja di "Lihat detail",
+          bukan "Hubungi", supaya Enter yang tidak disengaja tidak langsung menelepon lagi. */}
       {status === 'darurat' ? (
         <>
           <button type="button" onClick={() => onCall(alert.id)} className={`${BTN} mt-4 ${style.solid}`}>
@@ -111,6 +114,7 @@ export default function StatusCard({ status, alert, handling, onAct, onCall }) {
             {copy.actions.callElder(elderProfile.nama)}
           </button>
           <button
+            ref={actionRef}
             type="button"
             onClick={() => onAct(alert.id)}
             className={`${BTN} mt-3 border-2 border-line bg-surface ${style.text}`}
@@ -120,7 +124,7 @@ export default function StatusCard({ status, alert, handling, onAct, onCall }) {
           </button>
         </>
       ) : (
-        <button type="button" onClick={() => onAct(alert.id)} className={`${BTN} mt-4 ${style.solid}`}>
+        <button ref={actionRef} type="button" onClick={() => onAct(alert.id)} className={`${BTN} mt-4 ${style.solid}`}>
           {copy.dashboard.statusAction}
           <Icon name="chevronRight" className="h-5 w-5" strokeWidth={2.6} />
         </button>

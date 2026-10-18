@@ -102,7 +102,7 @@ export const alertEvents = [
     waktu: '2026-09-22T15:00:00+07:00',
     tingkat: 'waspada',
     deskripsi:
-      'Aktivitas Ibu hari ini jauh lebih sedikit dari biasanya. Mungkin sedang kurang bertenaga, ada baiknya ditanyakan kabarnya.',
+      'Aktivitas Ibu hari ini jauh lebih sedikit dari biasanya. Mungkin sedang kurang bertenaga.',
     status: 'selesai',
   },
   {

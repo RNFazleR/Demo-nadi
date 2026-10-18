@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
@@ -21,6 +21,16 @@ export default function Dashboard({ onSimulateAnomaly }) {
   const [openAlertId, setOpenAlertId] = useState(null)
   const [calling, setCalling] = useState(false) // modal simulasi panggilan dari kartu Darurat
   const topRef = useRef(null)
+  // Setelah panggilan, kartu Darurat berganti (mis. jadi "Sedang dicek") dan tombol pemicunya
+  // hilang, jadi fokus dipindah ke tombol tindak lanjut di kartu yang baru muncul.
+  const actionRef = useRef(null)
+  const [refocusAction, setRefocusAction] = useState(false)
+
+  useEffect(() => {
+    if (!refocusAction) return
+    actionRef.current?.focus()
+    setRefocusAction(false)
+  }, [refocusAction])
 
   // Fitur demo: notifikasi Waspada langsung masuk, lalu gulir ke atas supaya kartu status
   // yang berubah langsung terlihat (feedback)
@@ -68,7 +78,7 @@ export default function Dashboard({ onSimulateAnomaly }) {
           belum ditanggapi tetap ditampilkan supaya tidak tersembunyi. */}
       {monitoringPaused && <PausedCard />}
       {(!monitoringPaused || status !== 'normal') && (
-        <StatusCard status={status} alert={alert} handling={handling} onAct={setOpenAlertId} onCall={callElder} />
+        <StatusCard status={status} alert={alert} handling={handling} onAct={setOpenAlertId} onCall={callElder} actionRef={actionRef} />
       )}
 
       <section className="flex flex-col gap-3">
@@ -129,7 +139,14 @@ export default function Dashboard({ onSimulateAnomaly }) {
       </div>
 
       {calling && (
-        <CallModal name={elderProfile.nama} number={elderProfile.telepon} onClose={() => setCalling(false)} />
+        <CallModal
+          name={elderProfile.nama}
+          number={elderProfile.telepon}
+          onClose={() => {
+            setCalling(false)
+            setRefocusAction(true)
+          }}
+        />
       )}
     </div>
   )

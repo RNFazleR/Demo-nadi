@@ -107,9 +107,9 @@ export const copy = {
       hint: 'Tampilkan layar konfirmasi di HP lansia',
       waspadaButton: 'Simulasikan pola berubah',
       waspadaHint: 'Kirim satu notifikasi Waspada ke app keluarga',
-      // Isi AlertEvent Waspada yang dibuat simulasi ini
-      waspadaAlert: (nama) =>
-        `Pagi ini gerakan ${nama} lebih jarang dari biasanya di jam yang sama. Belum tentu ada masalah, tapi ada baiknya ditanyakan kabarnya.`,
+      // Isi AlertEvent Waspada yang dibuat simulasi ini. Hanya apa yang terlihat; ajakan
+      // "ada baiknya ditanyakan kabarnya" sudah ada di alertDetail.levelNote.waspada.
+      waspadaAlert: (nama) => `Pagi ini gerakan ${nama} lebih jarang dibanding jam yang sama di hari lain.`,
     },
   },
 
