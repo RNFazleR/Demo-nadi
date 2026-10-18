@@ -70,47 +70,6 @@ export default function AlertDetail({ alertId, onBack }) {
         </p>
       </section>
 
-      {/* Dibandingkan pola biasanya */}
-      <section className="rounded-card bg-surface p-5 shadow-card">
-        <h2 className="text-title text-ink">{copy.alertDetail.compareTitle}</h2>
-        {hasMetric ? (
-          <>
-            <p className="mt-1 text-body text-ink-soft">
-              {copy.alertDetail.compareSubtitle(formatDateShort(alert.waktu))}
-            </p>
-            <ul className="mt-4 divide-y divide-line">
-              {comparisons.map(({ key, icon, display, result }) => {
-                if (!result) return null
-                const { shortLabel, withUnit } = copy.metrics[key]
-                return (
-                  <li key={key} className="py-3 first:pt-0 last:pb-0">
-                    <div className="flex items-center gap-2">
-                      <Icon name={icon} className="h-5 w-5 text-brand-600" />
-                      <p className="text-body-lg font-semibold text-ink">{shortLabel}</p>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      <div className="rounded-chip bg-surface-muted px-3 py-2">
-                        <p className="text-body text-ink-soft">{copy.alertDetail.thatDay}</p>
-                        <p className="text-title text-ink">{withUnit(display(result.value))}</p>
-                      </div>
-                      <div className="rounded-chip border border-line px-3 py-2">
-                        <p className="text-body text-ink-soft">{copy.alertDetail.usual}</p>
-                        <p className="text-title text-ink-soft">{withUnit(display(result.usual))}</p>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-body font-semibold text-ink">
-                      {copy.comparison[key][result.trend]}
-                    </p>
-                  </li>
-                )
-              })}
-            </ul>
-          </>
-        ) : (
-          <p className="mt-2 text-body text-ink-soft">{copy.alertDetail.noMetric}</p>
-        )}
-      </section>
-
       {/* Tindak lanjut: info tidak punya tombol aksi */}
       {alert.tingkat !== 'info' && (
         <section className="flex flex-col gap-3">
@@ -172,6 +131,47 @@ export default function AlertDetail({ alertId, onBack }) {
           )}
         </section>
       )}
+
+      {/* Dibandingkan pola biasanya: konteks, ditaruh setelah tindak lanjut supaya aksi tidak terdorong ke bawah layar */}
+      <section className="rounded-card bg-surface p-5 shadow-card">
+        <h2 className="text-title text-ink">{copy.alertDetail.compareTitle}</h2>
+        {hasMetric ? (
+          <>
+            <p className="mt-1 text-body text-ink-soft">
+              {copy.alertDetail.compareSubtitle(formatDateShort(alert.waktu))}
+            </p>
+            <ul className="mt-4 divide-y divide-line">
+              {comparisons.map(({ key, icon, display, result }) => {
+                if (!result) return null
+                const { shortLabel, withUnit } = copy.metrics[key]
+                return (
+                  <li key={key} className="py-3 first:pt-0 last:pb-0">
+                    <div className="flex items-center gap-2">
+                      <Icon name={icon} className="h-5 w-5 text-brand-600" />
+                      <p className="text-body-lg font-semibold text-ink">{shortLabel}</p>
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <div className="rounded-chip bg-surface-muted px-3 py-2">
+                        <p className="text-body text-ink-soft">{copy.alertDetail.thatDay}</p>
+                        <p className="text-title text-ink">{withUnit(display(result.value))}</p>
+                      </div>
+                      <div className="rounded-chip border border-line px-3 py-2">
+                        <p className="text-body text-ink-soft">{copy.alertDetail.usual}</p>
+                        <p className="text-title text-ink-soft">{withUnit(display(result.usual))}</p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-body font-semibold text-ink">
+                      {copy.comparison[key][result.trend]}
+                    </p>
+                  </li>
+                )
+              })}
+            </ul>
+          </>
+        ) : (
+          <p className="mt-2 text-body text-ink-soft">{copy.alertDetail.noMetric}</p>
+        )}
+      </section>
 
       {/* Error prevention: panggilan 112 dikonfirmasi dulu supaya tidak terpanggil karena salah ketuk */}
       {confirmEmergency && (

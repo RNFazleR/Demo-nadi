@@ -26,7 +26,8 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
 
 - Warna status **hanya** diambil lewat `src/lib/status.js` (`STATUS_STYLES`), jangan menulis kelas warna status sendiri-sendiri di komponen.
 - `AlertEvent.tingkat = 'info'` ditampilkan dengan warna Normal (lihat `levelToStatus`).
-- Status di Dashboard = alert berstatus "baru" yang **paling serius** (darurat > waspada > info); kalau setara, yang paling baru. Lihat `getCurrentStatus` di `src/lib/insights.js`.
+- Status di Dashboard = alert berstatus "baru" yang **paling serius** (darurat > waspada > info); kalau setara, yang paling baru. Kalau tidak ada yang baru, Waspada/Darurat yang masih "dicek" ditampilkan sebagai kartu netral "Sedang dicek keluarga" (`handling`), bukan "Normal". "Normal" hanya saat tidak ada alert terbuka. Lihat `getCurrentStatus` di `src/lib/insights.js`.
+- Di kartu Darurat dan detail alert, tombol tindak lanjut selalu di atas konteks/perbandingan (aksi utama tidak boleh terdorong ke bawah layar).
 - Jangan pakai warna status untuk dekorasi lain, supaya maknanya tidak kabur.
 - **Kontras:** teks putih hanya di atas warna yang lolos ≥4,5:1: `*-strong` (lewat `STATUS_STYLES[x].solid`), `brand-600/700`, `accent-700`, `ink`. Warna status `DEFAULT` dan `accent-500` hanya untuk grafik/ikon/dekorasi, bukan latar teks.
 

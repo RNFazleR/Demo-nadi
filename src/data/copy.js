@@ -90,6 +90,12 @@ export const copy = {
     statusCardTitle: 'Status saat ini',
     alertAt: (time) => `Tercatat pukul ${time}`,
     statusAction: 'Lihat & tindak lanjuti',
+    statusDetail: 'Lihat detail',
+    // Kartu status saat alert Waspada/Darurat sudah ditanggapi tapi belum ditandai selesai
+    handling: {
+      title: 'Sedang dicek keluarga',
+      hint: 'Buka detail dan tandai selesai kalau keadaan beliau sudah dipastikan baik.',
+    },
     // Satu kalimat ringkas untuk status Normal
     normalSentence: 'Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.',
     todaySummary: 'Ringkasan hari ini',

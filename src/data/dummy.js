@@ -1,9 +1,9 @@
 // Satu-satunya sumber data dummy NADI. Komponen TIDAK boleh menulis data sendiri.
 // Tanggal sengaja statis supaya demo selalu menampilkan cerita yang sama.
 // Cerita: pola Ibu Sri stabil, lalu 22 Sep tidurnya pendek, sering terbangun,
-// dan siangnya kurang aktif (-> waspada). 23 Sep mulai pulih. Pagi 24 Sep ada
-// periode tanpa aktivitas yang cukup panjang (-> darurat, sudah dicek keluarga,
-// jadi tidak ada alert baru dan Dashboard tampil Normal).
+// dan siangnya kurang aktif (-> waspada, sudah selesai). 23 Sep mulai pulih. Pagi 24 Sep
+// ada periode tanpa aktivitas yang cukup panjang (-> darurat). Keluarga sudah menanggapi
+// tapi belum menandai selesai, jadi Dashboard menampilkan "Sedang dicek keluarga".
 
 /**
  * @typedef {Object} ElderProfile
@@ -103,7 +103,7 @@ export const alertEvents = [
     tingkat: 'waspada',
     deskripsi:
       'Aktivitas Ibu hari ini jauh lebih sedikit dari biasanya. Mungkin sedang kurang bertenaga, ada baiknya ditanyakan kabarnya.',
-    status: 'dicek',
+    status: 'selesai',
   },
   {
     id: 'alrt-001',

@@ -12,12 +12,14 @@ import StatusCard from '../components/StatusCard.jsx'
 import PausedCard from '../components/PausedCard.jsx'
 import MetricCard from '../components/MetricCard.jsx'
 import Icon from '../components/Icon.jsx'
+import CallModal from '../components/CallModal.jsx'
 import AlertDetail from './AlertDetail.jsx'
 
 export default function Dashboard({ onSimulateAnomaly }) {
-  const { alerts, monitoringPaused, addAlert } = useAlerts()
+  const { alerts, monitoringPaused, addAlert, respond } = useAlerts()
   const { isLive } = useSensor()
   const [openAlertId, setOpenAlertId] = useState(null)
+  const [calling, setCalling] = useState(false) // modal simulasi panggilan dari kartu Darurat
   const topRef = useRef(null)
 
   // Fitur demo: notifikasi Waspada langsung masuk, lalu gulir ke atas supaya kartu status
@@ -47,7 +49,14 @@ export default function Dashboard({ onSimulateAnomaly }) {
 
   if (openAlertId) return <AlertDetail alertId={openAlertId} onBack={() => setOpenAlertId(null)} />
 
-  const { status, alert } = getCurrentStatus(alerts)
+  const { status, alert, handling } = getCurrentStatus(alerts)
+
+  // Darurat: telepon langsung dari kartu status. Dicatat sebagai respons (alert -> "dicek"),
+  // sama seperti menelepon dari halaman detail.
+  const callElder = (id) => {
+    respond(id, 'callElder')
+    setCalling(true)
+  }
   const today = dailyMetrics[dailyMetrics.length - 1]
   const minutesSinceActivity = minutesBetween(aktivitasTerakhir, demoNow)
 
@@ -58,7 +67,9 @@ export default function Dashboard({ onSimulateAnomaly }) {
       {/* Saat dijeda, status "Normal" menyesatkan, jadi diganti kartu jeda. Alert yang
           belum ditanggapi tetap ditampilkan supaya tidak tersembunyi. */}
       {monitoringPaused && <PausedCard />}
-      {(!monitoringPaused || status !== 'normal') && <StatusCard status={status} alert={alert} onAct={setOpenAlertId} />}
+      {(!monitoringPaused || status !== 'normal') && (
+        <StatusCard status={status} alert={alert} handling={handling} onAct={setOpenAlertId} onCall={callElder} />
+      )}
 
       <section className="flex flex-col gap-3">
         <div>
@@ -116,6 +127,10 @@ export default function Dashboard({ onSimulateAnomaly }) {
         </button>
         <p className="text-center text-body text-ink-soft">{copy.dashboard.simulate.waspadaHint}</p>
       </div>
+
+      {calling && (
+        <CallModal name={elderProfile.nama} number={elderProfile.telepon} onClose={() => setCalling(false)} />
+      )}
     </div>
   )
 }
