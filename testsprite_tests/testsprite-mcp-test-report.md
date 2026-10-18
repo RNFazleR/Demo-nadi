@@ -7,6 +7,7 @@
 - **Date:** 2026-10-19
 - **Prepared by:** TestSprite AI Team
 - **Target:** build produksi (`npm run build` + `vite preview`, port 4173)
+- **Diperbarui:** 2026-10-19, ditambah bagian 5–7 (tindak lanjut perbaikan, bukti sebelum–sesudah, uji tugas). Hasil tes di bagian 2–3 adalah run **sebelum** perbaikan.
 - **Scope:** 21 dari 39 tes di rencana (duplikat Indonesia/Inggris dihapus; TC004 dilewati karena tidak bisa dicapai lewat UI, lihat Key Gaps #1)
 
 ---
@@ -237,8 +238,82 @@
 
 ## 4️⃣ Key Gaps / Risks
 
-1. **"Tandai sudah dicek" tidak bisa dicapai di demo.** Tombol ini hanya muncul untuk alert Waspada berstatus Baru, tapi data awal tidak punya alert seperti itu dan simulasi anomali hanya membuat Info atau Darurat. Akibatnya fasilitator tidak bisa memperlihatkan alur ini saat uji pengguna (dan TC004 tidak bisa dijalankan). Pertimbangkan satu alert Waspada "baru" di data awal, atau pilihan simulasi Waspada.
-2. **Alert Darurat tidak bisa ditutup.** Setelah menghubungi, status berhenti di "Sedang dicek" dan tidak ada jalan ke "Selesai". TC011 tersandung di sini: penguji (seperti pengguna) mencari cara menandai alert sudah beres. Layak dicatat sebagai temuan Norman/Nielsen (visibilitas status, kontrol pengguna).
+1. ✅ **Diperbaiki di `ad2272c`.** **"Tandai sudah dicek" tidak bisa dicapai di demo.** Tombol ini hanya muncul untuk alert Waspada berstatus Baru, tapi data awal tidak punya alert seperti itu dan simulasi anomali hanya membuat Info atau Darurat. Akibatnya fasilitator tidak bisa memperlihatkan alur ini saat uji pengguna (dan TC004 tidak bisa dijalankan). Pertimbangkan satu alert Waspada "baru" di data awal, atau pilihan simulasi Waspada.
+2. ✅ **Diperbaiki di `ad2272c` dan `c933373`.** **Alert Darurat tidak bisa ditutup.** Setelah menghubungi, status berhenti di "Sedang dicek" dan tidak ada jalan ke "Selesai". TC011 tersandung di sini: penguji (seperti pengguna) mencari cara menandai alert sudah beres. Layak dicatat sebagai temuan Norman/Nielsen (visibilitas status, kontrol pengguna).
 3. **Kualitas rencana tes otomatis.** Rencana awal berisi 39 tes dengan banyak duplikat, dan dua dari tiga kegagalan berasal dari asumsi tes yang keliru. Hasil gagal perlu selalu dicek manual sebelum dianggap bug.
-4. **Mode sensor langsung hanya teruji untuk keadaan "tidak terjangkau".** Keadaan kalibrasi, gerakan, diam, dan data basi butuh penghubung Python (`--replay`) dan tidak tercakup di sini.
-5. **Tes dijalankan di viewport desktop.** Aplikasi mobile-first (acuan 390px); tata letak di lebar ponsel tidak diuji oleh TestSprite.
+4. ✅ **Sudah diuji manual (lihat bagian 5).** **Mode sensor langsung hanya teruji untuk keadaan "tidak terjangkau".** Keadaan kalibrasi, gerakan, diam, dan data basi butuh penghubung Python (`--replay`) dan tidak tercakup di sini.
+5. ✅ **Sudah diuji manual di 375 px (lihat bagian 6–7).** **Tes dijalankan di viewport desktop.** Aplikasi mobile-first (acuan 390px); tata letak di lebar ponsel tidak diuji oleh TestSprite.
+
+---
+
+## 5️⃣ Tindak Lanjut: Temuan & Perbaikan
+
+Sumber temuan: **TestSprite** (bagian 2–4), **Audit UI/UX** (heuristik Nielsen, WCAG 2.2, prinsip UX di AGENTS.md; situs publik dan build lokal diperiksa di 375 / 320 / 1366 px), dan **review lanjutan** setelah perbaikan pertama. Mode sensor langsung diuji manual dengan `sensor/csi_bridge.py --replay` memakai fixture sintetis. Semua keadaan muncul berurutan: tidak terjangkau → kalibrasi → membaca → diam → gerak → diam → data berhenti. Keadaan tanpa data tidak pernah tampil sebagai "diam" atau "Normal".
+
+| # | Sumber | Temuan | Status | Commit |
+|---|---|---|---|---|
+| 1 | TestSprite (gap #1) | "Tandai sudah dicek" tidak bisa didemokan (tidak ada Waspada baru) | ✅ Diperbaiki: tombol demo "Simulasikan pola berubah" | `ad2272c` |
+| 2 | TestSprite (gap #2, TC011) | Alert Darurat/Waspada tidak bisa ditutup, menggantung di "Sedang dicek" | ✅ Diperbaiki: tombol "Tandai selesai" | `ad2272c` |
+| 3 | Audit #1 | Beranda "Normal · seperti biasanya" padahal Darurat 09.12 belum selesai dan 98 menit tanpa gerakan | ✅ Diperbaiki: kartu "Sedang dicek keluarga"; "Normal" hanya saat tidak ada alert terbuka | `c933373` |
+| 4 | Review lanjutan | Darurat yang sedang dicek kalah dari Waspada baru; Info baru bisa menutupinya | ✅ Diperbaiki: dipilih alert paling serius dari gabungan Baru + Sedang dicek | `996771d` |
+| 5 | Audit #3 | Tombol telepon terkubur (detail Darurat y=1099, 1,35 layar ke bawah); kartu Darurat tanpa tombol telepon | ✅ Diperbaiki: "Tindak lanjut" di atas perbandingan; "Hubungi Ibu Sri Wahyuni" langsung di kartu | `c933373` |
+| 6 | Audit lokal A | "Tandai selesai" tidak terlihat efeknya di Beranda | ✅ Diperbaiki (ikut #3) | `c933373` |
+| 7 | Review lanjutan | Fokus keyboard hilang setelah modal panggilan Beranda ditutup | ✅ Diperbaiki: fokus ke tombol tindak lanjut di kartu baru ("Lihat detail", bukan "Hubungi") | `996771d` |
+| 8 | Review lanjutan | Kalimat "ada baiknya ditanyakan kabarnya" muncul dua kali di detail Waspada | ✅ Diperbaiki | `996771d` |
+| 9 | Review lanjutan | Sumber data demo tidak jelas bagi orang yang baru membuka | ✅ Diperbaiki: chip "Demo · data contoh" dan tanggal cerita di baris pembaruan | `61b97c7` |
+| 10 | Audit #6 (sebagian) | Mode sensor bisa tampil "Pemantauan sedang dijeda" padahal sensor tetap membaca | ✅ Diperbaiki: switch nonaktif dan diberi penjelasan di mode sensor | `61b97c7` |
+| 11 | Audit #2 | Badge "Powered by Netlify" menutupi tab Notifikasi/Pengaturan, "Butuh bantuan", "Akhiri panggilan", dan "Kembali ke app keluarga" di 375 px | ⏳ Belum. Pengaturan proyek Netlify: *Project configuration → General → Powered by Netlify badge* | – |
+| 12 | Audit #6 (sisa) | Jeda tanpa durasi/pengingat; switch ON berwarna hijau brand | ⏳ Belum | – |
+| 13 | Audit #5 | Garis "pola biasanya" di grafik Riwayat berpindah saat memilih hari; detail hari di luar layar; sumbu Y tanpa satuan | ⏳ Belum | – |
+| 14 | Audit #8 | "Terbangun malam" vs "Bangun malam" (satu hal, dua nama) | ⏳ Belum | – |
+| 15 | Audit #4 | Eskalasi kontak ("Keluarga sedang dihubungi") tidak terlihat di sisi keluarga | ⏳ Belum | – |
+| 16 | Audit #7 | Di Notifikasi, Darurat "Sedang dicek" terlihat sama dengan Info "Selesai" | ⏳ Belum | – |
+| 17 | Audit #9 + lokal B | Mode sensor di situs publik selalu gagal (HTTPS → `http://…:8765`); copy sensor berisi jargon (port, hotspot 2,4 GHz) | ⏳ Belum | – |
+| 18 | Audit #10 + lokal C/D | Identitas visual generik; tombol demo paling berat di Beranda; pill Waspada tanpa ikon | ⏳ Belum | – |
+
+**Catatan untuk TestSprite:** beberapa ekspektasi tes sudah tidak berlaku, karena aplikasinya memang berubah, bukan karena ada bug. Contohnya TC002, yang mengharapkan Beranda dibuka dengan "Normal", padahal sekarang dibuka dengan "Sedang dicek keluarga". Rencana tes perlu diperbarui sebelum dijalankan ulang.
+
+---
+
+## 6️⃣ Bukti Sebelum–Sesudah (375 × 812 px)
+
+| Alur | Sebelum | Sesudah |
+|---|---|---|
+| Status saat membuka Beranda | "✓ Normal · Pola keseharian terlihat seperti biasanya", padahal Darurat 09.12 masih "Sedang dicek" | "Sedang dicek keluarga" + badge Darurat + "Hari ini, 09.12"; chip "Demo · data contoh"; "Diperbarui 24 September 2026, 09.20" |
+| Menelepon dari kartu Darurat | Hanya "Lihat & tindak lanjuti" → buka detail → scroll → "Hubungi" (2 ketukan + scroll) | "Hubungi Ibu Sri Wahyuni" langsung di kartu (1 ketukan) |
+| Posisi tombol "Hubungi Ibu Sri Wahyuni" di detail Darurat | y = 1099 px (1,35 layar; perlu scroll) | y = 473 px (terlihat tanpa scroll) |
+| Posisi "Tandai sudah dicek" di detail Waspada | y = 1127 px | y = 501 px |
+| Menutup alert | Tidak bisa; status menggantung di "Sedang dicek" | "Tandai selesai" → Beranda kembali "Normal" bila tidak ada alert terbuka lain |
+| Beberapa alert aktif (Darurat dicek + Waspada baru + Info) | Kartu menampilkan Waspada baru; Darurat yang belum selesai tersembunyi | Kartu tetap menampilkan Darurat (paling serius); badge Notifikasi tetap menghitung Waspada baru |
+
+| Sebelum | Sesudah |
+|---|---|
+| ![Beranda sebelum](evidence/01-sebelum-beranda-normal.jpg) | ![Beranda sesudah](evidence/02-sesudah-beranda-sedang-dicek.jpg) |
+| ![Kartu Darurat sebelum](evidence/03-sebelum-kartu-darurat.jpg) | ![Kartu Darurat sesudah](evidence/04-sesudah-kartu-darurat.jpg) |
+| ![Detail Darurat sebelum](evidence/05-sebelum-detail-darurat.jpg) | ![Detail Darurat sesudah](evidence/06-sesudah-detail-darurat.jpg) |
+
+Gambar "sebelum" diambil dari situs publik sebelum perbaikan. Gambar "sesudah" diambil dari build lokal dan situs publik setelah perbaikan. Badge Netlify yang terlihat di beberapa gambar adalah temuan #11 yang belum diperbaiki.
+
+**Verifikasi logika status:** 11 kombinasi alert diuji langsung pada `getCurrentStatus`, termasuk Darurat dicek + Waspada baru, Darurat dicek + Info baru, dua Darurat dicek, Info dicek, dan semua selesai. Semuanya lulus. Di browser, empat alert aktif sekaligus ditutup satu per satu dengan urutan yang benar (Darurat terbaru → Darurat 09.12 → Waspada → Normal).
+
+---
+
+## 7️⃣ Uji Tugas Singkat: memahami status → memilih tindakan → menyelesaikan alert
+
+**Metode:** walkthrough tugas berskrip di situs publik (`index-D1-kjbJf.js`) pada 375 × 812 px. Setiap ketukan diarahkan ke titik tengah tombol di layar (`elementFromPoint`), jadi overlay seperti badge Netlify ikut terhitung sebagai penghalang. Ini **bukan** uji dengan partisipan. Pemahaman diukur dari apa yang terlihat tanpa scroll, bukan dari jawaban pengguna.
+
+| Tugas | Status terlihat tanpa scroll | Aksi pertama terlihat tanpa scroll | Ketukan sampai selesai | Scroll | Penghalang | Hasil |
+|---|---|---|---|---|---|---|
+| A. Darurat sedang dicek (kondisi awal) | Ya: "Sedang dicek keluarga" | Ya: "Lihat & tindak lanjuti" | 3 | 0 | – | Selesai → "Normal" |
+| B. Darurat baru (lansia menekan "Butuh bantuan") | Ya: "Butuh perhatian sekarang, segera hubungi" | Ya: "Hubungi Ibu Sri Wahyuni" | 5 (telepon, akhiri, tindak lanjut, selesai, kembali) | 0 | Badge Netlify menutupi "Akhiri panggilan" dan "Kembali ke app keluarga" | Selesai → "Normal" |
+| C. Waspada baru (pola berubah) | Ya: "Ada pola yang berubah dari biasanya, perlu dicek" | Ya: "Lihat & tindak lanjuti" | 4 (tindak lanjut, sudah dicek, selesai, kembali) | 0 | – | Selesai → "Normal" |
+
+Ukuran kartu status: 46–57% tinggi layar, berisi 32–46 kata. Kartu "Sedang dicek" paling padat (46 kata) karena memuat deskripsi alert ditambah petunjuk.
+
+**Kesimpulan untuk penyederhanaan kartu:**
+- **Penyederhanaan struktural tidak diperlukan saat ini.** Di ketiga tugas, status dan aksi utama sudah terlihat di layar pertama, dan tidak ada scroll sampai alert selesai.
+- **Penyederhanaan terarah masih disarankan:**
+  1. **Kartu "Sedang dicek" (46 kata):** pendekkan petunjuk, atau potong deskripsi jadi 2 baris. Kalimat "Coba hubungi Ibu sekarang" di deskripsi juga terasa janggal setelah keluarga menanggapi.
+  2. **Waspada butuh dua keputusan** ("Tandai sudah dicek" lalu "Tandai selesai") untuk satu niat. Pertimbangkan satu langkah untuk Waspada.
+- **Penghalang terbesar saat ini bukan kartu, tapi badge Netlify (#11).** Badge ini menutupi tombol di modal panggilan dan di layar lansia.
+- **Langkah berikutnya:** uji tiga tugas yang sama dengan 3–5 partisipan (keluarga yang punya orang tua lansia). Catat keberhasilan, waktu, dan kesulitan (SEQ). Hasil itu yang menentukan apakah kartu perlu dipadatkan lebih jauh.
