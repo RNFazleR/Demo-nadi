@@ -1,25 +1,36 @@
 // Mode "Sensor langsung": alamat API penghubung (sensor/csi_bridge.py) dan penerjemahan
 // JSON-nya menjadi satu keadaan tampilan. Data sensor TIDAK pernah dicampur dengan data demo.
 
-// Default: laptop yang sama dengan halaman ini, port 8765. Untuk HP di jaringan yang sama,
-// buka frontend lewat IP laptop (mis. http://192.168.1.5:5173) dan jalankan penghubung
-// dengan --host 0.0.0.0. Bisa juga ditimpa lewat VITE_SENSOR_API_URL.
-export const SENSOR_API_URL =
-  import.meta.env.VITE_SENSOR_API_URL ||
-  `http://${typeof window !== 'undefined' ? window.location.hostname : 'localhost'}:8765/api/sensor/latest`
+// Alamat penghubung. Di browser defaultnya laptop yang sama dengan halaman ini, port 8765
+// (HP di WiFi yang sama: buka frontend lewat IP laptop dan jalankan penghubung dengan
+// --host 0.0.0.0). Di APK (Capacitor) halaman ada di HP sendiri, jadi alamat harus diisi
+// pengguna di Pengaturan. VITE_SENSOR_API_URL menimpa default.
+const isNativeApp = typeof window !== 'undefined' && Boolean(window.Capacitor?.isNativePlatform?.())
+
+export const DEFAULT_SENSOR_HOST = isNativeApp || typeof window === 'undefined' ? '' : window.location.hostname
+
+// "192.168.1.5", "192.168.1.5:8765", atau "http://192.168.1.5/..." -> URL API lengkap; kosong -> null
+export function sensorApiUrl(host) {
+  const h = (host ?? '').trim().replace(/^https?:\/\//i, '').replace(/\/.*$/, '')
+  if (!h) return null
+  return `http://${/:\d+$/.test(h) ? h : `${h}:8765`}/api/sensor/latest`
+}
+
+export const DEFAULT_SENSOR_API_URL = import.meta.env.VITE_SENSOR_API_URL || sensorApiUrl(DEFAULT_SENSOR_HOST)
 
 export const SENSOR_POLL_MS = 1000
 export const SENSOR_TIMEOUT_MS = 2000
 // Berapa kali polling gagal berturut-turut sebelum dianggap tidak terjangkau (hindari kedip)
 export const SENSOR_FAILS_BEFORE_UNREACHABLE = 2
 
-const PROBLEM = new Set(['unreachable', 'port_not_found', 'port_busy', 'disconnected', 'error', 'stalled', 'waiting_data', 'calibration_failed'])
+const PROBLEM = new Set(['unset', 'unreachable', 'port_not_found', 'port_busy', 'disconnected', 'error', 'stalled', 'waiting_data', 'calibration_failed'])
 
-// apiStatus: 'connecting' | 'ok' | 'unreachable' (dari polling frontend)
+// apiStatus: 'unset' | 'connecting' | 'ok' | 'unreachable' (dari polling frontend)
 // data: JSON terakhir dari penghubung, atau null
 export function describeSensor(apiStatus, data) {
   let kind
-  if (apiStatus === 'unreachable') kind = 'unreachable'
+  if (apiStatus === 'unset') kind = 'unset'
+  else if (apiStatus === 'unreachable') kind = 'unreachable'
   else if (!data) kind = 'connecting'
   else if (data.connection !== 'streaming') kind = data.connection // starting, waiting_data, stalled, port_*, disconnected, error
   else if (data.calibration === 'failed') kind = 'calibration_failed'

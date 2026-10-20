@@ -1,0 +1,8 @@
+{
+  "appId": "id.nadi.prototipe",
+  "appName": "NADI",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http"
+  }
+}

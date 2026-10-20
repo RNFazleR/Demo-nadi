@@ -228,8 +228,34 @@ export const copy = {
     noAlerts: 'Tidak ada catatan di tanggal ini.',
   },
 
+  // Layar masuk untuk keluarga (simulasi prototipe, akun di dummy.js)
+  login: {
+    title: 'Masuk ke NADI',
+    subtitle: 'Khusus anggota keluarga yang sudah terdaftar untuk mendampingi.',
+    email: 'Email',
+    password: 'Kata sandi',
+    showPassword: 'Tampilkan kata sandi',
+    submit: 'Masuk',
+    errors: {
+      emailEmpty: 'Isi email dulu, ya.',
+      emailFormat: 'Format email belum benar. Contoh: nama@contoh.id',
+      passwordEmpty: 'Isi kata sandi dulu, ya.',
+      wrong: 'Email atau kata sandi belum cocok. Coba periksa lagi.',
+    },
+    forgot: {
+      question: 'Lupa kata sandi?',
+      answer: 'Hubungi anggota keluarga yang mendaftarkan akun NADI untuk mengatur ulang kata sandi.',
+    },
+    signedOut: 'Kamu sudah keluar. Masuk lagi kapan saja.',
+  },
+
   settings: {
     title: 'Pengaturan',
+    account: {
+      title: 'Akun',
+      signedInAs: 'Masuk sebagai',
+      logout: 'Keluar',
+    },
     contacts: {
       title: 'Kontak keluarga',
       explainer: 'Saat Darurat, NADI menghubungi kontak sesuai urutan ini, mulai dari nomor 1.',
@@ -275,6 +301,10 @@ export const copy = {
     replayChip: 'Rekaman uji',
     cardTitle: 'Sensor gerak',
     states: {
+      unset: {
+        title: 'Alamat penghubung sensor belum diatur',
+        body: 'Isi alamat IP laptop di Pengaturan → Sumber data supaya NADI bisa membaca sensor.',
+      },
       connecting: { title: 'Menghubungkan ke penghubung sensor…', body: 'Mengambil data pertama dari laptop.' },
       starting: { title: 'Penghubung sedang dimulai…', body: 'Sebentar lagi data sensor dibaca.' },
       unreachable: {
@@ -358,6 +388,11 @@ export const copy = {
       demo: 'Demo (data contoh)',
       live: 'Sensor langsung (ESP32)',
       apiLabel: (url) => `Penghubung: ${url}`,
+      hostLabel: 'Alamat penghubung sensor',
+      hostHint: 'IP laptop yang menjalankan penghubung, mis. 192.168.1.5. HP dan laptop harus di WiFi yang sama.',
+      hostSave: 'Simpan',
+      hostSaved: 'Alamat penghubung disimpan.',
+      hostUnset: 'Belum diatur',
     },
   },
 

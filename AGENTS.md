@@ -2,6 +2,7 @@
 
 NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola keseharian dari sinyal WiFi di rumah dan mengabari keluarga. Project ini adalah **prototipe interaktif untuk Final Project mata kuliah HMI (Interaksi Manusia dan Komputer)**. Titik tekannya **UI/UX**: alur, tata letak, keterbacaan, dan aksesibilitas untuk keluarga dan lansia. Bukan produk, bukan untuk lomba. **Mode demo** memakai data dummy. **Mode sensor langsung** (opsional) membaca ESP32-S3 lewat penghubung Python lokal di `sensor/` — lihat bagian "Mode sensor langsung".
 
+- **Login keluarga** (email + kata sandi) adalah **simulasi**: akun di `akunKeluarga` (`dummy.js`), dicocokkan di `AuthContext`, tanpa server. Kredensial tidak boleh ditampilkan di layar. Sesi (hanya id akun) disimpan di localStorage; `resetDemo` tidak mengeluarkan pengguna.
 - Kontrol berlabel "Fitur demo" (simulasi anomali, simulasi pola berubah, reset data, kembali ke app keluarga) adalah kontrol fasilitator saat prototipe dicoba/diuji, bukan bagian dari produk.
 
 ## Positioning (wajib dipegang)
@@ -78,6 +79,7 @@ Setiap perubahan UI dicek terhadap prinsip ini. Contoh penerapannya di NADI ada 
 ## Mode sensor langsung (ESP32-S3 + `sensor/csi_bridge.py`)
 
 - Sumber data dipilih di Pengaturan (`useSensor()` dari `src/state/SensorContext.jsx`): `demo` atau `live`. **Data sensor tidak pernah dicampur dengan cerita demo**: di mode langsung Beranda hanya menampilkan kartu sensor; Riwayat & Notifikasi menampilkan pemberitahuan `LiveModeNotice`; badge & simulasi demo disembunyikan.
+- Alamat penghubung: default laptop yang sama dengan halaman; di APK wajib diisi pengguna (Pengaturan → Sumber data), disimpan di localStorage. Alamat kosong tampil "belum diatur" (`apiStatus: 'unset'`), bukan diam/Normal.
 - Frontend hanya membaca JSON `GET /api/sensor/latest` (kontrak di `sensor/README.md`), terjemahkan lewat `describeSensor()` di `src/lib/sensor.js`. Jangan mengurai output terminal.
 - Waktu di mode langsung berasal dari sumber data (`received_at`, `last_motion_at`), bukan `demoNow` dan bukan jam browser.
 - Data tidak tersedia/basi (`stalled`, port bermasalah, API tak terjangkau) **tidak boleh** tampil sebagai "diam" atau "Normal".
@@ -88,26 +90,29 @@ Setiap perubahan UI dicek terhadap prinsip ini. Contoh penerapannya di NADI ada 
 
 ## Stack & perintah
 
-- React + Vite, Tailwind CSS v3, Recharts.
+- React + Vite, Tailwind CSS v3, Recharts, Capacitor (APK Android). Font Nunito dibundel lewat `@fontsource/nunito`.
 - `npm run dev` — jalankan dev server
 - `npm run build` — build produksi
 - `python sensor/csi_bridge.py --port COMx` — penghubung sensor (`--replay <file>` untuk uji tanpa perangkat)
+- `npm run apk` — build APK Android debug lewat Capacitor (butuh `JAVA_HOME` = JDK Android Studio, `android/local.properties`)
 
 ## Struktur folder
 
 ```
 src/
   main.jsx            entry React
-  App.jsx             root: state tab aktif, tampilan keluarga/lansia, BottomNav
+  App.jsx             root: gerbang login, state tab aktif, tampilan keluarga/lansia, BottomNav
   index.css           Tailwind + style dasar body
   components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, ...)
-  screens/            satu file per layar (Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
-  lib/                helper non-UI: status.js, insights.js, format.js, metrics.js, sensor.js, useDialogFocus.js
-  state/              React Context bersama (AlertsContext: alert, respons, kontak, jeda, reset demo; SensorContext: sumber data & polling sensor)
+  screens/            satu file per layar (Login, Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
+  lib/                helper non-UI: status.js, insights.js, format.js, metrics.js, sensor.js, storage.js, useDialogFocus.js
+  state/              React Context bersama (AuthContext: login simulasi & sesi; AlertsContext: alert, respons, kontak, jeda, reset demo; SensorContext: sumber data & polling sensor)
   data/
     dummy.js          SATU-SATUNYA sumber data dummy
     copy.js           SEMUA teks UI
 public/               aset statis (favicon, foto placeholder)
 sensor/               penghubung Python ESP32-S3 → API lokal (pengolahan, bridge, fixture, unit test)
+android/             project Android (Capacitor) untuk APK; ikon & splash di app/src/main/res
+capacitor.config.json konfigurasi Capacitor (appId, webDir dist, skema http untuk penghubung lokal)
 firmware/csi_receiver project ESP-IDF v6.1 untuk ESP32-S3 (kredensial di main/wifi_secrets.h, tidak di-commit)
 ```

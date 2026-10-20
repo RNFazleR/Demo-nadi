@@ -90,7 +90,7 @@ function TechnicalDetails({ data, apiUrl }) {
     [tt.invalid, num(data?.invalid_lines, 0)],
     [tt.port, data?.port ?? tt.empty],
     [tt.source, data ? (data.source === 'replay' ? tt.sourceReplay : tt.sourceLive) : tt.empty],
-    [tt.api, apiUrl],
+    [tt.api, apiUrl ?? t.source.hostUnset],
   ]
   if (data?.error) rows.push([tt.error, data.error])
   if (data?.device_log) rows.push([tt.deviceLog(data.device_log_at ? formatTimeSeconds(data.device_log_at) : tt.empty), data.device_log])

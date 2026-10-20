@@ -61,6 +61,14 @@ export const kontakKeluarga = [
   { id: 'kontak-3', nama: 'Bu Darmi', hubungan: 'Tetangga', nomor: '0821-9988-7766' },
 ]
 
+// Akun keluarga untuk layar login (SIMULASI prototipe). Dicocokkan di aplikasi, tanpa server,
+// jadi ini bukan keamanan sungguhan. Kredensial sengaja tidak ditampilkan di layar; daftarnya
+// untuk fasilitator/penguji ada di README.
+export const akunKeluarga = [
+  { id: 'akun-1', email: 'rina@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-1' },
+  { id: 'akun-2', email: 'budi@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-2' },
+]
+
 /** @type {DailyMetric[]} urut dari terlama ke terbaru */
 export const dailyMetrics = [
   { tanggal: '2026-09-18', durasi_tidur_jam: 7.2, rasio_aktif: 0.52, jumlah_bangun_malam: 1 },

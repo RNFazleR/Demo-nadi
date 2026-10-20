@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- brand-500 (sage) dan canvas dari tailwind.config.js -->
+    <color name="ic_launcher_background">#4F8A6E</color>
+    <color name="nadi_canvas">#FBF6EF</color>
+</resources>

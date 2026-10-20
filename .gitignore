@@ -15,3 +15,6 @@ firmware/**/sdkconfig.old
 firmware/**/wifi_secrets.h
 testsprite_tests/tmp/
 testsprite_tests/tmp/config.json
+
+# APK hasil build (npm run apk)
+*.apk

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { copy } from '../data/copy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
 import { useSensor } from '../state/SensorContext.jsx'
+import { useAuth } from '../state/AuthContext.jsx'
 import Icon from '../components/Icon.jsx'
 
 const PRIVACY_POINTS = [
@@ -13,10 +14,13 @@ const PRIVACY_POINTS = [
 const ORDER_BTN =
   'grid h-12 w-12 place-items-center rounded-btn border border-line text-ink transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent'
 
-// Tab Pengaturan: urutan kontak keluarga, privasi & jeda pemantauan, reset demo.
+// Tab Pengaturan: akun, urutan kontak keluarga, privasi & jeda pemantauan, sumber data, reset demo.
 export default function Settings() {
   const { contacts, moveContact, monitoringPaused, setMonitoringPaused, resetDemo } = useAlerts()
-  const { mode, setMode, apiUrl, isLive } = useSensor()
+  const { mode, setMode, apiUrl, isLive, sensorHost, setSensorHost } = useSensor()
+  const { user, logout } = useAuth()
+  const [hostDraft, setHostDraft] = useState(sensorHost)
+  const [hostSaved, setHostSaved] = useState(false)
   // Jeda hanya berlaku untuk cerita demo. Di mode sensor langsung pembacaan tetap berjalan,
   // jadi switch dinonaktifkan dan tidak boleh tampil "dijeda".
   const paused = monitoringPaused && !isLive
@@ -52,6 +56,22 @@ export default function Settings() {
   return (
     <div className="flex flex-col gap-5 px-gutter pb-8 pt-6">
       <h1 className="text-heading text-ink">{t.title}</h1>
+
+      {/* Akun keluarga yang sedang masuk */}
+      <section className="rounded-card bg-surface p-4 shadow-card">
+        <h2 className="text-title text-ink">{t.account.title}</h2>
+        <p className="mt-1 text-body text-ink-soft">{t.account.signedInAs}</p>
+        <p className="break-words text-body-lg font-bold text-ink">{user.nama}</p>
+        <p className="break-all text-body text-ink-soft">{user.email}</p>
+        <button
+          type="button"
+          onClick={logout}
+          className="mt-3 flex min-h-tap items-center gap-2 rounded-btn border-2 border-line px-5 text-body-lg font-bold text-ink hover:bg-surface-muted"
+        >
+          <Icon name="logout" className="h-5 w-5" />
+          {t.account.logout}
+        </button>
+      </section>
 
       {/* Kontak keluarga */}
       <section className="rounded-card bg-surface p-4 shadow-card">
@@ -189,7 +209,50 @@ export default function Settings() {
               </label>
             ))}
           </div>
-          {mode === 'live' && <p className="mt-1 break-all text-body text-ink-soft">{copy.sensor.source.apiLabel(apiUrl)}</p>}
+          {mode === 'live' && (
+            <form
+              className="mt-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                setSensorHost(hostDraft)
+                setHostSaved(true)
+              }}
+            >
+              <label htmlFor="sensor-host" className="text-body-lg font-bold text-ink">
+                {copy.sensor.source.hostLabel}
+              </label>
+              <p id="sensor-host-hint" className="text-body text-ink-soft">{copy.sensor.source.hostHint}</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  id="sensor-host"
+                  type="text"
+                  inputMode="url"
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={hostDraft}
+                  onChange={(e) => {
+                    setHostDraft(e.target.value)
+                    setHostSaved(false)
+                  }}
+                  aria-describedby="sensor-host-hint"
+                  className="min-h-tap min-w-0 flex-1 rounded-btn border-2 border-line bg-surface px-3 text-body-lg text-ink focus:border-brand-600"
+                />
+                <button type="submit" className="min-h-tap shrink-0 rounded-btn bg-brand-600 px-4 text-body-lg font-bold text-surface hover:bg-brand-700">
+                  {copy.sensor.source.hostSave}
+                </button>
+              </div>
+              {hostSaved && (
+                <p role="status" className="mt-2 flex items-center gap-2 text-body font-semibold text-brand-700">
+                  <Icon name="check" className="h-5 w-5" strokeWidth={2.4} />
+                  {copy.sensor.source.hostSaved}
+                </p>
+              )}
+              <p className="mt-1 break-all text-body text-ink-soft">
+                {copy.sensor.source.apiLabel(apiUrl ?? copy.sensor.source.hostUnset)}
+              </p>
+            </form>
+          )}
         </fieldset>
       </section>
 
