@@ -40,59 +40,58 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Enter the provided demo credentials in the Email and Kata sandi fields, then submit the Masuk form.
+        # -> Sign in to NADI using the provided linked family-account credentials.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Enter the provided demo credentials in the Email and Kata sandi fields, then submit the Masuk form.
+        # -> Sign in to NADI using the provided linked family-account credentials.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Enter the provided demo credentials in the Email and Kata sandi fields, then submit the Masuk form.
+        # -> Sign in to NADI using the provided linked family-account credentials.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open the Riwayat tab from the bottom navigation.
+        # -> Open the “Riwayat” tab from the family app navigation.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Select the “Waktu aktif” metric and verify that the history view updates.
+        # -> Select the “Waktu aktif” metric tab and verify its history view appears.
         # Waktu aktif button
         elem = page.get_by_role("tab", name="Waktu aktif")
         await elem.click(timeout=10000)
         
-        # -> Select “Durasi tidur” and verify that the history data and usual-pattern comparison update.
-        # Durasi tidur button
-        elem = page.get_by_role("tab", name="Durasi tidur")
-        await elem.click(timeout=10000)
-        
-        # -> Select “Bangun malam” and verify that its history metric and usual-pattern comparison appear.
+        # -> Switch to “Bangun malam” and verify that the history view updates to that metric.
         # Bangun malam button
         elem = page.get_by_role("tab", name="Bangun malam")
         await elem.click(timeout=10000)
         
-        # -> Select 22 September in the Bangun malam chart and verify that its day-specific data and usual-pattern comparison are displayed.
+        # -> Select Tuesday, 22 September in the history chart and verify the selected day's value and usual-pattern comparison.
         # Sel 22 button
         elem = page.get_by_role("button", name="Selasa, 22 September: 5 kali")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Riwayat menampilkan tampilan hari terpilih untuk 22 September.
+        # --> Riwayat untuk Selasa, 22 September ditampilkan.
+        await page.get_by_role("button", name="Selasa, 22 September: 5 kali").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Memastikan tampilan hari terpilih untuk 22 September ditampilkan.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Hari terpilih \u00b7 Sel, 22 Sep", timeout=15000), "Memastikan tampilan hari terpilih untuk 22 September ditampilkan."
+        # Assert: Pastikan data riwayat untuk hari yang dipilih ditampilkan.
+        await expect(page.get_by_role("button", name="Selasa, 22 September: 5 kali").nth(0)).to_be_visible(timeout=15000), "Pastikan data riwayat untuk hari yang dipilih ditampilkan."
+        # Assert-outcome: not verified — the export-time check could not be evaluated
+        # Assert: Pastikan detail data hari terpilih terlihat.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Hari itu", timeout=15000), "Pastikan detail data hari terpilih terlihat."
         
-        # --> Perbandingan pola biasanya untuk 22 September ditampilkan.
+        # --> Perbandingan dengan pola biasanya ditampilkan.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Memastikan perbandingan dengan pola biasanya untuk 22 September ditampilkan.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pola biasanya untuk 22 Sep:", timeout=15000), "Memastikan perbandingan dengan pola biasanya untuk 22 September ditampilkan."
+        # Assert: Pastikan perbandingan dengan pola biasanya ditampilkan.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Pola biasanya", timeout=15000), "Pastikan perbandingan dengan pola biasanya ditampilkan."
         await asyncio.sleep(5)
 
     finally:

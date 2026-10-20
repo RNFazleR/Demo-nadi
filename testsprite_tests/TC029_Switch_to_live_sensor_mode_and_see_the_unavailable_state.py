@@ -50,9 +50,9 @@ async def run_test():
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in the Sumber data settings and check that it becomes the selected source.
+        # -> Select “Sensor langsung (lewat HP Pusat)” in the Sumber data settings and check that it becomes the selected source.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP Pusat)")
         await elem.click(timeout=10000)
         
         # -> Open the Notifikasi tab and verify the live-sensor mode message and unavailable state are displayed.

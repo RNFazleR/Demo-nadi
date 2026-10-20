@@ -40,50 +40,50 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Enter the provided demo email and password and submit the NADI login form.
+        # -> Masuk ke aplikasi NADI menggunakan akun keluarga tertaut agar layar Beranda dan navigasi utama dapat diuji.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Enter the provided demo email and password and submit the NADI login form.
+        # -> Masuk ke aplikasi NADI menggunakan akun keluarga tertaut agar layar Beranda dan navigasi utama dapat diuji.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Enter the provided demo email and password and submit the NADI login form.
+        # -> Masuk ke aplikasi NADI menggunakan akun keluarga tertaut agar layar Beranda dan navigasi utama dapat diuji.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Riwayat from the bottom navigation and confirm its screen is displayed.
+        # -> Open the “Riwayat” screen from the bottom navigation and verify its page content.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Open Notifikasi from the bottom navigation and verify that its screen is displayed.
+        # -> Open “Notifikasi” from the bottom navigation and verify the notification screen.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan using the bottom navigation and verify the settings screen and navigation remain visible.
+        # -> Open “Pengaturan” from the bottom navigation and verify that its screen appears with the navigation still available.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The Pengaturan screen is displayed.
+        # --> Layar Pengaturan ditampilkan.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Pengaturan screen is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pengaturan", timeout=15000), "The Pengaturan screen is displayed."
+        # Assert: Pengaturan menampilkan informasi akun.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Masuk sebagai", timeout=15000), "Pengaturan menampilkan informasi akun."
         
-        # --> The bottom navigation remains available.
-        await page.get_by_role("button", name="Pengaturan").nth(0).scroll_into_view_if_needed()
+        # --> Navigasi bawah tetap tersedia di layar Pengaturan.
+        await page.get_by_role("button", name="Riwayat").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The bottom navigation remains available.
-        await expect(page.get_by_role("button", name="Pengaturan").nth(0)).to_be_visible(timeout=15000), "The bottom navigation remains available."
+        # Assert: Tombol Riwayat pada navigasi bawah tetap terlihat.
+        await expect(page.get_by_role("button", name="Riwayat").nth(0)).to_be_visible(timeout=15000), "Tombol Riwayat pada navigasi bawah tetap terlihat."
         await asyncio.sleep(5)
 
     finally:

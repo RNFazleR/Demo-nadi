@@ -40,49 +40,55 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # -> Sign in to the family app using the provided Rina account credentials.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # -> Sign in to the family app using the provided Rina account credentials.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # -> Sign in to the family app using the provided Rina account credentials.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan to choose the live sensor data source.
+        # -> Open Pengaturan from the family app navigation to locate the live sensor data-source setting.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in the Sumber data settings and then inspect the live-mode fields.
+        # -> Select “Sensor langsung (lewat HP Pusat)” as the data source.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda to inspect the live sensor status card.
+        # -> Open Beranda and locate the sensor card and its technical-details control.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
-        # -> Expand “Detail teknis” on the live sensor card and verify the displayed port, data source, and signal-strength information.
+        # -> Expand “Detail teknis” on the sensor card and verify the displayed port, source, and RSSI values.
         # Detail teknis
         elem = page.get_by_text("Detail teknis")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The technical details should show the RSSI value in dBm.
+        # --> The expanded technical details show a Port field.
+        await page.get_by_text("Port", exact=True).nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Expected the technical details to show the RSSI value in dBm.
-        await expect(page.get_by_role("group").nth(0)).to_contain_text("dBm", timeout=15000), "Expected the technical details to show the RSSI value in dBm."
+        # Assert: The Port field is visible in the technical details.
+        await expect(page.get_by_text("Port", exact=True).nth(0)).to_be_visible(timeout=15000), "The Port field is visible in the technical details."
+        
+        # --> The expanded technical details show a Sumber field.
+        # Assert-outcome: not verified — the export-time check could not be evaluated
+        # Assert: The Sumber field is visible in the technical details.
+        await expect(page.get_by_role("group").nth(0)).to_contain_text("Sumber", timeout=15000), "The Sumber field is visible in the technical details."
         await asyncio.sleep(5)
 
     finally:

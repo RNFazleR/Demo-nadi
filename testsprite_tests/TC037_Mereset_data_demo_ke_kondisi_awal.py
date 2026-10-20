@@ -40,49 +40,47 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided demo account and continue to Beranda.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided demo account and continue to Beranda.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided demo account and continue to Beranda.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan and inspect the available demo reset controls.
+        # -> Open the “Pengaturan” tab to locate the demo data reset control.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Activate “Reset data demo” in Pengaturan and inspect the resulting confirmation or feedback.
+        # -> Gulir ke bagian bawah Pengaturan untuk menemukan kontrol reset data demo.
+        await page.mouse.wheel(0, 300)
+        
+        # -> Click “Reset data demo” and review any confirmation or completion message.
         # Reset data demo button
         elem = page.get_by_role("button", name="Reset data demo")
         await elem.click(timeout=10000)
         
-        # -> Buka Beranda dan pastikan kartu status serta cerita demo awal tampil kembali.
+        # -> Buka tab “Beranda” untuk memverifikasi cerita demo kembali ke keadaan awal.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Reset mengembalikan aplikasi ke mode Demo dengan data contoh.
+        # --> Beranda menampilkan kembali cerita awal mode demo setelah reset, dengan status “Sedang dicek keluarga” dan badge “Darurat”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Pastikan aplikasi kembali ke mode Demo dengan data contoh.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Demo \u00b7 data contoh", timeout=15000), "Pastikan aplikasi kembali ke mode Demo dengan data contoh."
-        
-        # --> Beranda menampilkan kembali cerita awal tentang belum adanya gerakan selama 90 menit.
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Pastikan Beranda menampilkan cerita awal tentang belum adanya gerakan.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Belum ada gerakan terdeteksi selama 90 menit, padahal biasanya Ibu sedang beraktivitas di jam ini.", timeout=15000), "Pastikan Beranda menampilkan cerita awal tentang belum adanya gerakan."
+        # Assert: Beranda menampilkan cerita awal mode demo setelah reset.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Demo \u00b7 data contoh Status saat ini Sedang dicek Sedang dicek keluarga Darurat", timeout=15000), "Beranda menampilkan cerita awal mode demo setelah reset."
         await asyncio.sleep(5)
 
     finally:

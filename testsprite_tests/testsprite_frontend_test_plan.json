@@ -73,7 +73,7 @@
       },
       {
         "type": "action",
-        "description": "Select \"Sensor langsung (ESP32)\""
+        "description": "Select \"Sensor langsung (lewat HP Pusat)\""
       },
       {
         "type": "action",
@@ -1265,7 +1265,7 @@
       },
       {
         "type": "action",
-        "description": "Select \"Sensor langsung (ESP32)\""
+        "description": "Select \"Sensor langsung (lewat HP Pusat)\""
       },
       {
         "type": "assertion",
@@ -1447,6 +1447,185 @@
       {
         "type": "assertion",
         "description": "Verify the heading \"Masuk ke NADI\" is still displayed (the session was cleared)"
+      }
+    ]
+  },
+  {
+    "id": "TC044",
+    "title": "Menyiapkan HP Pusat lalu membuka pengaturan dari mode lansia",
+    "description": "Akun Pusat disiapkan keluarga (perangkat dilewati, kode keluarga, mulai), lalu mode lansia hanya bisa dibuka pengaturannya dengan kata sandi.",
+    "category": "HP Pusat",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Log in with \"sri@nadi.id\" / \"nadi1234\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Langkah 1 dari 3\" and the heading \"Sambungkan perangkat\" are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Lewati, pakai data demo\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Kode untuk keluarga\" and the code \"482 917\" are displayed, and \"Rina Wahyuni\" is listed as already linked"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Lanjut\", then click \"Mulai\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the elder screen shows \"Halo Bu Sri\" and \"NADI sedang menemani di rumah.\" and there is NO bottom navigation"
+      },
+      {
+        "type": "action",
+        "description": "Focus the \"Pengaturan (untuk keluarga)\" button with the keyboard and press Enter (or press and hold it for about 1 second)"
+      },
+      {
+        "type": "action",
+        "description": "Type \"salah\" in the \"Kata sandi\" field and click \"Buka pengaturan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message \"Kata sandi belum cocok. Coba lagi.\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Type \"nadi1234\" in the \"Kata sandi\" field and click \"Buka pengaturan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Pengaturan HP Pusat\" with sections \"Perangkat\", \"Kode keluarga\", and \"Akun\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Kembali ke layar orang tua\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Halo Bu Sri\" is displayed again"
+      }
+    ]
+  },
+  {
+    "id": "TC045",
+    "title": "HP Cabang menautkan ke HP Pusat dengan kode keluarga lalu melepas tautan",
+    "description": "Akun Cabang yang belum tertaut memasukkan kode keluarga; kode salah ditolak dengan pesan jelas, kode benar membuka Beranda; lepas tautan dikonfirmasi dulu.",
+    "category": "HP Cabang",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Log in with \"budi@nadi.id\" / \"nadi1234\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Tautkan ke HP orang tua\" is displayed and there is NO bottom navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Tautkan\" with the code field empty"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message \"Isi kode keluarga dulu, ya.\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Type \"111 111\" in the \"Kode keluarga (6 angka)\" field and click \"Tautkan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message \"Kode belum cocok dengan HP Pusat mana pun. Coba periksa lagi.\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Replace the code with \"482 917\" and click \"Tautkan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Beranda shows \"Tertaut dengan HP Ibu Sri Wahyuni.\" and the bottom navigation is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open \"Pengaturan\" in the bottom navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the \"Akun\" section shows \"Tertaut ke HP Pusat\" and \"HP Ibu Sri Wahyuni\""
+      },
+      {
+        "type": "action",
+        "description": "Click \"Lepas tautan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation dialog \"Lepas tautan dari HP Pusat?\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Ya, lepas tautan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Tautkan ke HP orang tua\" is displayed again"
+      }
+    ]
+  },
+  {
+    "id": "TC046",
+    "title": "Jawaban di HP Pusat muncul sebagai alert di HP Cabang (simulasi satu perangkat)",
+    "description": "Di prototipe, aliran data Pusat ke Cabang disimulasikan pada perangkat yang sama: jawaban \"Butuh bantuan\" di HP Pusat menjadi alert Darurat di app keluarga.",
+    "category": "Dua sisi (simulasi)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Log in with \"sri@nadi.id\" / \"nadi1234\"; if the setup screen appears click \"Lewati, pakai data demo\", then \"Lanjut\", then \"Mulai\""
+      },
+      {
+        "type": "action",
+        "description": "In the \"Fitur demo\" area click \"Tampilkan pertanyaan konfirmasi\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the question \"Halo Bu Sri, apakah baik-baik saja?\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Butuh bantuan\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Keluarga sedang dihubungi.\" and a \"Selesai\" button are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Selesai\", then open the settings with the \"Pengaturan (untuk keluarga)\" button (Enter or press and hold) and password \"nadi1234\""
+      },
+      {
+        "type": "action",
+        "description": "Click \"Keluar dari akun\", then log in with \"rina@nadi.id\" / \"nadi1234\" (do NOT reload the page)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Beranda status card shows \"Darurat\" with a description mentioning \"Butuh bantuan\", and the \"Notifikasi\" tab shows 1 pending item"
       }
     ]
   }

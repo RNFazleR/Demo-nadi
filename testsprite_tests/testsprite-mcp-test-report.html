@@ -1683,6 +1683,408 @@ body {
 <li><strong>Skrip run pertama (bagian 2) masih ada di folder ini.</strong> Beberapa ID tes dipakai ulang dengan isi berbeda (misalnya TC018 dan TC039). Tabel di atas menautkan skrip run kedua.</li>
 <li><strong>Badge Netlify (temuan #11)</strong> tidak tercakup, karena tes berjalan di build lokal. Badge ini masih perlu dimatikan di pengaturan proyek Netlify.</li>
 </ul>
+<hr>
+<h2>9️⃣ Uji Ulang TestSprite: setelah login keluarga &amp; APK (2026-10-20)</h2>
+<p><strong>Perubahan yang diuji:</strong> layar <strong>Masuk ke NADI</strong> (email + kata sandi, simulasi dengan akun di <code>dummy.js</code>), sesi yang diingat setelah muat ulang, bagian <strong>Akun → Keluar</strong> di Pengaturan, isian <strong>Alamat penghubung sensor</strong> (untuk APK), dan font Nunito yang dibundel. Build produksi (<code>vite preview</code>, port 4173) dari working tree setelah perubahan.</p>
+<p><strong>Kondisi:</strong> penghubung sensor berjalan di <code>localhost:8765</code>, tapi <strong>ESP32-S3 tidak tercolok</strong> (penghubung melaporkan <code>connection: &quot;disconnected&quot;</code>, port COM23 tidak ditemukan). Instruksi ke TestSprite: masuk dulu dengan <code>rina@nadi.id</code> / <code>nadi1234</code> sebelum setiap skenario lama, dan mode sensor harus menampilkan keadaan bermasalah yang jujur (&quot;Sensor terputus&quot;).</p>
+<p><strong>Rencana tes:</strong> 3 tes baru ditambahkan ke rencana: <strong>TC041</strong> (masuk + sesi diingat), <strong>TC042</strong> (login gagal: field kosong, format email salah, kombinasi salah), <strong>TC043</strong> (keluar lewat Pengaturan). Ditambah 22 tes yang sama dengan bagian 8, jadi total 25 tes.</p>
+<p><strong>Hasil: 23/25 lulus, 1 gagal, 1 terblokir. Ketiga tes login lulus, dan tidak ada regresi akibat layar login.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tes</th>
+<th>Status</th>
+<th>Hasil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Login keluarga (baru)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC041_Masuk_dengan_akun_keluarga_dan_sesi_diingat_setelah_muat_ulang.py">TC041 Masuk dengan akun keluarga dan sesi diingat setelah muat ulang</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/efa8fdd6-a6f4-4e1f-bac9-37d6762c8420">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC042_Login_gagal_menampilkan_pesan_yang_jelas.py">TC042 Login gagal menampilkan pesan yang jelas</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7a8ab47f-d605-4b1c-a18b-181816e09868">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC043_Keluar_dari_akun_lewat_Pengaturan.py">TC043 Keluar dari akun lewat Pengaturan</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/661ead04-d404-42e5-aa05-15e2421dedf8">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Beranda (mode demo) &amp; navigasi</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC013_Melihat_ringkasan_dashboard_demo_saat_pertama_dibuka.py">TC013 Melihat ringkasan dashboard demo saat pertama dibuka</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/c911c1c4-673a-4359-a8a9-57081f83d4c3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC026_Beralih_ke_setiap_tab_utama_dari_navigasi_bawah.py">TC026 Beralih ke setiap tab utama dari navigasi bawah</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7e252b00-4f7f-4232-a090-5aa807df45e0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC030_Badge_notifikasi_muncul_setelah_alert_baru_dibuat_di_mode_demo.py">TC030 Badge notifikasi muncul setelah alert baru dibuat di mode demo</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7863a1ca-4f50-4175-bc87-377b53c6d2a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC040_Beberapa_alert_aktif_Darurat_yang_sedang_dicek_mengungguli_Waspada_baru.py">TC040 Beberapa alert aktif: Darurat yang sedang dicek mengungguli Waspada baru</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/cb34323d-77d4-4e0d-9dc0-622de20aecb0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Layar konfirmasi lansia</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC020_Konfirmasi_baik_baik_saja_menambahkan_alert_info.py">TC020 Konfirmasi baik-baik saja menambahkan alert info</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/8f5d638d-7acf-4653-8289-ce3b9f7aaed5">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC010_Konfirmasi_butuh_bantuan_menambahkan_alert_darurat.py">TC010 Konfirmasi butuh bantuan menambahkan alert darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24416251-b70d-4800-8ec9-58339b9e358e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC027_Kedaluwarsa_konfirmasi_lansia_otomatis_menghubungi_keluarga.py">TC027 Kedaluwarsa konfirmasi lansia otomatis menghubungi keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/5f7c6347-86ce-4dfb-a88f-73b9f789b8a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Detail alert &amp; tindak lanjut</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC006_Alert_darurat_terbuka_dapat_dilihat_detail_dan_ditindaklanjuti.py">TC006 Alert darurat terbuka dapat dilihat detail dan ditindaklanjuti</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d055d853-a20e-4f15-9bf2-52ec7bfb671c">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC009_Pengguna_memeriksa_detail_alert_dan_menandainya_selesai_dari_Notifikasi.py">TC009 Pengguna memeriksa detail alert dan menandainya selesai dari Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/1c48fa80-17fd-499c-bd9b-c2e88cd6e7ef">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC014_Menandai_alert_waspada_sebagai_sudah_dicek_lalu_selesai.py">TC014 Menandai alert waspada sebagai sudah dicek lalu selesai</a></td>
+<td>⚠️ Terblokir</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a55af5e7-29c6-4f4e-8ca9-c9b9fa3e500e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC019_Menghubungi_keluarga_dari_alert_darurat_membuka_modal_panggilan_simulasi.py">TC019 Menghubungi keluarga dari alert darurat membuka modal panggilan simulasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/2babd39b-bcb5-4631-b1f6-22dad62ebcb7">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC038_Membatalkan_konfirmasi_panggilan_darurat.py">TC038 Membatalkan konfirmasi panggilan darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/e1b71cd0-010c-4f84-b957-64c2ccd29e5f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Riwayat</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC023_Meninjau_riwayat_tujuh_hari_dan_berpindah_metrik.py">TC023 Meninjau riwayat tujuh hari dan berpindah metrik</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/39fcd950-eec6-4799-9169-b207fb7b6b6b">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC024_Riwayat_menampilkan_metrik_harian_dan_perbandingan_saat_tanggal_dipilih.py">TC024 Riwayat menampilkan metrik harian dan perbandingan saat tanggal dipilih</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7431c548-d481-49ee-83c7-b0b9835043d8">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Pengaturan (mode demo)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC032_Menjeda_dan_melanjutkan_pemantauan_di_mode_demo_mengubah_status_beranda.py">TC032 Menjeda dan melanjutkan pemantauan di mode demo mengubah status beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/b26ef2e7-3bce-4d51-8539-e447ee02dd38">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC035_Mengatur_ulang_prioritas_kontak_keluarga.py">TC035 Mengatur ulang prioritas kontak keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/bf0ed1ee-c9c5-49d3-9834-eaa467e9fc0f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC037_Mereset_data_demo_ke_kondisi_awal.py">TC037 Mereset data demo ke kondisi awal</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24eb9c2b-9209-4dd0-86d8-a5d0ad03874e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Mode sensor langsung (ESP32-S3 tidak tercolok)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC003_Mengubah_sumber_data_ke_sensor_langsung_menampilkan_pembacaan_live_di_Beranda.py">TC003 Mengubah sumber data ke sensor langsung menampilkan pembacaan live di Beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7f2f21d6-cbe6-4fa3-bb17-d086c3e36a2f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC018_Inspect_live_sensor_technical_details.py">TC018 Inspect live sensor technical details</a></td>
+<td>❌ Gagal</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/76f2f3dd-9847-4f7c-a26b-33c8d9271f96">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC005_Switch_to_live_sensor_mode_and_return_to_the_home_dashboard.py">TC005 Switch to live sensor mode and return to the home dashboard</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d23aaa71-c488-44bf-bd2c-05691ceba1b3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC028_Melihat_batasan_mode_sensor_langsung_pada_Riwayat_dan_Notifikasi.py">TC028 Melihat batasan mode sensor langsung pada Riwayat dan Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a000efac-32f8-4334-9a8b-8d571a2eebc3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC039_Jeda_pemantauan_dinonaktifkan_di_mode_sensor_langsung.py">TC039 Jeda pemantauan dinonaktifkan di mode sensor langsung</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/52334879-67de-4563-80d2-1cdca08da7f4">video &amp; detail</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Analisis yang gagal/terblokir (keduanya bukan bug aplikasi):</strong></p>
+<ul>
+<li><strong>TC018 ❌:</strong> asersi &quot;RSSI tampil dalam dBm&quot; mengandaikan perangkat tersambung. Saat run ini ESP32 tidak tercolok, dan penghubung mengirim <code>rssi_dbm: null</code>. App menampilkan &quot;–&quot; dan kartu &quot;Sensor terputus&quot;. Ini sesuai aturan AGENTS.md: data yang tidak tersedia tidak boleh tampil seolah ada. Port &quot;COM23&quot; dan &quot;Perangkat (serial)&quot; tetap terverifikasi. Di bagian 8, dengan perangkat tersambung, tes yang sama lulus.</li>
+<li><strong>TC014 ⚠️:</strong> langkah &quot;Open a new warning-level alert&quot; tidak bisa dijalankan, karena cerita demo memang dimulai tanpa Waspada &quot;baru&quot; (semua Waspada 22 Sep sudah &quot;Selesai&quot;). Tes perlu membuat dulu satu Waspada baru lewat <strong>Fitur demo → Simulasikan pola berubah</strong>. Di run bagian 8, agen TestSprite kebetulan menemukan langkah itu sendiri. Perbaikan: tambahkan langkah simulasi di rencana tes TC014.</li>
+</ul>
+<p><strong>Yang dibuktikan tes login:</strong></p>
+<ul>
+<li><strong>TC041:</strong> app dibuka di &quot;Masuk ke NADI&quot; tanpa navigasi bawah. Setelah masuk, Beranda tampil, dan setelah muat ulang tetap masuk.</li>
+<li><strong>TC042:</strong> &quot;Isi email dulu, ya.&quot; / &quot;Isi kata sandi dulu, ya.&quot;, &quot;Format email belum benar…&quot;, dan satu pesan netral &quot;Email atau kata sandi belum cocok. Coba periksa lagi.&quot; Kata sandi dikosongkan dan pengguna tetap di layar masuk.</li>
+<li><strong>TC043:</strong> Pengaturan → Akun menampilkan &quot;Rina Wahyuni&quot; dan &quot;rina@nadi.id&quot;. &quot;Keluar&quot; kembali ke layar masuk dengan pesan &quot;Kamu sudah keluar. Masuk lagi kapan saja.&quot;, dan sesi hilang setelah muat ulang.</li>
+</ul>
+<p><strong>Catatan:</strong></p>
+<ul>
+<li>APK Android tidak diuji TestSprite (TestSprite menguji web lewat tunnel). APK diuji manual di emulator Android 16 (API 37): splash NADI → layar masuk → login → Beranda dengan navigasi bawah.</li>
+<li>Laporan HTML (<code>testsprite-mcp-test-report.html</code>) belum diperbarui untuk bagian 9.</li>
+</ul>
+<hr>
+<h2>🔟 Uji Ulang TestSprite: dua sisi HP Pusat &amp; HP Cabang (2026-10-20)</h2>
+<p><strong>Perubahan yang diuji:</strong> peran ditentukan akun. <strong>HP Pusat</strong> (<code>sri@nadi.id</code>) menjalani setup 3 langkah (perangkat → kode keluarga → mulai), lalu masuk <strong>mode lansia</strong>; pengaturannya dibuka dengan tekan &amp; tahan / Enter + kata sandi. <strong>HP Cabang</strong> belum tertaut (<code>budi@nadi.id</code>) memasukkan kode keluarga <code>482 917</code>, dan &quot;Lepas tautan&quot; dikonfirmasi dulu. Aliran data Pusat → Cabang disimulasikan di satu perangkat. Label demo &quot;Simulasikan anomali&quot; diganti &quot;Pratinjau HP Pusat&quot;, dan opsi sensor menjadi &quot;Sensor langsung (lewat HP Pusat)&quot;. Build produksi (<code>vite preview</code>, port 4173).</p>
+<p><strong>Kondisi:</strong> penghubung sensor berjalan, ESP32-S3 tidak tercolok (<code>connection: &quot;disconnected&quot;</code>). Instruksi ke TestSprite menyebut &quot;–&quot; untuk RSSI sebagai perilaku benar, dan tombol &quot;Simulasikan pola berubah&quot; untuk membuat Waspada baru. Dua hal yang terblokir/gagal di bagian 9 karena itu sekarang lulus.</p>
+<p><strong>Rencana tes:</strong> 3 tes baru: <strong>TC044</strong> (setup HP Pusat + buka pengaturan dari mode lansia dengan kata sandi salah/benar), <strong>TC045</strong> (Cabang menautkan dengan kode kosong/salah/benar, lalu lepas tautan), <strong>TC046</strong> (jawaban &quot;Butuh bantuan&quot; di HP Pusat muncul sebagai alert Darurat di HP Cabang). Ditambah 25 tes dari bagian 9, jadi total 28 tes.</p>
+<p><strong>Hasil: 28/28 lulus.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tes</th>
+<th>Status</th>
+<th>Hasil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dua sisi: HP Pusat &amp; HP Cabang (baru)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC044_Menyiapkan_HP_Pusat_lalu_membuka_pengaturan_dari_mode_lansia.py">TC044 Menyiapkan HP Pusat lalu membuka pengaturan dari mode lansia</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/70bdb86d-b872-47c9-a2ff-3fe655085fb4">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC045_HP_Cabang_menautkan_ke_HP_Pusat_dengan_kode_keluarga_lalu_melepas_tautan.py">TC045 HP Cabang menautkan ke HP Pusat dengan kode keluarga lalu melepas tautan</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/de8e537f-71fa-4b94-9351-4cf8dd1a213b">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC046_Jawaban_di_HP_Pusat_muncul_sebagai_alert_di_HP_Cabang_simulasi_satu_perangkat.py">TC046 Jawaban di HP Pusat muncul sebagai alert di HP Cabang (simulasi satu perangkat)</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/cc00e33a-0f20-434a-b858-0903ea8dea7a">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Login</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC041_Masuk_dengan_akun_keluarga_dan_sesi_diingat_setelah_muat_ulang.py">TC041 Masuk dengan akun keluarga dan sesi diingat setelah muat ulang</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/efa8fdd6-a6f4-4e1f-bac9-37d6762c8420">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC042_Login_gagal_menampilkan_pesan_yang_jelas.py">TC042 Login gagal menampilkan pesan yang jelas</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7a8ab47f-d605-4b1c-a18b-181816e09868">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC043_Keluar_dari_akun_lewat_Pengaturan.py">TC043 Keluar dari akun lewat Pengaturan</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/661ead04-d404-42e5-aa05-15e2421dedf8">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Beranda (mode demo) &amp; navigasi</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC013_Melihat_ringkasan_dashboard_demo_saat_pertama_dibuka.py">TC013 Melihat ringkasan dashboard demo saat pertama dibuka</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/c911c1c4-673a-4359-a8a9-57081f83d4c3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC026_Beralih_ke_setiap_tab_utama_dari_navigasi_bawah.py">TC026 Beralih ke setiap tab utama dari navigasi bawah</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7e252b00-4f7f-4232-a090-5aa807df45e0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC030_Badge_notifikasi_muncul_setelah_alert_baru_dibuat_di_mode_demo.py">TC030 Badge notifikasi muncul setelah alert baru dibuat di mode demo</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7863a1ca-4f50-4175-bc87-377b53c6d2a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC040_Beberapa_alert_aktif_Darurat_yang_sedang_dicek_mengungguli_Waspada_baru.py">TC040 Beberapa alert aktif: Darurat yang sedang dicek mengungguli Waspada baru</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/cb34323d-77d4-4e0d-9dc0-622de20aecb0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Layar konfirmasi lansia (pratinjau dari Cabang)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC020_Konfirmasi_baik_baik_saja_menambahkan_alert_info.py">TC020 Konfirmasi baik-baik saja menambahkan alert info</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/8f5d638d-7acf-4653-8289-ce3b9f7aaed5">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC010_Konfirmasi_butuh_bantuan_menambahkan_alert_darurat.py">TC010 Konfirmasi butuh bantuan menambahkan alert darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24416251-b70d-4800-8ec9-58339b9e358e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC027_Kedaluwarsa_konfirmasi_lansia_otomatis_menghubungi_keluarga.py">TC027 Kedaluwarsa konfirmasi lansia otomatis menghubungi keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/5f7c6347-86ce-4dfb-a88f-73b9f789b8a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Detail alert &amp; tindak lanjut</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC006_Alert_darurat_terbuka_dapat_dilihat_detail_dan_ditindaklanjuti.py">TC006 Alert darurat terbuka dapat dilihat detail dan ditindaklanjuti</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d055d853-a20e-4f15-9bf2-52ec7bfb671c">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC009_Pengguna_memeriksa_detail_alert_dan_menandainya_selesai_dari_Notifikasi.py">TC009 Pengguna memeriksa detail alert dan menandainya selesai dari Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/1c48fa80-17fd-499c-bd9b-c2e88cd6e7ef">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC014_Menandai_alert_waspada_sebagai_sudah_dicek_lalu_selesai.py">TC014 Menandai alert waspada sebagai sudah dicek lalu selesai</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a55af5e7-29c6-4f4e-8ca9-c9b9fa3e500e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC019_Menghubungi_keluarga_dari_alert_darurat_membuka_modal_panggilan_simulasi.py">TC019 Menghubungi keluarga dari alert darurat membuka modal panggilan simulasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/2babd39b-bcb5-4631-b1f6-22dad62ebcb7">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC038_Membatalkan_konfirmasi_panggilan_darurat.py">TC038 Membatalkan konfirmasi panggilan darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/e1b71cd0-010c-4f84-b957-64c2ccd29e5f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Riwayat</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC023_Meninjau_riwayat_tujuh_hari_dan_berpindah_metrik.py">TC023 Meninjau riwayat tujuh hari dan berpindah metrik</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/39fcd950-eec6-4799-9169-b207fb7b6b6b">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC024_Riwayat_menampilkan_metrik_harian_dan_perbandingan_saat_tanggal_dipilih.py">TC024 Riwayat menampilkan metrik harian dan perbandingan saat tanggal dipilih</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7431c548-d481-49ee-83c7-b0b9835043d8">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Pengaturan (mode demo)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC032_Menjeda_dan_melanjutkan_pemantauan_di_mode_demo_mengubah_status_beranda.py">TC032 Menjeda dan melanjutkan pemantauan di mode demo mengubah status beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/b26ef2e7-3bce-4d51-8539-e447ee02dd38">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC035_Mengatur_ulang_prioritas_kontak_keluarga.py">TC035 Mengatur ulang prioritas kontak keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/bf0ed1ee-c9c5-49d3-9834-eaa467e9fc0f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC037_Mereset_data_demo_ke_kondisi_awal.py">TC037 Mereset data demo ke kondisi awal</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24eb9c2b-9209-4dd0-86d8-a5d0ad03874e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Mode sensor langsung (ESP32-S3 tidak tercolok)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC003_Mengubah_sumber_data_ke_sensor_langsung_menampilkan_pembacaan_live_di_Beranda.py">TC003 Mengubah sumber data ke sensor langsung menampilkan pembacaan live di Beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7f2f21d6-cbe6-4fa3-bb17-d086c3e36a2f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC018_Inspect_live_sensor_technical_details.py">TC018 Inspect live sensor technical details</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/76f2f3dd-9847-4f7c-a26b-33c8d9271f96">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC005_Switch_to_live_sensor_mode_and_return_to_the_home_dashboard.py">TC005 Switch to live sensor mode and return to the home dashboard</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d23aaa71-c488-44bf-bd2c-05691ceba1b3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC028_Melihat_batasan_mode_sensor_langsung_pada_Riwayat_dan_Notifikasi.py">TC028 Melihat batasan mode sensor langsung pada Riwayat dan Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a000efac-32f8-4334-9a8b-8d571a2eebc3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC039_Jeda_pemantauan_dinonaktifkan_di_mode_sensor_langsung.py">TC039 Jeda pemantauan dinonaktifkan di mode sensor langsung</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/52334879-67de-4563-80d2-1cdca08da7f4">video &amp; detail</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Yang dibuktikan tes dua sisi:</strong></p>
+<ul>
+<li><strong>TC044:</strong> &quot;Langkah 1 dari 3&quot; → lewati perangkat → kode &quot;482 917&quot; dengan Rina Wahyuni sebagai keluarga tertaut → &quot;Mulai&quot; → mode lansia &quot;Halo Bu Sri&quot; tanpa navigasi bawah. Kata sandi salah menampilkan &quot;Kata sandi belum cocok. Coba lagi.&quot;; kata sandi benar membuka &quot;Pengaturan HP Pusat&quot; (Perangkat, Kode keluarga, Akun); &quot;Kembali ke layar orang tua&quot; berfungsi.</li>
+<li><strong>TC045:</strong> &quot;Tautkan ke HP orang tua&quot; tanpa navigasi; kode kosong dan kode salah ditolak dengan pesan jelas; kode benar menampilkan &quot;Tertaut dengan HP Ibu Sri Wahyuni.&quot; di Beranda; Pengaturan menampilkan &quot;Tertaut ke HP Pusat&quot;; lepas tautan meminta konfirmasi, lalu kembali ke layar kode.</li>
+<li><strong>TC046:</strong> pertanyaan di HP Pusat → &quot;Butuh bantuan&quot; → &quot;Keluarga sedang dihubungi.&quot; + &quot;Selesai&quot; → keluar → masuk sebagai Rina → Beranda menampilkan Darurat dari jawaban tersebut, dengan badge Notifikasi 1.</li>
+</ul>
+<p><strong>Catatan:</strong></p>
+<ul>
+<li>Aliran data dua HP <strong>disimulasikan</strong>: TC046 membuktikan alurnya di satu perangkat (tanpa reload), bukan sinkronisasi antar HP sungguhan.</li>
+<li>Tekan &amp; tahan diuji manual di browser: tekan singkat tidak membuka, tahan ±1 detik membuka dialog. TestSprite memakai jalur keyboard (Enter).</li>
+<li>Laporan HTML belum diperbarui untuk bagian 9–10.</li>
+</ul>
 
             </li>
 </ul>

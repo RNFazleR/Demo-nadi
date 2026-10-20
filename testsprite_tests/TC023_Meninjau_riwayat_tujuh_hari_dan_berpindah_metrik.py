@@ -40,54 +40,54 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # -> Masukkan akun keluarga Rina dan masuk ke Beranda NADI.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # -> Masukkan akun keluarga Rina dan masuk ke Beranda NADI.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # -> Masukkan akun keluarga Rina dan masuk ke Beranda NADI.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open the “Riwayat” page using the bottom navigation and inspect its history view.
+        # -> Open “Riwayat” from the bottom navigation and verify whether a seven-day history view is shown.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Switch the Riwayat chart to the “Waktu aktif” metric and inspect the updated history.
+        # -> Pilih tab “Waktu aktif” dan periksa metrik riwayat yang ditampilkan.
         # Waktu aktif button
         elem = page.get_by_role("tab", name="Waktu aktif")
         await elem.click(timeout=10000)
         
-        # -> Switch the Riwayat chart to “Bangun malam” and inspect the updated metric history.
+        # -> Buka tab “Bangun malam” dan periksa bahwa metrik riwayat tujuh hari ikut berubah.
         # Bangun malam button
         elem = page.get_by_role("tab", name="Bangun malam")
         await elem.click(timeout=10000)
         
-        # -> Select Selasa, 22 September, the day marked as unusually different, and verify its comparison with the usual pattern.
+        # -> Select Selasa, 22 September, the date marked as unusually different, and verify its selected-day comparison details.
         # Sel 22 button
         elem = page.get_by_role("button", name="Selasa, 22 September: 5 kali")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Riwayat displays the seven-day history view.
+        # --> The history view shows the last seven days.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The seven-day history view is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("7 hari terakhir", timeout=15000), "The seven-day history view is displayed."
+        # Assert: The history view should show the last seven days.
+        await expect(page.locator("#root").nth(0)).to_contain_text("7 hari terakhir", timeout=15000), "The history view should show the last seven days."
         
-        # --> The selected day’s night-awakening detail compares its frequency with the usual pattern.
+        # --> The selected day’s night-waking detail compares it with the usual pattern.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The selected day’s detail compares night awakenings with the usual pattern.
-        await expect(page.locator("#root").nth(0)).to_contain_text("lebih sering dari biasanya", timeout=15000), "The selected day\u2019s detail compares night awakenings with the usual pattern."
+        # Assert: The selected-day detail should compare night wakings with the usual pattern.
+        await expect(page.locator("#root").nth(0)).to_contain_text("lebih sering dari biasanya", timeout=15000), "The selected-day detail should compare night wakings with the usual pattern."
         await asyncio.sleep(5)
 
     finally:

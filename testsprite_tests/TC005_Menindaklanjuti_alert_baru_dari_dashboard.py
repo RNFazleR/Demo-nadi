@@ -45,9 +45,9 @@ async def run_test():
         await page.get_by_role("button", name="Masuk", exact=True).click()
         await expect(page.get_by_role("navigation")).to_be_visible(timeout=15000)
         
-        # -> Klik “Simulasikan anomali” pada Beranda untuk memulai alur perubahan status.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Klik “Pratinjau HP Pusat” pada Beranda untuk memulai alur perubahan status.
+        # Pratinjau HP Pusat button
+        elem = page.get_by_role("button", name="Pratinjau HP Pusat")
         await elem.click(timeout=10000)
         
         # -> Pilih “Butuh bantuan” pada konfirmasi anomali.

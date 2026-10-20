@@ -40,49 +40,46 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # -> Sign in to NADI with the linked family account and inspect Beranda.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # -> Sign in to NADI with the linked family account and inspect Beranda.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # -> Sign in to NADI with the linked family account and inspect Beranda.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Use the “Simulasikan anomali” demo control to create a new unanswered alert and inspect the resulting UI.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Use “Simulasikan pola berubah” on Beranda to create a new Waspada alert.
+        # Simulasikan pola berubah button
+        elem = page.get_by_role("button", name="Simulasikan pola berubah")
         await elem.click(timeout=10000)
         
-        # -> Return from the family-contact screen to the app and continue verifying the unanswered alert in Notifikasi.
-        # Kembali ke app keluarga button
-        elem = page.get_by_role("button", name="Kembali ke app keluarga")
-        await elem.click(timeout=10000)
-        
-        # -> Open the “Notifikasi” tab and verify the unanswered alert is listed.
+        # -> Open “Notifikasi” to check whether the changed-pattern alert increased the badge and appears in the list.
         # 1 Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The Notifikasi tab shows a badge for one unanswered notification.
+        # --> The Notifikasi tab displays a notification badge.
+        await page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Notifikasi badge shows one unanswered notification.
-        await expect(page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0)).to_have_attribute("aria-label", "Notifikasi, 1 belum ditanggapi", timeout=15000), "The Notifikasi badge shows one unanswered notification."
+        # Assert: The Notifikasi tab displays its notification badge.
+        await expect(page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0)).to_be_visible(timeout=15000), "The Notifikasi tab displays its notification badge."
         
-        # --> The new unanswered alert appears at the top of the notifications list.
+        # --> The new alert appears in the notifications list as a new Waspada alert.
+        await page.get_by_role("button", name="Waspada Baru Pagi ini gerakan").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The new unanswered alert appears in the notifications list.
-        await expect(page.get_by_label("Perlu ditanggapi (1)").get_by_role("button").nth(0)).to_contain_text("Ibu Sri Wahyuni belum menjawab pertanyaan konfirmasi NADI dalam 20 detik.", timeout=15000), "The new unanswered alert appears in the notifications list."
+        # Assert: The new Waspada alert appears in the notifications list.
+        await expect(page.get_by_role("button", name="Waspada Baru Pagi ini gerakan").nth(0)).to_be_visible(timeout=15000), "The new Waspada alert appears in the notifications list."
         await asyncio.sleep(5)
 
     finally:

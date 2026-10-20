@@ -40,44 +40,44 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina untuk mencapai Beranda.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina untuk mencapai Beranda.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga Rina untuk mencapai Beranda.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Trigger the demo anomaly flow using the visible “Simulasikan anomali” control and inspect its result.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Buka detail alert darurat melalui tombol “Lihat & tindak lanjuti”.
+        # Lihat & tindak lanjuti button
+        elem = page.get_by_role("button", name="Lihat & tindak lanjuti")
         await elem.click(timeout=10000)
         
-        # -> Pilih “Butuh bantuan” pada prompt Ibu Sri untuk melanjutkan alur alert darurat.
-        # Butuh bantuan button
-        elem = page.get_by_role("button", name="Butuh bantuan")
+        # -> Click “Hubungi Ibu Sri Wahyuni” and verify that a simulated call modal appears.
+        # Hubungi Ibu Sri Wahyuni button
+        elem = page.get_by_role("button", name="Hubungi Ibu Sri Wahyuni")
         await elem.click(timeout=10000)
         
-        # -> Close the simulated call screen using “Kembali ke app keluarga” and verify the emergency alert remains in follow-up status.
-        # Kembali ke app keluarga button
-        elem = page.get_by_role("button", name="Kembali ke app keluarga")
+        # -> Close the simulated call by selecting “Akhiri panggilan,” then verify the emergency alert remains in its follow-up state.
+        # Akhiri panggilan button
+        elem = page.get_by_role("button", name="Akhiri panggilan")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The emergency alert remains in follow-up with a prompt to contact Ibu Sri Wahyuni.
+        # --> The emergency alert remains in the “Sedang dicek” follow-up state after the call is ended.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The alert still shows its follow-up contact message.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Butuh perhatian sekarang, segera hubungi", timeout=15000), "The alert still shows its follow-up contact message."
+        # Assert: The emergency alert remains in the “Sedang dicek” follow-up state.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Sedang dicek", timeout=15000), "The emergency alert remains in the \u201cSedang dicek\u201d follow-up state."
         await asyncio.sleep(5)
 
     finally:

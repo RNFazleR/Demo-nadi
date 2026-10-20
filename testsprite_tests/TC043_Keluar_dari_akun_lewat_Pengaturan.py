@@ -40,42 +40,42 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Isi Email dan Kata sandi dengan kredensial demo, lalu pilih tombol Masuk.
+        # -> Masuk ke NADI dengan akun keluarga Rina.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Isi Email dan Kata sandi dengan kredensial demo, lalu pilih tombol Masuk.
+        # -> Masuk ke NADI dengan akun keluarga Rina.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Isi Email dan Kata sandi dengan kredensial demo, lalu pilih tombol Masuk.
+        # -> Masuk ke NADI dengan akun keluarga Rina.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan and check whether the Akun section shows Rina Wahyuni and rina@nadi.id.
+        # -> Buka tab Pengaturan dari navigasi bawah dan periksa informasi akun Rina.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Click “Keluar” and verify the login heading and logout confirmation message appear.
+        # -> Click “Keluar” and verify the login heading and signed-out confirmation message appear.
         # Keluar button
         elem = page.get_by_role("button", name="Keluar")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> After logout and reload, the login screen remains visible with the logout confirmation.
+        # --> After logout and reload, the login screen still shows the signed-out confirmation.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The login heading is visible after reload.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Masuk ke NADI", timeout=15000), "The login heading is visible after reload."
+        # Assert: The login heading is displayed after reload.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Masuk ke NADI", timeout=15000), "The login heading is displayed after reload."
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The logout confirmation is visible after reload.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Kamu sudah keluar. Masuk lagi kapan saja.", timeout=15000), "The logout confirmation is visible after reload."
+        # Assert: The signed-out confirmation is displayed after reload.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Kamu sudah keluar. Masuk lagi kapan saja.", timeout=15000), "The signed-out confirmation is displayed after reload."
         await asyncio.sleep(5)
 
     finally:

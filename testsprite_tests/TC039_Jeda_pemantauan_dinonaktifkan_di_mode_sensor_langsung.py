@@ -40,49 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # -> Masuk ke NADI menggunakan akun HP Cabang yang sudah tertaut.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # -> Masuk ke NADI menggunakan akun HP Cabang yang sudah tertaut.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # -> Masuk ke NADI menggunakan akun HP Cabang yang sudah tertaut.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan to inspect the monitoring mode and pause controls.
+        # -> Buka tab “Pengaturan” untuk memeriksa dan mengatur Jeda pemantauan.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Turn on “Jeda pemantauan” in demo mode and verify the paused status appears.
+        # -> Aktifkan switch “Jeda pemantauan” dalam mode Demo dan periksa status yang muncul.
         # button
         elem = page.get_by_role("switch", name="Jeda pemantauan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” and inspect the pause control and live-mode status message.
-        # Sensor langsung (ESP32)
-        elem = page.locator("label").filter(has_text="Sensor langsung (ESP32)")
+        # -> Select “Sensor langsung (lewat HP Pusat)” and verify the pause control and status update for live mode.
+        # Sensor langsung (lewat HP Pusat)
+        elem = page.locator("label").filter(has_text="Sensor langsung (lewat HP")
         await elem.click(timeout=10000)
         
         # -> Select “Demo (data contoh)” and verify that “Pemantauan sedang dijeda” appears again.
-        # Demo (data contoh)
-        elem = page.locator("label").filter(has_text="Demo (data contoh)")
+        # data-source radio button
+        elem = page.get_by_role("radio", name="Demo (data contoh)")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Di mode Demo, “Pemantauan sedang dijeda” tampil.
+        # --> In Demo mode, “Pemantauan sedang dijeda” is displayed.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Pastikan status “Pemantauan sedang dijeda” tampil.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pemantauan sedang dijeda", timeout=15000), "Pastikan status \u201cPemantauan sedang dijeda\u201d tampil."
+        # Assert: Verify that the paused-monitoring status is displayed in Demo mode.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Pemantauan sedang dijeda", timeout=15000), "Verify that the paused-monitoring status is displayed in Demo mode."
         await asyncio.sleep(5)
 
     finally:

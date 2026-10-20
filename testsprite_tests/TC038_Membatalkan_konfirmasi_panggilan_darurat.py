@@ -40,50 +40,50 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in with the provided demo account to reach the NADI home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga rina@nadi.id.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in with the provided demo account to reach the NADI home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga rina@nadi.id.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in with the provided demo account to reach the NADI home screen.
+        # -> Masuk ke NADI menggunakan akun keluarga rina@nadi.id.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open the Notifikasi tab to locate an emergency-level alert.
+        # -> Open the Notifikasi tab and locate the Darurat alert.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
-        # -> Open the “Darurat” alert marked “Sedang dicek” to view its details.
+        # -> Buka alert “Darurat” yang sedang dicek untuk melihat detailnya.
         # Darurat Sedang dicek Belum ada gerakan terdeteksi... button
         elem = page.get_by_role("button", name="Darurat Sedang dicek Belum")
         await elem.click(timeout=10000)
         
-        # -> Open the emergency-service confirmation from the alert details.
+        # -> Open the emergency-call confirmation dialog from the alert detail.
         # Hubungi layanan darurat button
         elem = page.get_by_role("button", name="Hubungi layanan darurat")
         await elem.click(timeout=10000)
         
-        # -> Click “Batal” to close the emergency confirmation and confirm the alert detail screen remains visible.
+        # -> Pilih “Batal” pada dialog panggilan darurat dan pastikan detail alert tetap tampil.
         # Batal button
         elem = page.get_by_role("button", name="Batal")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The “Darurat” alert detail screen remains visible.
-        await page.locator("#root").nth(0).scroll_into_view_if_needed()
+        # --> The Darurat alert detail screen remains visible with the emergency-service contact action.
+        await page.get_by_role("button", name="Hubungi layanan darurat").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The alert detail screen is visible.
-        await expect(page.locator("#root").nth(0)).to_be_visible(timeout=15000), "The alert detail screen is visible."
+        # Assert: The emergency-service contact action is visible on the alert detail screen.
+        await expect(page.get_by_role("button", name="Hubungi layanan darurat").nth(0)).to_be_visible(timeout=15000), "The emergency-service contact action is visible on the alert detail screen."
         await asyncio.sleep(5)
 
     finally:

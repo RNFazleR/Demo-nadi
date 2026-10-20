@@ -45,9 +45,9 @@ async def run_test():
         await page.get_by_role("button", name="Masuk", exact=True).click()
         await expect(page.get_by_role("navigation")).to_be_visible(timeout=15000)
         
-        # -> Mulai simulasi anomali melalui tombol “Simulasikan anomali”.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Mulai simulasi anomali melalui tombol “Pratinjau HP Pusat”.
+        # Pratinjau HP Pusat button
+        elem = page.get_by_role("button", name="Pratinjau HP Pusat")
         await elem.click(timeout=10000)
         
         # -> Select “Kembali ke app keluarga” and verify whether a new emergency alert appears in the family app.

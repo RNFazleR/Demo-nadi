@@ -40,49 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided family demo credentials.
+        # -> Sign in to NADI with the linked family account to open the family app.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided family demo credentials.
+        # -> Sign in to NADI with the linked family account to open the family app.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided family demo credentials.
+        # -> Sign in to NADI with the linked family account to open the family app.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Start the anomaly simulation by selecting “Simulasikan anomali” on Beranda.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Open the “Pratinjau HP Pusat” elder-phone preview to reach the confirmation question.
+        # Pratinjau HP Pusat button
+        elem = page.get_by_role("button", name="Pratinjau HP Pusat")
         await elem.click(timeout=10000)
         
-        # -> Select “Butuh bantuan” on the anomaly response screen and check that the family dashboard shows a newly recorded emergency alert.
+        # -> Choose “Butuh bantuan” on the elder-phone confirmation screen.
         # Butuh bantuan button
         elem = page.get_by_role("button", name="Butuh bantuan")
         await elem.click(timeout=10000)
         
-        # -> Tekan “Kembali ke app keluarga” untuk memastikan dashboard tampil kembali dan memeriksa apakah alert darurat baru tercatat.
+        # -> Click “Kembali ke app keluarga” and verify the family dashboard shows a newly recorded emergency alert.
         # Kembali ke app keluarga button
         elem = page.get_by_role("button", name="Kembali ke app keluarga")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The Beranda dashboard is shown again.
+        # --> The family dashboard is shown again.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Beranda dashboard is shown.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Kabar hari ini", timeout=15000), "The Beranda dashboard is shown."
+        # Assert: The family dashboard is shown again.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Kabar hari ini", timeout=15000), "The family dashboard is shown again."
         
-        # --> A new emergency alert records the “Butuh bantuan” response.
+        # --> A new emergency alert is recorded after the “Butuh bantuan” response.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The emergency alert records the “Butuh bantuan” response.
-        await expect(page.locator("#root").nth(0)).to_contain_text("menekan tombol \"Butuh bantuan\"", timeout=15000), "The emergency alert records the \u201cButuh bantuan\u201d response."
+        # Assert: The dashboard records the emergency alert from the help-needed response.
+        await expect(page.locator("#root").nth(0)).to_contain_text("menekan tombol \"Butuh bantuan\" di pertanyaan konfirmasi NADI.", timeout=15000), "The dashboard records the emergency alert from the help-needed response."
         await asyncio.sleep(5)
 
     finally:

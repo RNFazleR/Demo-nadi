@@ -40,50 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Enter the provided demo email and password, then select “Masuk” to open the app.
+        # -> Enter Rina’s provided email and password, then submit the visible Masuk form.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Enter the provided demo email and password, then select “Masuk” to open the app.
+        # -> Enter Rina’s provided email and password, then submit the visible Masuk form.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Enter the provided demo email and password, then select “Masuk” to open the app.
+        # -> Enter Rina’s provided email and password, then submit the visible Masuk form.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open the “Notifikasi” tab and locate an alert that needs attention.
+        # -> Open the “Notifikasi” tab to view alerts needing attention.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
-        # -> Open the Darurat alert marked “Sedang dicek” and inspect its details.
+        # -> Open the today’s “Darurat” alert marked “Sedang dicek” and inspect its detail.
         # Darurat Sedang dicek Belum ada gerakan terdeteksi... button
         elem = page.get_by_role("button", name="Darurat Sedang dicek Belum")
         await elem.click(timeout=10000)
         
-        # -> Select “Tandai selesai” on the Darurat alert and verify its handled status.
+        # -> Click “Tandai selesai” on the Darurat alert and verify the alert is shown as completed.
         # Tandai selesai button
         elem = page.get_by_role("button", name="Tandai selesai")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Detail alert Darurat ditampilkan.
-        await page.locator("#root").nth(0).scroll_into_view_if_needed()
+        # --> Detail alert Darurat menampilkan informasi tentang tidak adanya gerakan selama 90 menit.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Darurat alert detail is displayed.
-        await expect(page.locator("#root").nth(0)).to_be_visible(timeout=15000), "The Darurat alert detail is displayed."
+        # Assert: Detail alert Darurat menampilkan informasi deteksinya.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Belum ada gerakan terdeteksi selama 90 menit", timeout=15000), "Detail alert Darurat menampilkan informasi deteksinya."
         
-        # --> Status alert berubah menjadi “Selesai.”
+        # --> Status alert Darurat berubah menjadi “Selesai”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The alert status is Selesai.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Selesai", timeout=15000), "The alert status is Selesai."
+        # Assert: Status alert Darurat adalah Selesai.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Selesai", timeout=15000), "Status alert Darurat adalah Selesai."
         await asyncio.sleep(5)
 
     finally:

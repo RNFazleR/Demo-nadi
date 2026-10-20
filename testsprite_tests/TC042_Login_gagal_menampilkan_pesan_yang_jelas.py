@@ -40,54 +40,54 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Kirim formulir Masuk tanpa mengisi Email maupun Kata sandi, lalu periksa pesan validasi yang tampil.
+        # -> Submit the empty login form and verify that both required-field messages are displayed.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Masukkan email berformat salah dan kata sandi, lalu kirim formulir untuk memverifikasi pesan format email.
+        # -> Enter “rina-nadi” and “nadi1234,” submit the login form, and check for the malformed-email message.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina-nadi")
         
-        # -> Masukkan email berformat salah dan kata sandi, lalu kirim formulir untuk memverifikasi pesan format email.
+        # -> Enter “rina-nadi” and “nadi1234,” submit the login form, and check for the malformed-email message.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Masukkan email berformat salah dan kata sandi, lalu kirim formulir untuk memverifikasi pesan format email.
+        # -> Enter “rina-nadi” and “nadi1234,” submit the login form, and check for the malformed-email message.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Masukkan email rina@nadi.id dan kata sandi salah123, kirim formulir Masuk, lalu periksa pesan kesalahan, kata sandi kosong, dan judul Masuk ke NADI.
+        # -> Replace the email and password with the specified incorrect credentials, submit the form, and verify the error message, cleared password field, and “Masuk ke NADI” heading.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Masukkan email rina@nadi.id dan kata sandi salah123, kirim formulir Masuk, lalu periksa pesan kesalahan, kata sandi kosong, dan judul Masuk ke NADI.
+        # -> Replace the email and password with the specified incorrect credentials, submit the form, and verify the error message, cleared password field, and “Masuk ke NADI” heading.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("salah123")
         
-        # -> Masukkan email rina@nadi.id dan kata sandi salah123, kirim formulir Masuk, lalu periksa pesan kesalahan, kata sandi kosong, dan judul Masuk ke NADI.
+        # -> Replace the email and password with the specified incorrect credentials, submit the form, and verify the error message, cleared password field, and “Masuk ke NADI” heading.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Setelah kredensial ditolak, pesan ketidakcocokan tampil, kolom Kata sandi kosong, dan judul Masuk ke NADI tetap terlihat.
+        # --> Kredensial yang salah menampilkan pesan ketidakcocokan, mengosongkan kolom kata sandi, dan mempertahankan layar masuk.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Pesan kredensial tidak cocok ditampilkan.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Email atau kata sandi belum cocok. Coba periksa lagi.", timeout=15000), "Pesan kredensial tidak cocok ditampilkan."
+        # Assert: Pesan ketidakcocokan kredensial ditampilkan.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Email atau kata sandi belum cocok. Coba periksa lagi.", timeout=15000), "Pesan ketidakcocokan kredensial ditampilkan."
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Kolom Kata sandi kosong setelah kredensial ditolak.
-        await expect(page.get_by_role("textbox", name="Kata sandi").nth(0)).to_have_value("", timeout=15000), "Kolom Kata sandi kosong setelah kredensial ditolak."
+        # Assert: Kolom kata sandi kosong setelah percobaan masuk.
+        await expect(page.get_by_role("textbox", name="Kata sandi").nth(0)).to_have_value("", timeout=15000), "Kolom kata sandi kosong setelah percobaan masuk."
         await asyncio.sleep(5)
 
     finally:

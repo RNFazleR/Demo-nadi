@@ -45,9 +45,9 @@ async def run_test():
         await page.get_by_role("button", name="Masuk", exact=True).click()
         await expect(page.get_by_role("navigation")).to_be_visible(timeout=15000)
         
-        # -> Mulai simulasi dengan memilih “Simulasikan anomali” di Beranda.
-        # Simulasikan anomali button
-        elem = page.get_by_role("button", name="Simulasikan anomali")
+        # -> Mulai simulasi dengan memilih “Pratinjau HP Pusat” di Beranda.
+        # Pratinjau HP Pusat button
+        elem = page.get_by_role("button", name="Pratinjau HP Pusat")
         await elem.click(timeout=10000)
         
         # -> Choose “Ya, saya baik-baik saja” on the elder confirmation screen.

@@ -40,58 +40,62 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # -> Masuk ke aplikasi keluarga menggunakan akun rina@nadi.id dan kata sandi demo.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # -> Masuk ke aplikasi keluarga menggunakan akun rina@nadi.id dan kata sandi demo.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # -> Masuk ke aplikasi keluarga menggunakan akun rina@nadi.id dan kata sandi demo.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open the Pengaturan tab to inspect the sensor mode setting.
+        # -> Buka tab Pengaturan untuk menemukan pilihan sumber sensor langsung.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in the Sumber data section and inspect the resulting settings.
+        # -> Select “Sensor langsung (lewat HP Pusat)” in Pengaturan, then verify the resulting live state on Beranda.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and verify the live sensor card, its technical details, and the absence of the “Rekaman uji” chip.
+        # -> Open the “Beranda” tab and verify the live sensor status and technical details shown there.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
-        # -> Open “Detail teknis” on the live sensor card and verify the displayed technical information.
+        # -> Buka “Detail teknis” pada kartu Sensor gerak dan periksa informasi teknis yang ditampilkan.
         # Detail teknis Skor perubahan sinyal – Batas gerak...
         elem = page.get_by_text("Detail teknisSkor perubahan")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The “Sensor langsung” chip is displayed on Beranda.
-        await page.get_by_role("main").locator("span").nth(0).scroll_into_view_if_needed()
+        # --> Beranda menampilkan chip “Sensor langsung”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The “Sensor langsung” chip is visible.
-        await expect(page.get_by_role("main").locator("span").nth(0)).to_be_visible(timeout=15000), "The \u201cSensor langsung\u201d chip is visible."
+        # Assert: Tampilkan chip “Sensor langsung” di Beranda.
+        await expect(page.get_by_role("main").nth(0)).to_contain_text("Sensor langsung", timeout=15000), "Tampilkan chip \u201cSensor langsung\u201d di Beranda."
         
-        # --> Both “Gerakan terakhir” and “Data terakhir diterima” are displayed.
+        # --> Kartu Sensor gerak menampilkan status “Sensor terputus”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: “Gerakan terakhir” is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Gerakan terakhir", timeout=15000), "\u201cGerakan terakhir\u201d is displayed."
+        # Assert: Tampilkan status “Sensor terputus” pada kartu sensor.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Sensor terputus", timeout=15000), "Tampilkan status \u201cSensor terputus\u201d pada kartu sensor."
+        
+        # --> Beranda menampilkan label “Gerakan terakhir” dan “Data terakhir diterima”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: “Data terakhir diterima” is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Data terakhir diterima", timeout=15000), "\u201cData terakhir diterima\u201d is displayed."
+        # Assert: Tampilkan label “Gerakan terakhir”.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Gerakan terakhir", timeout=15000), "Tampilkan label \u201cGerakan terakhir\u201d."
+        # Assert-outcome: not verified — the export-time check could not be evaluated
+        # Assert: Tampilkan label “Data terakhir diterima”.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Data terakhir diterima", timeout=15000), "Tampilkan label \u201cData terakhir diterima\u201d."
         await asyncio.sleep(5)
 
     finally:

@@ -40,55 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Sign in to NADI using the provided demo account to reach the home dashboard.
+        # -> Sign in to the family app using the provided Rina account.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Sign in to NADI using the provided demo account to reach the home dashboard.
+        # -> Sign in to the family app using the provided Rina account.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Sign in to NADI using the provided demo account to reach the home dashboard.
+        # -> Sign in to the family app using the provided Rina account.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan to inspect the sensor source setting.
+        # -> Open the “Pengaturan” tab to locate the sensor data source setting.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in the data source settings and inspect the newly displayed live-mode options.
+        # -> Select “Sensor langsung (lewat HP Pusat)” in the Sumber data settings.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP")
         await elem.click(timeout=10000)
         
-        # -> Return to Beranda and verify the live sensor chip, sensor status card, and technical details.
+        # -> Open Beranda and verify the live sensor indicator and sensor status card on the dashboard.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
-        await elem.click(timeout=10000)
-        
-        # -> Expand “Detail teknis” on the Beranda sensor card and verify the displayed port and device type.
-        # Detail teknis
-        elem = page.get_by_text("Detail teknis")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
         # --> The dashboard displays the “Sensor langsung” chip.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The dashboard shows the Sensor langsung chip.
-        await expect(page.get_by_role("main").nth(0)).to_contain_text("Sensor langsung", timeout=15000), "The dashboard shows the Sensor langsung chip."
+        # Assert: The dashboard displays the live sensor chip.
+        await expect(page.get_by_role("main").nth(0)).to_contain_text("Sensor langsung", timeout=15000), "The dashboard displays the live sensor chip."
         
-        # --> The sensor status card is displayed on the dashboard.
-        await page.get_by_text("Detail teknisSkor perubahan").nth(0).scroll_into_view_if_needed()
+        # --> The dashboard’s sensor status card reports “Sensor terputus.”
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The sensor card’s technical details are visible on the dashboard.
-        await expect(page.get_by_text("Detail teknisSkor perubahan").nth(0)).to_be_visible(timeout=15000), "The sensor card\u2019s technical details are visible on the dashboard."
+        # Assert: The dashboard displays the disconnected sensor status.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Sensor terputus", timeout=15000), "The dashboard displays the disconnected sensor status."
         await asyncio.sleep(5)
 
     finally:

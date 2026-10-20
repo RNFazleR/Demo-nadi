@@ -40,49 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # -> Sign in to NADI with the provided Rina family account.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # -> Sign in to NADI with the provided Rina family account.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # -> Sign in to NADI with the provided Rina family account.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan and inspect the available data-source settings.
+        # -> Open the Pengaturan tab to locate the data source setting.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in the Sumber data settings and inspect the resulting sensor status.
+        # -> Select “Sensor langsung (lewat HP Pusat)” in Pengaturan and check the resulting sensor-source state.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP")
         await elem.click(timeout=10000)
         
-        # -> Open the “Riwayat” tab and verify the displayed history state.
+        # -> Open the Riwayat tab and check whether it displays the expected unavailable-history state.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Open the “Notifikasi” tab and verify the unavailable-feature state shown there.
+        # -> Open the Notifikasi tab and check that its unavailable state is displayed.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung.
+        # --> Notifikasi menampilkan bahwa fitur belum tersedia dalam mode sensor langsung.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Belum tersedia di mode sensor langsung", timeout=15000), "Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung."
+        # Assert: Notifikasi menampilkan pesan bahwa fitur belum tersedia dalam mode sensor langsung.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Belum tersedia di mode sensor langsung", timeout=15000), "Notifikasi menampilkan pesan bahwa fitur belum tersedia dalam mode sensor langsung."
         await asyncio.sleep(5)
 
     finally:

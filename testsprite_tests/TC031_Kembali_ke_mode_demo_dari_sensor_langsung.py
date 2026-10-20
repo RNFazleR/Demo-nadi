@@ -50,9 +50,9 @@ async def run_test():
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” in Pengaturan and check the resulting sensor status.
+        # -> Select “Sensor langsung (lewat HP Pusat)” in Pengaturan and check the resulting sensor status.
         # data-source radio button
-        elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
+        elem = page.get_by_role("radio", name="Sensor langsung (lewat HP Pusat)")
         await elem.click(timeout=10000)
         
         # -> Pilih “Demo (data contoh)” di Pengaturan dan periksa apakah mode demo menjadi aktif.
@@ -68,10 +68,10 @@ async def run_test():
         # --> Assertions to verify final state
         
         # --> Demo mode is active again, with the demo simulation option available.
-        await page.get_by_role("button", name="Simulasikan anomali").nth(0).scroll_into_view_if_needed()
+        await page.get_by_role("button", name="Pratinjau HP Pusat").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
         # Assert: The demo simulation option is visible.
-        await expect(page.get_by_role("button", name="Simulasikan anomali").nth(0)).to_be_visible(timeout=15000), "The demo simulation option is visible."
+        await expect(page.get_by_role("button", name="Pratinjau HP Pusat").nth(0)).to_be_visible(timeout=15000), "The demo simulation option is visible."
         
         # --> The standard family-facing Beranda screen is available.
         # Assert-outcome: not verified — the export-time check could not be evaluated

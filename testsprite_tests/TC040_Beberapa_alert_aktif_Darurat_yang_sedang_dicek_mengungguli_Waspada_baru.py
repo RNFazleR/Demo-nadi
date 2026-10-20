@@ -40,72 +40,72 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar kartu status di Beranda dapat diuji.
+        # -> Sign in to NADI with the family account and open the Beranda status card.
         # email field
         elem = page.get_by_role("textbox", name="Email")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("rina@nadi.id")
         
-        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar kartu status di Beranda dapat diuji.
+        # -> Sign in to NADI with the family account and open the Beranda status card.
         # password field
         elem = page.get_by_role("textbox", name="Kata sandi")
         await elem.wait_for(state="visible", timeout=10000)
         await elem.fill("nadi1234")
         
-        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar kartu status di Beranda dapat diuji.
+        # -> Sign in to NADI with the family account and open the Beranda status card.
         # Masuk button
         elem = page.get_by_role("button", name="Masuk")
         await elem.click(timeout=10000)
         
-        # -> Scroll to the demo controls and select “Simulasikan pola berubah” to test whether the status card keeps the more serious alert.
+        # -> Select “Simulasikan pola berubah” on Beranda to generate the Waspada alert.
         # Simulasikan pola berubah button
         elem = page.get_by_role("button", name="Simulasikan pola berubah")
         await elem.click(timeout=10000)
         
-        # -> Open “Lihat & tindak lanjuti” on the status card and inspect the available follow-up actions.
+        # -> Open “Lihat & tindak lanjuti” on the status card.
         # Lihat & tindak lanjuti button
         elem = page.get_by_role("button", name="Lihat & tindak lanjuti")
         await elem.click(timeout=10000)
         
-        # -> Click “Tandai selesai” on the Darurat alert detail, then inspect the resulting page state.
+        # -> Mark the Darurat alert as selesai and then return to Beranda to verify which open alert is shown.
         # Tandai selesai button
         elem = page.get_by_role("button", name="Tandai selesai")
         await elem.click(timeout=10000)
         
-        # -> Return from the completed Darurat alert to Beranda and verify the status card shows the Waspada alert.
+        # -> Return from the completed Darurat detail to Beranda and verify the status card selects the open Waspada alert.
         # Kembali button
         elem = page.get_by_role("button", name="Kembali")
         await elem.click(timeout=10000)
         
-        # -> Open “Lihat & tindak lanjuti” for the Waspada alert and inspect its available actions.
+        # -> Open the Waspada card’s “Lihat & tindak lanjuti” follow-up view.
         # Lihat & tindak lanjuti button
         elem = page.get_by_role("button", name="Lihat & tindak lanjuti")
         await elem.click(timeout=10000)
         
-        # -> Click “Tandai sudah dicek” on the Waspada alert and inspect the updated detail view.
+        # -> Mark the Waspada alert as checked using “Tandai sudah dicek” and inspect the updated alert state.
         # Tandai sudah dicek button
         elem = page.get_by_role("button", name="Tandai sudah dicek")
         await elem.click(timeout=10000)
         
-        # -> Click “Tandai selesai” for the Waspada alert and confirm that it is marked complete.
+        # -> Complete the checked Waspada alert by selecting “Tandai selesai.”
         # Tandai selesai button
         elem = page.get_by_role("button", name="Tandai selesai")
         await elem.click(timeout=10000)
         
-        # -> Return to Beranda after completing the Waspada alert and verify that the status card shows Normal.
+        # -> Return to Beranda and verify the status card shows “Normal” with “Pola keseharian terlihat seperti biasanya.”
         # Kembali button
         elem = page.get_by_role("button", name="Kembali")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> After both alerts are handled, the status card shows Normal with its usual-pattern message.
+        # --> Kartu status menunjukkan Normal dengan pesan bahwa pola keseharian terlihat seperti biasanya.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The status card shows Normal.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Normal", timeout=15000), "The status card shows Normal."
+        # Assert: Kartu status menunjukkan Normal.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Normal", timeout=15000), "Kartu status menunjukkan Normal."
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The status card shows the usual-pattern message.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.", timeout=15000), "The status card shows the usual-pattern message."
+        # Assert: Kartu status menampilkan pesan pola keseharian seperti biasanya tanpa pemberitahuan baru.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.", timeout=15000), "Kartu status menampilkan pesan pola keseharian seperti biasanya tanpa pemberitahuan baru."
         await asyncio.sleep(5)
 
     finally:
