@@ -61,13 +61,22 @@ export const kontakKeluarga = [
   { id: 'kontak-3', nama: 'Bu Darmi', hubungan: 'Tetangga', nomor: '0821-9988-7766' },
 ]
 
-// Akun keluarga untuk layar login (SIMULASI prototipe). Dicocokkan di aplikasi, tanpa server,
+// Akun untuk layar login (SIMULASI prototipe). Dicocokkan di aplikasi, tanpa server,
 // jadi ini bukan keamanan sungguhan. Kredensial sengaja tidak ditampilkan di layar; daftarnya
-// untuk fasilitator/penguji ada di README.
-export const akunKeluarga = [
-  { id: 'akun-1', email: 'rina@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-1' },
-  { id: 'akun-2', email: 'budi@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-2' },
+// untuk fasilitator/penguji ada di README. Peran menentukan sisi app:
+// 'pusat' = HP orang tua di rumah (tersambung ke perangkat), 'cabang' = HP keluarga yang memantau.
+export const akun = [
+  { id: 'akun-pusat-1', peran: 'pusat', email: 'sri@nadi.id', kataSandi: 'nadi1234', pusatId: 'pusat-1' },
+  { id: 'akun-1', peran: 'cabang', email: 'rina@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-1' },
+  { id: 'akun-2', peran: 'cabang', email: 'budi@nadi.id', kataSandi: 'nadi1234', kontakId: 'kontak-2' },
 ]
+
+// HP Pusat milik Ibu Sri. Kode undangan dibacakan/dikirim ke keluarga untuk menautkan HP Cabang.
+export const pusat = [{ id: 'pusat-1', lansia: elderProfile, kodeUndangan: '482917' }]
+
+// Tautan awal Cabang -> Pusat. Rina sudah tertaut (langsung ke Beranda); Budi belum,
+// supaya alur memasukkan kode bisa didemokan.
+export const tautanAwal = { 'akun-1': 'pusat-1' }
 
 /** @type {DailyMetric[]} urut dari terlama ke terbaru */
 export const dailyMetrics = [

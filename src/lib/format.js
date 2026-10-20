@@ -80,3 +80,8 @@ export function formatRelativeDayTime(iso, nowIso, labels) {
 export function minutesBetween(fromIso, toIso) {
   return Math.round((new Date(toIso) - new Date(fromIso)) / 60000)
 }
+
+// Kode undangan "482917" -> "482 917" (mudah dibacakan lewat telepon)
+export function formatInviteCode(code) {
+  return `${code.slice(0, 3)} ${code.slice(3)}`
+}

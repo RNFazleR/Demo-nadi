@@ -3,6 +3,7 @@ import { copy } from '../data/copy.js'
 import { elderProfile, dailyMetrics, demoNow, aktivitasTerakhir } from '../data/dummy.js'
 import { useAlerts } from '../state/AlertsContext.jsx'
 import { useSensor } from '../state/SensorContext.jsx'
+import { useAuth } from '../state/AuthContext.jsx'
 import SensorStatusCard from '../components/SensorStatusCard.jsx'
 import { getCurrentStatus, compareDayToUsual } from '../lib/insights.js'
 import { METRICS } from '../lib/metrics.js'
@@ -18,6 +19,7 @@ import AlertDetail from './AlertDetail.jsx'
 export default function Dashboard({ onSimulateAnomaly }) {
   const { alerts, monitoringPaused, addAlert, respond } = useAlerts()
   const { isLive } = useSensor()
+  const { justLinked, linkedPusat } = useAuth()
   const [openAlertId, setOpenAlertId] = useState(null)
   const [calling, setCalling] = useState(false) // modal simulasi panggilan dari kartu Darurat
   const topRef = useRef(null)
@@ -43,6 +45,7 @@ export default function Dashboard({ onSimulateAnomaly }) {
   if (isLive) {
     return (
       <div className="flex flex-col gap-6 px-gutter pb-8 pt-6">
+        {justLinked && <LinkedNote nama={linkedPusat.lansia.nama} />}
         <ProfileHeader profile={elderProfile} />
         <p className="-mt-3 self-start rounded-full bg-brand-700 px-3 py-0.5 text-body font-bold text-surface">
           {copy.sensor.modeChip}
@@ -72,6 +75,7 @@ export default function Dashboard({ onSimulateAnomaly }) {
 
   return (
     <div ref={topRef} className="flex flex-col gap-6 px-gutter pb-8 pt-6">
+      {justLinked && <LinkedNote nama={linkedPusat.lansia.nama} />}
       <ProfileHeader profile={elderProfile} />
       {/* Sumber data terlihat sejak layar pertama (sama posisinya dengan chip "Sensor langsung"),
           sengaja netral supaya tidak terbaca sebagai status */}
@@ -156,5 +160,15 @@ export default function Dashboard({ onSimulateAnomaly }) {
         />
       )}
     </div>
+  )
+}
+
+// Feedback setelah HP Cabang berhasil tertaut ke HP Pusat
+function LinkedNote({ nama }) {
+  return (
+    <p role="status" className="flex items-start gap-2 rounded-card bg-brand-50 p-4 text-body font-semibold text-brand-700">
+      <Icon name="check" className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={2.4} />
+      {copy.linkPusat.linked(nama)}
+    </p>
   )
 }

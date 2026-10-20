@@ -100,14 +100,14 @@ export const copy = {
     normalSentence: 'Pola keseharian terlihat seperti biasanya, tidak ada pemberitahuan baru.',
     todaySummary: 'Ringkasan hari ini',
     // Tanggal cerita demo ikut ditulis, supaya jelas data ini bukan "hari ini" yang sebenarnya
-    provenance: (date, time) => `Diperbarui ${date}, ${time} · dari sinyal WiFi di rumah`,
+    provenance: (date, time) => `Diperbarui ${date}, ${time} · dari sinyal WiFi di rumah, lewat HP Pusat`,
     // Penanda sumber data di mode demo (padanan copy.sensor.modeChip di mode sensor langsung)
     demoChip: 'Demo · data contoh',
     lastActivity: (minutes) => `Aktivitas terakhir terdeteksi: ${minutes} menit lalu`,
     simulate: {
       tag: 'Fitur demo',
-      button: 'Simulasikan anomali',
-      hint: 'Tampilkan layar konfirmasi di HP lansia',
+      button: 'Pratinjau HP Pusat',
+      hint: 'Lihat pertanyaan konfirmasi yang muncul di HP orang tua',
       waspadaButton: 'Simulasikan pola berubah',
       waspadaHint: 'Kirim satu notifikasi Waspada ke app keluarga',
       // Isi AlertEvent Waspada yang dibuat simulasi ini. Hanya apa yang terlihat; ajakan
@@ -231,7 +231,7 @@ export const copy = {
   // Layar masuk untuk keluarga (simulasi prototipe, akun di dummy.js)
   login: {
     title: 'Masuk ke NADI',
-    subtitle: 'Khusus anggota keluarga yang sudah terdaftar untuk mendampingi.',
+    subtitle: 'Untuk keluarga yang mendampingi, dan untuk HP orang tua yang disiapkan keluarga.',
     email: 'Email',
     password: 'Kata sandi',
     showPassword: 'Tampilkan kata sandi',
@@ -255,6 +255,15 @@ export const copy = {
       title: 'Akun',
       signedInAs: 'Masuk sebagai',
       logout: 'Keluar',
+      linkedTo: 'Tertaut ke HP Pusat',
+      linkedName: (nama) => `HP ${nama}`,
+      unlink: 'Lepas tautan',
+      unlinkConfirm: {
+        title: 'Lepas tautan dari HP Pusat?',
+        body: (nama) => `Kabar ${nama} tidak akan masuk ke HP ini lagi sampai ditautkan ulang dengan kode keluarga.`,
+        confirm: 'Ya, lepas tautan',
+        cancel: 'Batal',
+      },
     },
     contacts: {
       title: 'Kontak keluarga',
@@ -285,6 +294,87 @@ export const copy = {
       hint: 'Kembalikan semua notifikasi, status, kontak, dan pengaturan pemantauan ke kondisi awal.',
       done: 'Data demo sudah dikembalikan ke kondisi awal.',
     },
+  },
+
+  // HP Cabang: menautkan ke HP Pusat (HP orang tua) dengan kode undangan
+  linkPusat: {
+    title: 'Tautkan ke HP orang tua',
+    intro: 'Masukkan kode keluarga dari HP Pusat, yaitu HP orang tua di rumah yang tersambung ke perangkat NADI.',
+    where: 'Kodenya ada di HP orang tua: tekan dan tahan "Pengaturan (untuk keluarga)", lalu lihat "Kode keluarga".',
+    codeLabel: 'Kode keluarga (6 angka)',
+    submit: 'Tautkan',
+    errors: {
+      empty: 'Isi kode keluarga dulu, ya.',
+      format: 'Kode keluarga terdiri dari 6 angka.',
+      wrong: 'Kode belum cocok dengan HP Pusat mana pun. Coba periksa lagi.',
+    },
+    signedInAs: (nama) => `Masuk sebagai ${nama}`,
+    switchAccount: 'Ganti akun',
+    linked: (nama) => `Tertaut dengan HP ${nama}.`,
+  },
+
+  // HP Pusat: disiapkan keluarga sekali, lalu menjadi mode lansia
+  pusatSetup: {
+    stepOf: (n, total) => `Langkah ${n} dari ${total}`,
+    intro: (nama) => `Siapkan HP ini untuk ${nama}. Cukup sekali; setelah itu HP ini menampilkan layar yang sederhana untuk beliau.`,
+    device: {
+      title: 'Sambungkan perangkat',
+      body: 'Isi alamat IP laptop yang menjalankan penghubung NADI di rumah. HP ini dan laptop harus tersambung ke WiFi yang sama.',
+      next: 'Lanjut',
+      skip: 'Lewati, pakai data demo',
+      skipNote: 'Tanpa perangkat, HP ini tetap bisa dicoba dengan data contoh.',
+    },
+    code: {
+      title: 'Kode untuk keluarga',
+      body: 'Bacakan atau kirim kode ini ke anggota keluarga. Mereka memasukkannya di HP masing-masing untuk menerima kabar dari HP ini.',
+      linkedTitle: 'Keluarga yang sudah tertaut',
+      noneLinked: 'Belum ada. Kode bisa dipakai kapan saja.',
+      next: 'Lanjut',
+    },
+    start: {
+      title: 'Siap untuk beliau',
+      points: [
+        'Layar dibuat besar dan sederhana, tanpa menu.',
+        'Sesekali NADI bertanya kabar dengan dua tombol besar.',
+        'Pengaturan hanya bisa dibuka keluarga: tekan dan tahan, lalu masukkan kata sandi.',
+      ],
+      button: 'Mulai',
+    },
+    back: 'Kembali',
+  },
+
+  // HP Pusat, mode lansia: teks besar, satu sapaan, tanpa navigasi
+  pusatHome: {
+    greeting: (panggilan) => `Halo ${panggilan}`,
+    body: 'NADI sedang menemani di rumah.',
+    device: {
+      live: 'Perangkat NADI tersambung',
+      demo: 'Memakai data contoh',
+      problem: 'Perangkat NADI belum tersambung',
+    },
+    demoTag: 'Fitur demo',
+    showQuestion: 'Tampilkan pertanyaan konfirmasi',
+    settings: 'Pengaturan (untuk keluarga)',
+    settingsHint: 'Tekan dan tahan',
+  },
+
+  // Dialog kata sandi untuk membuka pengaturan HP Pusat
+  pusatUnlock: {
+    title: 'Pengaturan untuk keluarga',
+    body: 'Masukkan kata sandi akun HP ini.',
+    password: 'Kata sandi',
+    submit: 'Buka pengaturan',
+    cancel: 'Batal',
+    wrong: 'Kata sandi belum cocok. Coba lagi.',
+  },
+
+  // Pengaturan HP Pusat (setelah kata sandi benar)
+  pusatSettings: {
+    title: 'Pengaturan HP Pusat',
+    deviceTitle: 'Perangkat',
+    codeTitle: 'Kode keluarga',
+    backToElder: 'Kembali ke layar orang tua',
+    logout: 'Keluar dari akun',
   },
 
   // Status di Dashboard saat pemantauan dijeda
@@ -386,7 +476,9 @@ export const copy = {
       title: 'Sumber data',
       hint: 'Mode demo memakai cerita contoh. Sensor langsung membaca perangkat ESP32 lewat penghubung di laptop.',
       demo: 'Demo (data contoh)',
-      live: 'Sensor langsung (ESP32)',
+      live: 'Sensor langsung (lewat HP Pusat)',
+      liveDemoNote:
+        'Di produk nyata, data datang lewat akun HP Pusat. Di prototipe ini HP keluarga membaca penghubung yang sama di WiFi rumah.',
       apiLabel: (url) => `Penghubung: ${url}`,
       hostLabel: 'Alamat penghubung sensor',
       hostHint: 'IP laptop yang menjalankan penghubung, mis. 192.168.1.5. HP dan laptop harus di WiFi yang sama.',
@@ -415,7 +507,9 @@ export const copy = {
       },
     },
     demoTag: 'Fitur demo',
+    previewTag: 'Pratinjau HP Pusat',
     backToFamily: 'Kembali ke app keluarga',
+    done: 'Selesai',
     // Isi AlertEvent baru yang dibuat dari hasil konfirmasi
     generated: {
       ok: (nama) => `${nama} menjawab bahwa ia baik-baik saja lewat pertanyaan konfirmasi NADI.`,

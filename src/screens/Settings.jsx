@@ -4,6 +4,8 @@ import { useAlerts } from '../state/AlertsContext.jsx'
 import { useSensor } from '../state/SensorContext.jsx'
 import { useAuth } from '../state/AuthContext.jsx'
 import Icon from '../components/Icon.jsx'
+import SensorHostForm from '../components/SensorHostForm.jsx'
+import UnlinkDialog from '../components/UnlinkDialog.jsx'
 
 const PRIVACY_POINTS = [
   { key: 'noCamera', icon: 'cameraOff' },
@@ -17,10 +19,9 @@ const ORDER_BTN =
 // Tab Pengaturan: akun, urutan kontak keluarga, privasi & jeda pemantauan, sumber data, reset demo.
 export default function Settings() {
   const { contacts, moveContact, monitoringPaused, setMonitoringPaused, resetDemo } = useAlerts()
-  const { mode, setMode, apiUrl, isLive, sensorHost, setSensorHost } = useSensor()
-  const { user, logout } = useAuth()
-  const [hostDraft, setHostDraft] = useState(sensorHost)
-  const [hostSaved, setHostSaved] = useState(false)
+  const { mode, setMode, isLive } = useSensor()
+  const { user, logout, linkedPusat, unlinkPusat } = useAuth()
+  const [confirmUnlink, setConfirmUnlink] = useState(false)
   // Jeda hanya berlaku untuk cerita demo. Di mode sensor langsung pembacaan tetap berjalan,
   // jadi switch dinonaktifkan dan tidak boleh tampil "dijeda".
   const paused = monitoringPaused && !isLive
@@ -63,6 +64,23 @@ export default function Settings() {
         <p className="mt-1 text-body text-ink-soft">{t.account.signedInAs}</p>
         <p className="break-words text-body-lg font-bold text-ink">{user.nama}</p>
         <p className="break-all text-body text-ink-soft">{user.email}</p>
+
+        {/* HP Pusat sumber kabar (penautan lewat kode keluarga) */}
+        <div className="mt-4 border-t border-line pt-4">
+          <p className="text-body text-ink-soft">{t.account.linkedTo}</p>
+          <p className="flex items-center gap-2 text-body-lg font-bold text-ink">
+            <Icon name="home" className="h-5 w-5 shrink-0 text-brand-600" />
+            {t.account.linkedName(linkedPusat.lansia.nama)}
+          </p>
+          <button
+            type="button"
+            onClick={() => setConfirmUnlink(true)}
+            className="mt-2 flex min-h-tap items-center rounded-btn px-2 text-body-lg font-semibold text-brand-700 hover:bg-surface-muted"
+          >
+            {t.account.unlink}
+          </button>
+        </div>
+
         <button
           type="button"
           onClick={logout}
@@ -210,51 +228,26 @@ export default function Settings() {
             ))}
           </div>
           {mode === 'live' && (
-            <form
-              className="mt-2"
-              onSubmit={(e) => {
-                e.preventDefault()
-                setSensorHost(hostDraft)
-                setHostSaved(true)
-              }}
-            >
-              <label htmlFor="sensor-host" className="text-body-lg font-bold text-ink">
-                {copy.sensor.source.hostLabel}
-              </label>
-              <p id="sensor-host-hint" className="text-body text-ink-soft">{copy.sensor.source.hostHint}</p>
-              <div className="mt-2 flex gap-2">
-                <input
-                  id="sensor-host"
-                  type="text"
-                  inputMode="url"
-                  autoCapitalize="none"
-                  autoComplete="off"
-                  spellCheck={false}
-                  value={hostDraft}
-                  onChange={(e) => {
-                    setHostDraft(e.target.value)
-                    setHostSaved(false)
-                  }}
-                  aria-describedby="sensor-host-hint"
-                  className="min-h-tap min-w-0 flex-1 rounded-btn border-2 border-line bg-surface px-3 text-body-lg text-ink focus:border-brand-600"
-                />
-                <button type="submit" className="min-h-tap shrink-0 rounded-btn bg-brand-600 px-4 text-body-lg font-bold text-surface hover:bg-brand-700">
-                  {copy.sensor.source.hostSave}
-                </button>
+            <div className="mt-3 rounded-chip border border-dashed border-line p-3">
+              <p className="text-body text-ink-soft">{copy.sensor.source.liveDemoNote}</p>
+              <div className="mt-3">
+                <SensorHostForm />
               </div>
-              {hostSaved && (
-                <p role="status" className="mt-2 flex items-center gap-2 text-body font-semibold text-brand-700">
-                  <Icon name="check" className="h-5 w-5" strokeWidth={2.4} />
-                  {copy.sensor.source.hostSaved}
-                </p>
-              )}
-              <p className="mt-1 break-all text-body text-ink-soft">
-                {copy.sensor.source.apiLabel(apiUrl ?? copy.sensor.source.hostUnset)}
-              </p>
-            </form>
+            </div>
           )}
         </fieldset>
       </section>
+
+      {confirmUnlink && (
+        <UnlinkDialog
+          nama={linkedPusat.lansia.nama}
+          onCancel={() => setConfirmUnlink(false)}
+          onConfirm={() => {
+            setConfirmUnlink(false)
+            unlinkPusat()
+          }}
+        />
+      )}
 
       {/* Kontrol khusus demo */}
       <section className="flex flex-col items-center gap-2 rounded-card border-2 border-dashed border-line p-4">

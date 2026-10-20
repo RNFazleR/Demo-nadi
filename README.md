@@ -13,17 +13,23 @@ npm run dev
 
 Buka alamat yang muncul di terminal (biasanya http://localhost:5173).
 
-## Akun demo (login keluarga)
+## Akun demo & dua sisi (Pusat / Cabang)
 
-App keluarga diawali layar **Masuk**. Login ini **simulasi prototipe**: akun dicocokkan dengan
-`src/data/dummy.js` (`akunKeluarga`), tanpa server. Kredensial sengaja tidak ditampilkan di layar.
+App diawali layar **Masuk**. Login ini **simulasi prototipe**: akun dicocokkan dengan
+`src/data/dummy.js` (`akun`), tanpa server. Kredensial sengaja tidak ditampilkan di layar.
+Peran akun menentukan sisi app:
 
-| Email          | Kata sandi | Masuk sebagai          |
-|----------------|------------|------------------------|
-| `rina@nadi.id` | `nadi1234` | Rina Wahyuni (Anak)    |
-| `budi@nadi.id` | `nadi1234` | Budi Santoso (Menantu) |
+| Email          | Kata sandi | Peran  | Keterangan                                              |
+|----------------|------------|--------|---------------------------------------------------------|
+| `sri@nadi.id`  | `nadi1234` | Pusat  | HP Ibu Sri di rumah: setup sekali, lalu mode lansia     |
+| `rina@nadi.id` | `nadi1234` | Cabang | Rina Wahyuni (Anak), **sudah tertaut**, langsung Beranda |
+| `budi@nadi.id` | `nadi1234` | Cabang | Budi Santoso (Menantu), **belum tertaut**               |
 
-Sesi diingat di perangkat; keluar lewat Pengaturan → Akun → **Keluar**.
+- **Kode keluarga** untuk menautkan Cabang: `482 917`. Kode ini terlihat di setup HP Pusat dan di Pengaturan HP Pusat.
+- **Membuka pengaturan dari mode lansia:** tekan & tahan "Pengaturan (untuk keluarga)", lalu masukkan kata sandi `sri@nadi.id`.
+- **Aliran data Pusat → Cabang disimulasikan** di satu perangkat. Contoh demo: masuk sebagai Sri → "Tampilkan pertanyaan konfirmasi" → "Butuh bantuan" → buka pengaturan → keluar → masuk sebagai Rina. Alert Darurat baru sudah ada di Beranda.
+
+Sesi dan tautan diingat di perangkat. Keluar lewat Pengaturan → Akun → **Keluar**.
 
 ## Membuka di HP
 
@@ -45,7 +51,8 @@ atau kabel USB), buka, lalu izinkan "Instal dari sumber tidak dikenal". APK dibu
 [Capacitor](https://capacitorjs.com) dari hasil `vite build`; konfigurasinya di `capacitor.config.json`.
 
 **Mode sensor langsung dari APK:** jalankan penghubung dengan `--host 0.0.0.0`, pastikan HP dan laptop
-di WiFi yang sama, lalu isi IP laptop di Pengaturan → Sumber data → **Alamat penghubung sensor**.
+di WiFi yang sama, lalu isi IP laptop di HP Pusat (langkah "Sambungkan perangkat" saat setup, atau
+Pengaturan HP Pusat → Perangkat). Untuk mencoba di HP Cabang: Pengaturan → Sumber data → Sensor langsung (Fitur demo).
 
 ## Mode sensor langsung (opsional, ESP32-S3)
 

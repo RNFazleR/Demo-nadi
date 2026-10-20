@@ -21,7 +21,10 @@ const OUTCOMES = {
 }
 
 // Layar di HP lansia: teks sangat besar, satu pertanyaan, dua tombol, tanpa navigasi.
-export default function ElderCheck({ onExit }) {
+// context 'pusat' = muncul sungguhan di HP Pusat (mode lansia);
+// context 'preview' = pratinjau dari HP Cabang (Fitur demo), dengan jalan kembali ke app keluarga.
+export default function ElderCheck({ onExit, context = 'preview' }) {
+  const isPreview = context === 'preview'
   const { addAlert } = useAlerts()
   const [remaining, setRemaining] = useState(COUNTDOWN_SECONDS)
   const [outcome, setOutcome] = useState(null) // 'ok' | 'help' | 'timeout'
@@ -67,20 +70,32 @@ export default function ElderCheck({ onExit }) {
           <p className="text-elder-body text-ink">{text.body}</p>
         </div>
 
-        {/* Kontrol demo, bukan bagian dari layar lansia yang sebenarnya */}
-        <div className="mt-8 flex flex-col items-center gap-2 border-t border-dashed border-line pt-5">
-          <span className="rounded-full bg-surface-muted px-3 py-0.5 text-body text-ink-soft">
-            {copy.elderCheck.demoTag}
-          </span>
+        {!isPreview && (
           <button
             type="button"
             onClick={onExit}
-            className="flex min-h-tap w-full items-center justify-center gap-2 rounded-btn border-2 border-brand-500 px-4 text-body-lg font-bold text-brand-700"
+            className="mt-8 flex min-h-tap-elder w-full items-center justify-center rounded-card bg-brand-700 px-5 text-elder-btn text-surface active:bg-brand-600"
           >
-            <Icon name="chevronLeft" className="h-5 w-5" strokeWidth={2.4} />
-            {copy.elderCheck.backToFamily}
+            {copy.elderCheck.done}
           </button>
-        </div>
+        )}
+
+        {/* Kontrol demo, bukan bagian dari layar lansia yang sebenarnya */}
+        {isPreview && (
+          <div className="mt-8 flex flex-col items-center gap-2 border-t border-dashed border-line pt-5">
+            <span className="rounded-full bg-surface-muted px-3 py-0.5 text-body text-ink-soft">
+              {copy.elderCheck.demoTag}
+            </span>
+            <button
+              type="button"
+              onClick={onExit}
+              className="flex min-h-tap w-full items-center justify-center gap-2 rounded-btn border-2 border-brand-500 px-4 text-body-lg font-bold text-brand-700"
+            >
+              <Icon name="chevronLeft" className="h-5 w-5" strokeWidth={2.4} />
+              {copy.elderCheck.backToFamily}
+            </button>
+          </div>
+        )}
       </div>
     )
   }
@@ -89,6 +104,12 @@ export default function ElderCheck({ onExit }) {
 
   return (
     <div className="flex flex-1 flex-col bg-surface px-6 pb-8 pt-12 text-ink">
+      {/* Penanda pratinjau supaya fasilitator & penguji tahu ini tampilan HP Pusat */}
+      {isPreview && (
+        <p className="self-center rounded-full border border-dashed border-line px-3 py-0.5 text-body text-ink-soft">
+          {copy.elderCheck.demoTag} · {copy.elderCheck.previewTag}
+        </p>
+      )}
       {/* Pertanyaan = fokus utama. Hitung mundur tetap terlihat tapi sekunder (teks 24px +
           bar tipis), tidak lagi angka besar yang lebih dominan dari pertanyaan. */}
       <div className="flex flex-1 flex-col justify-center gap-8 text-center">

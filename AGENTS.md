@@ -2,7 +2,16 @@
 
 NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola keseharian dari sinyal WiFi di rumah dan mengabari keluarga. Project ini adalah **prototipe interaktif untuk Final Project mata kuliah HMI (Interaksi Manusia dan Komputer)**. Titik tekannya **UI/UX**: alur, tata letak, keterbacaan, dan aksesibilitas untuk keluarga dan lansia. Bukan produk, bukan untuk lomba. **Mode demo** memakai data dummy. **Mode sensor langsung** (opsional) membaca ESP32-S3 lewat penghubung Python lokal di `sensor/` — lihat bagian "Mode sensor langsung".
 
-- **Login keluarga** (email + kata sandi) adalah **simulasi**: akun di `akunKeluarga` (`dummy.js`), dicocokkan di `AuthContext`, tanpa server. Kredensial tidak boleh ditampilkan di layar. Sesi (hanya id akun) disimpan di localStorage; `resetDemo` tidak mengeluarkan pengguna.
+- **Login** (email + kata sandi) adalah **simulasi**: akun di `akun` (`dummy.js`), dicocokkan di `AuthContext`, tanpa server. Kredensial tidak boleh ditampilkan di layar. Sesi, tautan, dan status "Pusat sudah disiapkan" (hanya id) disimpan di localStorage; `resetDemo` tidak mengeluarkan pengguna dan tidak melepas tautan.
+
+## Dua sisi: HP Pusat & HP Cabang
+
+- **Peran ditentukan oleh akun** (`akun[].peran`), satu layar login untuk semua:
+  - **Pusat** = HP orang tua di rumah, tersambung ke perangkat (ESP32 → laptop penghubung). Disiapkan keluarga sekali (`PusatSetup`: perangkat → kode keluarga → mulai), lalu menjadi **mode lansia** (`PusatHome`).
+  - **Cabang** = HP keluarga yang memantau. Belum tertaut → `LinkPusat` (kode keluarga 6 angka dari Pusat). Sudah tertaut → app keluarga (Beranda, Riwayat, Notifikasi, Pengaturan).
+- **Aliran data Pusat → Cabang disimulasikan** (tanpa server): satu app, state alert dibagi di perangkat yang sama (`AlertsProvider` di atas gerbang login). Jawaban di HP Pusat terlihat di Cabang setelah keluar lalu masuk sebagai Cabang. Di mode sensor, HP Cabang membaca penghubung yang sama di WiFi rumah, dan ini dijelaskan di Fitur demo Pengaturan. Jangan klaim sinkron sungguhan di copy.
+- **Mode lansia (`PusatHome`)** mengikuti aturan Layar lansia di bawah. Status perangkat memakai teks + ikon netral, bukan warna status. Pengaturan keluarga dibuka dengan **tekan & tahan** (keyboard: Enter) lalu **kata sandi** (`PasswordDialog`).
+- App keluarga selalu dimulai di mode demo saat masuk; HP Pusat yang punya alamat perangkat langsung membaca sensor.
 - Kontrol berlabel "Fitur demo" (simulasi anomali, simulasi pola berubah, reset data, kembali ke app keluarga) adalah kontrol fasilitator saat prototipe dicoba/diuji, bukan bagian dari produk.
 
 ## Positioning (wajib dipegang)
@@ -52,10 +61,10 @@ NADI adalah konsep **AI wellness agent untuk lansia** yang membaca pola kesehari
   - Warna teks: `text-ink`, `text-ink-soft`; `text-ink-faint` hanya untuk teks ≥18px atau ikon.
   - Radius: `rounded-chip`, `rounded-btn`, `rounded-card`, `rounded-sheet`. Bayangan: `shadow-card`, `shadow-raised`.
   - Target sentuh minimal `min-h-tap` (48px). Padding samping layar `px-gutter`.
-- **Layar lansia** (`ElderCheck`, tampilan di HP lansia) punya aturan sendiri, berbeda dari app keluarga:
+- **Layar lansia** (`ElderCheck` dan `PusatHome`, tampilan di HP Pusat) punya aturan sendiri, berbeda dari app keluarga:
   - Teks minimum 24px: pakai `text-elder-body`, `text-elder-btn`, `text-elder-title`. Pertanyaan adalah elemen paling dominan; hitung mundur tetap terlihat tapi sekunder. Latar putih (`bg-surface`) + teks `text-ink` untuk kontras tinggi.
   - Maksimal 1 kalimat pertanyaan, hanya 2 tombol besar (`min-h-tap-elder`, 88px), tanpa navigasi/menu.
-  - Kontrol demo (mis. "Kembali ke app keluarga") selalu diberi label "Fitur demo" dan dipisah garis putus-putus.
+  - Kontrol demo (mis. "Kembali ke app keluarga", "Tampilkan pertanyaan konfirmasi") selalu diberi label "Fitur demo" dan dipisah garis putus-putus. `ElderCheck context="preview"` (dari Cabang) diberi penanda "Pratinjau HP Pusat"; `context="pusat"` tanpa kontrol kembali ke app keluarga.
 - Grafik: hari yang berbeda jauh dari biasanya diberi warna Waspada **dan** penanda "!" + legenda, jangan hanya warna.
 - Interaksi di grafik (mis. memilih hari) wajib punya padanan yang bisa dipakai keyboard & pembaca layar. Di Riwayat: deretan tombol hari di bawah grafik (`aria-pressed`, `aria-controls` ke kartu detail, label berisi nilai), SVG grafiknya `aria-hidden`. Pilihan metrik memakai pola tab WAI-ARIA (panah, Home/End, `tabpanel`).
 - **Fokus & gerak:** indikator `:focus-visible` global ada di `src/index.css`, jangan dihilangkan. Animasi berulang pakai `motion-safe:`; `prefers-reduced-motion` dihormati secara global.
@@ -103,10 +112,10 @@ src/
   main.jsx            entry React
   App.jsx             root: gerbang login, state tab aktif, tampilan keluarga/lansia, BottomNav
   index.css           Tailwind + style dasar body
-  components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, ...)
-  screens/            satu file per layar (Login, Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
+  components/         komponen UI yang dipakai ulang (PhoneFrame, Icon, StatusCard, MetricCard, BottomNav, SensorHostForm, PasswordDialog, ...)
+  screens/            satu file per layar (Login, LinkPusat, PusatSetup, PusatHome, PusatSettings, Dashboard, Notifications, AlertDetail, History, Settings, ElderCheck)
   lib/                helper non-UI: status.js, insights.js, format.js, metrics.js, sensor.js, storage.js, useDialogFocus.js
-  state/              React Context bersama (AuthContext: login simulasi & sesi; AlertsContext: alert, respons, kontak, jeda, reset demo; SensorContext: sumber data & polling sensor)
+  state/              React Context bersama (AuthContext: login simulasi, sesi, peran, tautan Pusat–Cabang; AlertsContext: alert, respons, kontak, jeda, reset demo; SensorContext: sumber data & polling sensor)
   data/
     dummy.js          SATU-SATUNYA sumber data dummy
     copy.js           SEMUA teks UI
