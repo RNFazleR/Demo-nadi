@@ -40,42 +40,59 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Buka tab Pengaturan dan periksa kontrol pemantauan dalam mode demo.
+        # -> Sign in to NADI using the provided demo email and password.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided demo email and password.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided demo email and password.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open Pengaturan and inspect the demo monitoring controls.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Turn on “Jeda pemantauan” and check the updated monitoring state in Pengaturan.
+        # -> Turn on “Jeda pemantauan” and inspect the updated control status.
         # button
         elem = page.get_by_role("switch", name="Jeda pemantauan")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and verify that the dashboard displays the paused monitoring state.
+        # -> Open Beranda and check that the dashboard displays the paused monitoring status.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
-        # -> Open Pengaturan and turn off “Jeda pemantauan” to resume monitoring.
+        # -> Open Pengaturan to turn off “Jeda pemantauan” and resume monitoring.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Turn off “Jeda pemantauan” in Pengaturan to resume monitoring.
+        # -> Turn off “Jeda pemantauan” to resume monitoring.
         # button
         elem = page.get_by_role("switch", name="Jeda pemantauan")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and verify that the dashboard shows active monitoring rather than “Pemantauan dijeda.”
+        # -> Open Beranda and verify that the dashboard no longer displays the paused monitoring status.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> After monitoring was resumed, Beranda shows “Sedang dicek keluarga.”
+        # --> After monitoring was resumed, the dashboard shows “Sedang dicek keluarga”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Beranda shows the active monitoring status after the pause is resumed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Sedang dicek keluarga", timeout=15000), "Beranda shows the active monitoring status after the pause is resumed."
+        # Assert: The dashboard shows that monitoring is active again.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Sedang dicek keluarga", timeout=15000), "The dashboard shows that monitoring is active again."
         await asyncio.sleep(5)
 
     finally:

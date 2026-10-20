@@ -6,6 +6,7 @@
   },
   "product_overview": "NADI adalah prototipe interaktif wellness monitoring untuk lansia yang membantu keluarga melihat perubahan pola keseharian dari data demo atau sensor langsung ESP32-S3. Aplikasi ini menampilkan ringkasan status, riwayat, notifikasi, dan pengaturan dalam antarmuka mobile berbahasa Indonesia yang hangat dan mudah dipahami.",
   "core_goals": [
+    "Masuk ke app keluarga dengan email dan kata sandi akun demo, lalu keluar lewat Pengaturan",
     "Melihat ringkasan kondisi keseharian lansia dari beranda",
     "Meninjau notifikasi perubahan pola dan menindaklanjutinya",
     "Melihat detail alert serta melakukan tindak lanjut yang sesuai",
@@ -14,6 +15,10 @@
     "Menggunakan mode sensor langsung untuk membaca data dari ESP32-S3"
   ],
   "features": [
+    {
+      "name": "Login keluarga (simulasi)",
+      "description": "App keluarga diawali layar \"Masuk ke NADI\" (email + kata sandi). Akun demo: rina@nadi.id / nadi1234 (Rina Wahyuni) dan budi@nadi.id / nadi1234 (Budi Santoso). Field kosong, format email salah, dan kombinasi salah menampilkan pesan yang jelas. Sesi diingat setelah muat ulang. Pengaturan → Akun → \"Keluar\" kembali ke layar masuk dengan pesan \"Kamu sudah keluar\"."
+    },
     {
       "name": "Bottom navigation",
       "description": "Pengguna berpindah antar layar utama aplikasi keluarga melalui tab bawah untuk mengakses Beranda, Riwayat, Notifikasi, dan Pengaturan.",

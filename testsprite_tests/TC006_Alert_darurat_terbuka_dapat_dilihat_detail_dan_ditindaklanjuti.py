@@ -40,27 +40,44 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open the emergency alert using “Lihat & tindak lanjuti” to inspect its details and handling options.
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu pilih tombol Masuk untuk membuka Beranda.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu pilih tombol Masuk untuk membuka Beranda.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu pilih tombol Masuk untuk membuka Beranda.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open the emergency alert using “Lihat & tindak lanjuti” to view its details.
         # Lihat & tindak lanjuti button
         elem = page.get_by_role("button", name="Lihat & tindak lanjuti")
         await elem.click(timeout=10000)
         
-        # -> Mark the alert as complete using “Tandai selesai” and verify the resulting handled status on screen.
+        # -> Mark the emergency alert as complete using “Tandai selesai,” then verify the updated handling status.
         # Tandai selesai button
         elem = page.get_by_role("button", name="Tandai selesai")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Halaman detail alert darurat ditampilkan.
+        # --> Detail alert Darurat ditampilkan.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Halaman detail alert darurat ditampilkan.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Apa yang terdeteksi", timeout=15000), "Halaman detail alert darurat ditampilkan."
+        # Assert: The alert detail view is displayed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Apa yang terdeteksi", timeout=15000), "The alert detail view is displayed."
         
-        # --> Status alert ditampilkan sebagai selesai.
+        # --> Status alert menunjukkan “Selesai”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Status alert ditampilkan sebagai selesai.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Selesai", timeout=15000), "Status alert ditampilkan sebagai selesai."
+        # Assert: The alert is marked as completed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Selesai", timeout=15000), "The alert is marked as completed."
         await asyncio.sleep(5)
 
     finally:

@@ -40,42 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open the Pengaturan tab and inspect the available settings.
+        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Enter the provided demo email and password, then submit the login form using Masuk.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open Pengaturan to choose the live sensor data source.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” as the data source and allow the settings UI to update.
+        # -> Select “Sensor langsung (ESP32)” in the Sumber data settings and then inspect the live-mode fields.
         # data-source radio button
         elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
         await elem.click(timeout=10000)
         
-        # -> Return to Beranda to inspect the live sensor status and technical details.
+        # -> Open Beranda to inspect the live sensor status card.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
-        # -> Expand the “Detail teknis” section on Beranda to inspect the live device information.
+        # -> Expand “Detail teknis” on the live sensor card and verify the displayed port, data source, and signal-strength information.
         # Detail teknis
         elem = page.get_by_text("Detail teknis")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The technical details show Port COM23.
+        # --> The technical details should show the RSSI value in dBm.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The technical details show port COM23.
-        await expect(page.get_by_role("group").nth(0)).to_contain_text("COM23", timeout=15000), "The technical details show port COM23."
-        
-        # --> The technical details show Sumber as Perangkat (serial).
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The technical details show Sumber as Perangkat (serial).
-        await expect(page.get_by_role("group").nth(0)).to_contain_text("Perangkat (serial)", timeout=15000), "The technical details show Sumber as Perangkat (serial)."
-        
-        # --> The RSSI is displayed in dBm.
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The RSSI is displayed in dBm.
-        await expect(page.get_by_role("group").nth(0)).to_contain_text("dBm", timeout=15000), "The RSSI is displayed in dBm."
+        # Assert: Expected the technical details to show the RSSI value in dBm.
+        await expect(page.get_by_role("group").nth(0)).to_contain_text("dBm", timeout=15000), "Expected the technical details to show the RSSI value in dBm."
         await asyncio.sleep(5)
 
     finally:

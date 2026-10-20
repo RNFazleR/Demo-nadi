@@ -39,6 +39,11 @@ async def run_test():
             await page.wait_for_load_state("domcontentloaded", timeout=5000)
         except Exception:
             pass
+        # -> masuk sebagai keluarga (akun demo, lihat README "Akun demo")
+        await page.get_by_label("Email", exact=True).fill("rina@nadi.id")
+        await page.get_by_label("Kata sandi", exact=True).fill("nadi1234")
+        await page.get_by_role("button", name="Masuk", exact=True).click()
+        await expect(page.get_by_role("navigation")).to_be_visible(timeout=15000)
         
         # -> Klik “Simulasikan anomali” pada Beranda untuk memulai alur perubahan status.
         # Simulasikan anomali button

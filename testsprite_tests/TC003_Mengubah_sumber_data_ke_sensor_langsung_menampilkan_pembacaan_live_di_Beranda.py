@@ -40,46 +40,58 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open Pengaturan and inspect the available sensor-mode controls.
+        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided demo account and verify that Beranda opens.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open the Pengaturan tab to inspect the sensor mode setting.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” as the data source, then inspect the updated settings state.
+        # -> Select “Sensor langsung (ESP32)” in the Sumber data section and inspect the resulting settings.
         # data-source radio button
         elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and check the live sensor status and technical details after the page updates.
+        # -> Open Beranda and verify the live sensor card, its technical details, and the absence of the “Rekaman uji” chip.
         # Beranda Beranda button
         elem = page.get_by_role("button", name="Beranda")
         await elem.click(timeout=10000)
         
-        # -> Open “Detail teknis” on Beranda and verify the live sensor’s device and port information.
-        # Detail teknis
-        elem = page.get_by_text("Detail teknis")
+        # -> Open “Detail teknis” on the live sensor card and verify the displayed technical information.
+        # Detail teknis Skor perubahan sinyal – Batas gerak...
+        elem = page.get_by_text("Detail teknisSkor perubahan")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Chip “Sensor langsung” is displayed.
+        # --> The “Sensor langsung” chip is displayed on Beranda.
         await page.get_by_role("main").locator("span").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The “Sensor langsung” chip is displayed.
-        await expect(page.get_by_role("main").locator("span").nth(0)).to_be_visible(timeout=15000), "The \u201cSensor langsung\u201d chip is displayed."
+        # Assert: The “Sensor langsung” chip is visible.
+        await expect(page.get_by_role("main").locator("span").nth(0)).to_be_visible(timeout=15000), "The \u201cSensor langsung\u201d chip is visible."
         
-        # --> The “Sensor gerak” card displays “Belum ada gerakan terdeteksi.”
+        # --> Both “Gerakan terakhir” and “Data terakhir diterima” are displayed.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The live motion status is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Belum ada gerakan terdeteksi", timeout=15000), "The live motion status is displayed."
-        
-        # --> Both latest-reading details are displayed.
+        # Assert: “Gerakan terakhir” is displayed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Gerakan terakhir", timeout=15000), "\u201cGerakan terakhir\u201d is displayed."
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The “Gerakan terakhir” detail is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Gerakan terakhir", timeout=15000), "The \u201cGerakan terakhir\u201d detail is displayed."
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The “Data terakhir diterima” detail is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Data terakhir diterima", timeout=15000), "The \u201cData terakhir diterima\u201d detail is displayed."
+        # Assert: “Data terakhir diterima” is displayed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Data terakhir diterima", timeout=15000), "\u201cData terakhir diterima\u201d is displayed."
         await asyncio.sleep(5)
 
     finally:

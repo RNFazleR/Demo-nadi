@@ -1213,7 +1213,7 @@ body {
         </div>
         <div class="metadata-row">
           <div class="metadata-label text-body-medium">Date</div>
-          <div class="metadata-value text-body">19/10/2026</div>
+          <div class="metadata-value text-body">20/10/2026</div>
         </div>
         <div class="metadata-row">
           <div class="metadata-label text-body-medium">Prepared by</div>
@@ -1238,12 +1238,451 @@ body {
             <li><span class="coverage-highlight">Key gaps / risks:</span>
             
               <ol>
-<li><strong>&quot;Tandai sudah dicek&quot; tidak bisa dicapai di demo.</strong> Tombol ini hanya muncul untuk alert Waspada berstatus Baru, tapi data awal tidak punya alert seperti itu dan simulasi anomali hanya membuat Info atau Darurat. Akibatnya fasilitator tidak bisa memperlihatkan alur ini saat uji pengguna (dan TC004 tidak bisa dijalankan). Pertimbangkan satu alert Waspada &quot;baru&quot; di data awal, atau pilihan simulasi Waspada.</li>
-<li><strong>Alert Darurat tidak bisa ditutup.</strong> Setelah menghubungi, status berhenti di &quot;Sedang dicek&quot; dan tidak ada jalan ke &quot;Selesai&quot;. TC011 tersandung di sini: penguji (seperti pengguna) mencari cara menandai alert sudah beres. Layak dicatat sebagai temuan Norman/Nielsen (visibilitas status, kontrol pengguna).</li>
+<li>✅ <strong>Diperbaiki di <code>ad2272c</code>.</strong> <strong>&quot;Tandai sudah dicek&quot; tidak bisa dicapai di demo.</strong> Tombol ini hanya muncul untuk alert Waspada berstatus Baru, tapi data awal tidak punya alert seperti itu dan simulasi anomali hanya membuat Info atau Darurat. Akibatnya fasilitator tidak bisa memperlihatkan alur ini saat uji pengguna (dan TC004 tidak bisa dijalankan). Pertimbangkan satu alert Waspada &quot;baru&quot; di data awal, atau pilihan simulasi Waspada.</li>
+<li>✅ <strong>Diperbaiki di <code>ad2272c</code> dan <code>c933373</code>.</strong> <strong>Alert Darurat tidak bisa ditutup.</strong> Setelah menghubungi, status berhenti di &quot;Sedang dicek&quot; dan tidak ada jalan ke &quot;Selesai&quot;. TC011 tersandung di sini: penguji (seperti pengguna) mencari cara menandai alert sudah beres. Layak dicatat sebagai temuan Norman/Nielsen (visibilitas status, kontrol pengguna).</li>
 <li><strong>Kualitas rencana tes otomatis.</strong> Rencana awal berisi 39 tes dengan banyak duplikat, dan dua dari tiga kegagalan berasal dari asumsi tes yang keliru. Hasil gagal perlu selalu dicek manual sebelum dianggap bug.</li>
-<li><strong>Mode sensor langsung hanya teruji untuk keadaan &quot;tidak terjangkau&quot;.</strong> Keadaan kalibrasi, gerakan, diam, dan data basi butuh penghubung Python (<code>--replay</code>) dan tidak tercakup di sini.</li>
-<li><strong>Tes dijalankan di viewport desktop.</strong> Aplikasi mobile-first (acuan 390px); tata letak di lebar ponsel tidak diuji oleh TestSprite.</li>
+<li>✅ <strong>Sudah diuji manual (lihat bagian 5).</strong> <strong>Mode sensor langsung hanya teruji untuk keadaan &quot;tidak terjangkau&quot;.</strong> Keadaan kalibrasi, gerakan, diam, dan data basi butuh penghubung Python (<code>--replay</code>) dan tidak tercakup di sini.</li>
+<li>✅ <strong>Sudah diuji manual di 375 px (lihat bagian 6–7).</strong> <strong>Tes dijalankan di viewport desktop.</strong> Aplikasi mobile-first (acuan 390px); tata letak di lebar ponsel tidak diuji oleh TestSprite.</li>
 </ol>
+<hr>
+<h2>5️⃣ Tindak Lanjut: Temuan &amp; Perbaikan</h2>
+<p>Sumber temuan: <strong>TestSprite</strong> (bagian 2–4), <strong>Audit UI/UX</strong> (heuristik Nielsen, WCAG 2.2, prinsip UX di AGENTS.md; situs publik dan build lokal diperiksa di 375 / 320 / 1366 px), dan <strong>review lanjutan</strong> setelah perbaikan pertama. Mode sensor langsung diuji manual dengan <code>sensor/csi_bridge.py --replay</code> memakai fixture sintetis. Semua keadaan muncul berurutan: tidak terjangkau → kalibrasi → membaca → diam → gerak → diam → data berhenti. Keadaan tanpa data tidak pernah tampil sebagai &quot;diam&quot; atau &quot;Normal&quot;.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Sumber</th>
+<th>Temuan</th>
+<th>Status</th>
+<th>Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>TestSprite (gap #1)</td>
+<td>&quot;Tandai sudah dicek&quot; tidak bisa didemokan (tidak ada Waspada baru)</td>
+<td>✅ Diperbaiki: tombol demo &quot;Simulasikan pola berubah&quot;</td>
+<td><code>ad2272c</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>TestSprite (gap #2, TC011)</td>
+<td>Alert Darurat/Waspada tidak bisa ditutup, menggantung di &quot;Sedang dicek&quot;</td>
+<td>✅ Diperbaiki: tombol &quot;Tandai selesai&quot;</td>
+<td><code>ad2272c</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Audit #1</td>
+<td>Beranda &quot;Normal · seperti biasanya&quot; padahal Darurat 09.12 belum selesai dan 98 menit tanpa gerakan</td>
+<td>✅ Diperbaiki: kartu &quot;Sedang dicek keluarga&quot;; &quot;Normal&quot; hanya saat tidak ada alert terbuka</td>
+<td><code>c933373</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Review lanjutan</td>
+<td>Darurat yang sedang dicek kalah dari Waspada baru; Info baru bisa menutupinya</td>
+<td>✅ Diperbaiki: dipilih alert paling serius dari gabungan Baru + Sedang dicek</td>
+<td><code>996771d</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Audit #3</td>
+<td>Tombol telepon terkubur (detail Darurat y=1099, 1,35 layar ke bawah); kartu Darurat tanpa tombol telepon</td>
+<td>✅ Diperbaiki: &quot;Tindak lanjut&quot; di atas perbandingan; &quot;Hubungi Ibu Sri Wahyuni&quot; langsung di kartu</td>
+<td><code>c933373</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Audit lokal A</td>
+<td>&quot;Tandai selesai&quot; tidak terlihat efeknya di Beranda</td>
+<td>✅ Diperbaiki (ikut #3)</td>
+<td><code>c933373</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Review lanjutan</td>
+<td>Fokus keyboard hilang setelah modal panggilan Beranda ditutup</td>
+<td>✅ Diperbaiki: fokus ke tombol tindak lanjut di kartu baru (&quot;Lihat detail&quot;, bukan &quot;Hubungi&quot;)</td>
+<td><code>996771d</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Review lanjutan</td>
+<td>Kalimat &quot;ada baiknya ditanyakan kabarnya&quot; muncul dua kali di detail Waspada</td>
+<td>✅ Diperbaiki</td>
+<td><code>996771d</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Review lanjutan</td>
+<td>Sumber data demo tidak jelas bagi orang yang baru membuka</td>
+<td>✅ Diperbaiki: chip &quot;Demo · data contoh&quot; dan tanggal cerita di baris pembaruan</td>
+<td><code>61b97c7</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Audit #6 (sebagian)</td>
+<td>Mode sensor bisa tampil &quot;Pemantauan sedang dijeda&quot; padahal sensor tetap membaca</td>
+<td>✅ Diperbaiki: switch nonaktif dan diberi penjelasan di mode sensor</td>
+<td><code>61b97c7</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Audit #2</td>
+<td>Badge &quot;Powered by Netlify&quot; menutupi tab Notifikasi/Pengaturan, &quot;Butuh bantuan&quot;, &quot;Akhiri panggilan&quot;, dan &quot;Kembali ke app keluarga&quot; di 375 px</td>
+<td>⏳ Belum. Pengaturan proyek Netlify: <em>Project configuration → General → Powered by Netlify badge</em></td>
+<td>–</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Audit #6 (sisa)</td>
+<td>Jeda tanpa durasi/pengingat; switch ON berwarna hijau brand</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Audit #5</td>
+<td>Garis &quot;pola biasanya&quot; di grafik Riwayat berpindah saat memilih hari; detail hari di luar layar; sumbu Y tanpa satuan</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Audit #8</td>
+<td>&quot;Terbangun malam&quot; vs &quot;Bangun malam&quot; (satu hal, dua nama)</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Audit #4</td>
+<td>Eskalasi kontak (&quot;Keluarga sedang dihubungi&quot;) tidak terlihat di sisi keluarga</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Audit #7</td>
+<td>Di Notifikasi, Darurat &quot;Sedang dicek&quot; terlihat sama dengan Info &quot;Selesai&quot;</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Audit #9 + lokal B</td>
+<td>Mode sensor di situs publik selalu gagal (HTTPS → <code>http://…:8765</code>); copy sensor berisi jargon (port, hotspot 2,4 GHz)</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Audit #10 + lokal C/D</td>
+<td>Identitas visual generik; tombol demo paling berat di Beranda; pill Waspada tanpa ikon</td>
+<td>⏳ Belum</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Catatan untuk TestSprite:</strong> beberapa ekspektasi tes sudah tidak berlaku, karena aplikasinya memang berubah, bukan karena ada bug. Contohnya TC002, yang mengharapkan Beranda dibuka dengan &quot;Normal&quot;, padahal sekarang dibuka dengan &quot;Sedang dicek keluarga&quot;. Rencana tes perlu diperbarui sebelum dijalankan ulang.</p>
+<hr>
+<h2>6️⃣ Bukti Sebelum–Sesudah (375 × 812 px)</h2>
+<table>
+<thead>
+<tr>
+<th>Alur</th>
+<th>Sebelum</th>
+<th>Sesudah</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status saat membuka Beranda</td>
+<td>&quot;✓ Normal · Pola keseharian terlihat seperti biasanya&quot;, padahal Darurat 09.12 masih &quot;Sedang dicek&quot;</td>
+<td>&quot;Sedang dicek keluarga&quot; + badge Darurat + &quot;Hari ini, 09.12&quot;; chip &quot;Demo · data contoh&quot;; &quot;Diperbarui 24 September 2026, 09.20&quot;</td>
+</tr>
+<tr>
+<td>Menelepon dari kartu Darurat</td>
+<td>Hanya &quot;Lihat &amp; tindak lanjuti&quot; → buka detail → scroll → &quot;Hubungi&quot; (2 ketukan + scroll)</td>
+<td>&quot;Hubungi Ibu Sri Wahyuni&quot; langsung di kartu (1 ketukan)</td>
+</tr>
+<tr>
+<td>Posisi tombol &quot;Hubungi Ibu Sri Wahyuni&quot; di detail Darurat</td>
+<td>y = 1099 px (1,35 layar; perlu scroll)</td>
+<td>y = 473 px (terlihat tanpa scroll)</td>
+</tr>
+<tr>
+<td>Posisi &quot;Tandai sudah dicek&quot; di detail Waspada</td>
+<td>y = 1127 px</td>
+<td>y = 501 px</td>
+</tr>
+<tr>
+<td>Menutup alert</td>
+<td>Tidak bisa; status menggantung di &quot;Sedang dicek&quot;</td>
+<td>&quot;Tandai selesai&quot; → Beranda kembali &quot;Normal&quot; bila tidak ada alert terbuka lain</td>
+</tr>
+<tr>
+<td>Beberapa alert aktif (Darurat dicek + Waspada baru + Info)</td>
+<td>Kartu menampilkan Waspada baru; Darurat yang belum selesai tersembunyi</td>
+<td>Kartu tetap menampilkan Darurat (paling serius); badge Notifikasi tetap menghitung Waspada baru</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Sebelum</th>
+<th>Sesudah</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="evidence/01-sebelum-beranda-normal.jpg" alt="Beranda sebelum"></td>
+<td><img src="evidence/02-sesudah-beranda-sedang-dicek.jpg" alt="Beranda sesudah"></td>
+</tr>
+<tr>
+<td><img src="evidence/03-sebelum-kartu-darurat.jpg" alt="Kartu Darurat sebelum"></td>
+<td><img src="evidence/04-sesudah-kartu-darurat.jpg" alt="Kartu Darurat sesudah"></td>
+</tr>
+<tr>
+<td><img src="evidence/05-sebelum-detail-darurat.jpg" alt="Detail Darurat sebelum"></td>
+<td><img src="evidence/06-sesudah-detail-darurat.jpg" alt="Detail Darurat sesudah"></td>
+</tr>
+</tbody>
+</table>
+<p>Gambar &quot;sebelum&quot; diambil dari situs publik sebelum perbaikan. Gambar &quot;sesudah&quot; diambil dari build lokal dan situs publik setelah perbaikan. Badge Netlify yang terlihat di beberapa gambar adalah temuan #11 yang belum diperbaiki.</p>
+<p><strong>Verifikasi logika status:</strong> 11 kombinasi alert diuji langsung pada <code>getCurrentStatus</code>, termasuk Darurat dicek + Waspada baru, Darurat dicek + Info baru, dua Darurat dicek, Info dicek, dan semua selesai. Semuanya lulus. Di browser, empat alert aktif sekaligus ditutup satu per satu dengan urutan yang benar (Darurat terbaru → Darurat 09.12 → Waspada → Normal).</p>
+<hr>
+<h2>7️⃣ Uji Tugas Singkat: memahami status → memilih tindakan → menyelesaikan alert</h2>
+<p><strong>Metode:</strong> walkthrough tugas berskrip di situs publik (<code>index-D1-kjbJf.js</code>) pada 375 × 812 px. Setiap ketukan diarahkan ke titik tengah tombol di layar (<code>elementFromPoint</code>), jadi overlay seperti badge Netlify ikut terhitung sebagai penghalang. Ini <strong>bukan</strong> uji dengan partisipan. Pemahaman diukur dari apa yang terlihat tanpa scroll, bukan dari jawaban pengguna.</p>
+<table>
+<thead>
+<tr>
+<th>Tugas</th>
+<th>Status terlihat tanpa scroll</th>
+<th>Aksi pertama terlihat tanpa scroll</th>
+<th>Ketukan sampai selesai</th>
+<th>Scroll</th>
+<th>Penghalang</th>
+<th>Hasil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A. Darurat sedang dicek (kondisi awal)</td>
+<td>Ya: &quot;Sedang dicek keluarga&quot;</td>
+<td>Ya: &quot;Lihat &amp; tindak lanjuti&quot;</td>
+<td>3</td>
+<td>0</td>
+<td>–</td>
+<td>Selesai → &quot;Normal&quot;</td>
+</tr>
+<tr>
+<td>B. Darurat baru (lansia menekan &quot;Butuh bantuan&quot;)</td>
+<td>Ya: &quot;Butuh perhatian sekarang, segera hubungi&quot;</td>
+<td>Ya: &quot;Hubungi Ibu Sri Wahyuni&quot;</td>
+<td>5 (telepon, akhiri, tindak lanjut, selesai, kembali)</td>
+<td>0</td>
+<td>Badge Netlify menutupi &quot;Akhiri panggilan&quot; dan &quot;Kembali ke app keluarga&quot;</td>
+<td>Selesai → &quot;Normal&quot;</td>
+</tr>
+<tr>
+<td>C. Waspada baru (pola berubah)</td>
+<td>Ya: &quot;Ada pola yang berubah dari biasanya, perlu dicek&quot;</td>
+<td>Ya: &quot;Lihat &amp; tindak lanjuti&quot;</td>
+<td>4 (tindak lanjut, sudah dicek, selesai, kembali)</td>
+<td>0</td>
+<td>–</td>
+<td>Selesai → &quot;Normal&quot;</td>
+</tr>
+</tbody>
+</table>
+<p>Ukuran kartu status: 46–57% tinggi layar, berisi 32–46 kata. Kartu &quot;Sedang dicek&quot; paling padat (46 kata) karena memuat deskripsi alert ditambah petunjuk.</p>
+<p><strong>Kesimpulan untuk penyederhanaan kartu:</strong></p>
+<ul>
+<li><strong>Penyederhanaan struktural tidak diperlukan saat ini.</strong> Di ketiga tugas, status dan aksi utama sudah terlihat di layar pertama, dan tidak ada scroll sampai alert selesai.</li>
+<li><strong>Penyederhanaan terarah masih disarankan:</strong>
+<ol>
+<li><strong>Kartu &quot;Sedang dicek&quot; (46 kata):</strong> pendekkan petunjuk, atau potong deskripsi jadi 2 baris. Kalimat &quot;Coba hubungi Ibu sekarang&quot; di deskripsi juga terasa janggal setelah keluarga menanggapi.</li>
+<li><strong>Waspada butuh dua keputusan</strong> (&quot;Tandai sudah dicek&quot; lalu &quot;Tandai selesai&quot;) untuk satu niat. Pertimbangkan satu langkah untuk Waspada.</li>
+</ol>
+</li>
+<li><strong>Penghalang terbesar saat ini bukan kartu, tapi badge Netlify (#11).</strong> Badge ini menutupi tombol di modal panggilan dan di layar lansia.</li>
+<li><strong>Langkah berikutnya:</strong> uji tiga tugas yang sama dengan 3–5 partisipan (keluarga yang punya orang tua lansia). Catat keberhasilan, waktu, dan kesulitan (SEQ). Hasil itu yang menentukan apakah kartu perlu dipadatkan lebih jauh.</li>
+</ul>
+<hr>
+<h2>8️⃣ Uji Ulang TestSprite: setelah perbaikan, dengan hardware sungguhan (2026-10-20)</h2>
+<p><strong>Kondisi:</strong> build produksi HEAD <code>21358cf</code> (<code>vite preview</code>, port 4173). ESP32-S3 tersambung lewat USB (COM23), dan <code>sensor/csi_bridge.py --port COM23</code> (dijalankan dengan venv <code>sensor/.venv</code>) melayani <code>http://localhost:8765/api/sensor/latest</code> dengan status <code>streaming</code> (sekitar 50–60 paket/detik, RSSI sekitar −52 dBm, kalibrasi selesai). Browser cloud TestSprite menjangkau port 4173 dan 8765 lewat tunnel. Log run tidak berisi satu pun &quot;Target connect failed&quot;, jadi semua request ke bridge berhasil.</p>
+<p><strong>Rencana tes:</strong> dibuat ulang dari code summary yang sudah diperbarui (40 tes). Asersi TC003, TC013, dan TC018 dipertajam supaya menguji perilaku hasil perbaikan, bukan sekadar &quot;kartu tampil&quot;. Ada dua tes baru: <strong>TC039</strong> (jeda nonaktif di mode sensor) dan <strong>TC040</strong> (beberapa alert aktif). Duplikat versi Indonesia/Inggris dibuang, sehingga yang dijalankan 22 tes.</p>
+<p><strong>Hasil: 22/22 lulus.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tes</th>
+<th>Status</th>
+<th>Hasil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Beranda (mode demo) &amp; navigasi</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC013_Melihat_ringkasan_dashboard_demo_saat_pertama_dibuka.py">TC013 Melihat ringkasan dashboard demo saat pertama dibuka</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/c911c1c4-673a-4359-a8a9-57081f83d4c3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC026_Beralih_ke_setiap_tab_utama_dari_navigasi_bawah.py">TC026 Beralih ke setiap tab utama dari navigasi bawah</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7e252b00-4f7f-4232-a090-5aa807df45e0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC030_Badge_notifikasi_muncul_setelah_alert_baru_dibuat_di_mode_demo.py">TC030 Badge notifikasi muncul setelah alert baru dibuat di mode demo</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7863a1ca-4f50-4175-bc87-377b53c6d2a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC040_Beberapa_alert_aktif_Darurat_yang_sedang_dicek_mengungguli_Waspada_baru.py">TC040 Beberapa alert aktif: Darurat yang sedang dicek mengungguli Waspada baru</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/cb34323d-77d4-4e0d-9dc0-622de20aecb0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Layar konfirmasi lansia</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC020_Konfirmasi_baik_baik_saja_menambahkan_alert_info.py">TC020 Konfirmasi baik-baik saja menambahkan alert info</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/8f5d638d-7acf-4653-8289-ce3b9f7aaed5">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC010_Konfirmasi_butuh_bantuan_menambahkan_alert_darurat.py">TC010 Konfirmasi butuh bantuan menambahkan alert darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24416251-b70d-4800-8ec9-58339b9e358e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC027_Kedaluwarsa_konfirmasi_lansia_otomatis_menghubungi_keluarga.py">TC027 Kedaluwarsa konfirmasi lansia otomatis menghubungi keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/5f7c6347-86ce-4dfb-a88f-73b9f789b8a0">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Detail alert &amp; tindak lanjut</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC006_Alert_darurat_terbuka_dapat_dilihat_detail_dan_ditindaklanjuti.py">TC006 Alert darurat terbuka dapat dilihat detail dan ditindaklanjuti</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d055d853-a20e-4f15-9bf2-52ec7bfb671c">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC009_Pengguna_memeriksa_detail_alert_dan_menandainya_selesai_dari_Notifikasi.py">TC009 Pengguna memeriksa detail alert dan menandainya selesai dari Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/1c48fa80-17fd-499c-bd9b-c2e88cd6e7ef">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC014_Menandai_alert_waspada_sebagai_sudah_dicek_lalu_selesai.py">TC014 Menandai alert waspada sebagai sudah dicek lalu selesai</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a55af5e7-29c6-4f4e-8ca9-c9b9fa3e500e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC019_Menghubungi_keluarga_dari_alert_darurat_membuka_modal_panggilan_simulasi.py">TC019 Menghubungi keluarga dari alert darurat membuka modal panggilan simulasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/2babd39b-bcb5-4631-b1f6-22dad62ebcb7">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC038_Membatalkan_konfirmasi_panggilan_darurat.py">TC038 Membatalkan konfirmasi panggilan darurat</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/e1b71cd0-010c-4f84-b957-64c2ccd29e5f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Riwayat</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC023_Meninjau_riwayat_tujuh_hari_dan_berpindah_metrik.py">TC023 Meninjau riwayat tujuh hari dan berpindah metrik</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/39fcd950-eec6-4799-9169-b207fb7b6b6b">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC024_Riwayat_menampilkan_metrik_harian_dan_perbandingan_saat_tanggal_dipilih.py">TC024 Riwayat menampilkan metrik harian dan perbandingan saat tanggal dipilih</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7431c548-d481-49ee-83c7-b0b9835043d8">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Pengaturan (mode demo)</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC032_Menjeda_dan_melanjutkan_pemantauan_di_mode_demo_mengubah_status_beranda.py">TC032 Menjeda dan melanjutkan pemantauan di mode demo mengubah status beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/b26ef2e7-3bce-4d51-8539-e447ee02dd38">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC035_Mengatur_ulang_prioritas_kontak_keluarga.py">TC035 Mengatur ulang prioritas kontak keluarga</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/bf0ed1ee-c9c5-49d3-9834-eaa467e9fc0f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC037_Mereset_data_demo_ke_kondisi_awal.py">TC037 Mereset data demo ke kondisi awal</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24eb9c2b-9209-4dd0-86d8-a5d0ad03874e">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><strong>Mode sensor langsung dengan ESP32-S3 sungguhan</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="./TC003_Mengubah_sumber_data_ke_sensor_langsung_menampilkan_pembacaan_live_di_Beranda.py">TC003 Mengubah sumber data ke sensor langsung menampilkan pembacaan live di Beranda</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7f2f21d6-cbe6-4fa3-bb17-d086c3e36a2f">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC018_Inspect_live_sensor_technical_details.py">TC018 Inspect live sensor technical details</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/76f2f3dd-9847-4f7c-a26b-33c8d9271f96">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC005_Switch_to_live_sensor_mode_and_return_to_the_home_dashboard.py">TC005 Switch to live sensor mode and return to the home dashboard</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d23aaa71-c488-44bf-bd2c-05691ceba1b3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC028_Melihat_batasan_mode_sensor_langsung_pada_Riwayat_dan_Notifikasi.py">TC028 Melihat batasan mode sensor langsung pada Riwayat dan Notifikasi</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a000efac-32f8-4334-9a8b-8d571a2eebc3">video &amp; detail</a></td>
+</tr>
+<tr>
+<td><a href="./TC039_Jeda_pemantauan_dinonaktifkan_di_mode_sensor_langsung.py">TC039 Jeda pemantauan dinonaktifkan di mode sensor langsung</a></td>
+<td>✅ Lulus</td>
+<td><a href="https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/52334879-67de-4563-80d2-1cdca08da7f4">video &amp; detail</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Yang dibuktikan oleh hardware sungguhan:</strong></p>
+<ul>
+<li><strong>TC003:</strong> chip &quot;Sensor langsung&quot; tampil, kartu menampilkan keadaan live &quot;Belum ada gerakan terdeteksi&quot; (bukan &quot;Penghubung sensor tidak terjangkau&quot;), dan &quot;Gerakan terakhir&quot; serta &quot;Data terakhir diterima&quot; tampil.</li>
+<li><strong>TC018:</strong> Detail teknis menunjukkan &quot;COM23&quot;, &quot;Perangkat (serial)&quot;, dan RSSI dalam dBm. Data ini hanya bisa muncul dari perangkat yang benar-benar tersambung.</li>
+<li><strong>TC039:</strong> switch jeda <code>disabled</code> dan <code>aria-checked=&quot;false&quot;</code> di mode sensor, dengan penjelasan &quot;Jeda belum tersedia di mode sensor langsung. Pembacaan sensor tetap berjalan.&quot; Saat kembali ke demo, &quot;Pemantauan sedang dijeda&quot; muncul lagi.</li>
+<li><strong>TC028 / TC005:</strong> Riwayat dan Notifikasi menampilkan &quot;Belum tersedia di mode sensor langsung&quot;, dan bisa kembali ke mode demo.</li>
+</ul>
+<p><strong>Yang dibuktikan di mode demo (hasil perbaikan):</strong> TC013 (Beranda dibuka dengan &quot;Sedang dicek keluarga&quot; + badge Darurat, chip &quot;Demo · data contoh&quot;, tanggal cerita), TC040 (beberapa alert aktif ditutup sesuai urutan sampai &quot;Normal&quot;), TC014 (Waspada: sudah dicek → selesai), TC009 (menandai selesai dari Notifikasi), dan TC019 (telepon dari kartu Darurat).</p>
+<p><strong>Catatan jujur:</strong></p>
+<ul>
+<li><strong>TC040:</strong> skrip Playwright yang diekspor hanya menyimpan asersi akhir (Beranda &quot;Normal&quot;). Urutan prioritas tetap teruji secara tidak langsung: tombol &quot;Tandai selesai&quot; di detail pertama hanya ada untuk alert yang &quot;Sedang dicek&quot; (Darurat), dan &quot;Tandai sudah dicek&quot; di detail kedua hanya ada untuk Waspada baru. Kalau urutannya salah, klik itu gagal. Aturan ini juga sudah diuji lewat 11 kasus logika (bagian 6).</li>
+<li><strong>Deteksi gerak bergantung pada orang yang bergerak</strong> di dekat perangkat. Tes menerima keadaan &quot;diam&quot; maupun &quot;gerak&quot;. Ketepatan deteksi gerak tidak diukur di sini (lihat <code>sensor/README.md</code> dan commit uji CSI-Bench).</li>
+<li><strong>Skrip run pertama (bagian 2) masih ada di folder ini.</strong> Beberapa ID tes dipakai ulang dengan isi berbeda (misalnya TC018 dan TC039). Tabel di atas menautkan skrip run kedua.</li>
+<li><strong>Badge Netlify (temuan #11)</strong> tidak tercakup, karena tes berjalan di build lokal. Badge ini masih perlu dimatikan di pengaturan proyek Netlify.</li>
+</ul>
 
             </li>
 </ul>

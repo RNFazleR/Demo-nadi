@@ -40,28 +40,45 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Mulai simulasi anomali dengan tombol “Simulasikan anomali” dan amati layar konfirmasi lansia yang ditampilkan.
+        # -> Sign in to NADI using the provided demo credentials and open the family app home screen.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided demo credentials and open the family app home screen.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided demo credentials and open the family app home screen.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Start the “Simulasikan anomali” flow and inspect the elder confirmation screen.
         # Simulasikan anomali button
         elem = page.get_by_role("button", name="Simulasikan anomali")
         await elem.click(timeout=10000)
         
-        # -> Return to the family app using “Kembali ke app keluarga” and verify that a new emergency alert is recorded.
+        # -> Click “Kembali ke app keluarga” to return and check the family app’s status and emergency alert.
         # Kembali ke app keluarga button
         elem = page.get_by_role("button", name="Kembali ke app keluarga")
         await elem.click(timeout=10000)
         
-        # -> Open the Notifikasi view and verify that the timeout generated a new emergency alert.
+        # -> Open “Notifikasi” and verify that the emergency alert appears in the notification list.
         # 1 Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> A new emergency alert is recorded in Notifications.
+        # --> A new emergency alert is recorded in Notifikasi.
         await page.get_by_role("button", name="Darurat Baru Ibu Sri Wahyuni").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: A new emergency alert is visible in Notifications.
-        await expect(page.get_by_role("button", name="Darurat Baru Ibu Sri Wahyuni").nth(0)).to_be_visible(timeout=15000), "A new emergency alert is visible in Notifications."
+        # Assert: A new emergency alert is visible in the notification list.
+        await expect(page.get_by_role("button", name="Darurat Baru Ibu Sri Wahyuni").nth(0)).to_be_visible(timeout=15000), "A new emergency alert is visible in the notification list."
         await asyncio.sleep(5)
 
     finally:

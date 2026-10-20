@@ -7,7 +7,7 @@
 - **Date:** 2026-10-19
 - **Prepared by:** TestSprite AI Team
 - **Target:** build produksi (`npm run build` + `vite preview`, port 4173)
-- **Diperbarui:** 2026-10-20, ditambah bagian 8 (uji ulang TestSprite dengan hardware sungguhan: 22/22 lulus). 2026-10-19, ditambah bagian 5–7 (tindak lanjut perbaikan, bukti sebelum–sesudah, uji tugas). Hasil tes di bagian 2–3 adalah run **sebelum** perbaikan.
+- **Diperbarui:** 2026-10-20, ditambah bagian 9 (uji ulang setelah login keluarga & APK: 23/25 lulus, 3/3 tes login lulus) dan bagian 8 (uji ulang TestSprite dengan hardware sungguhan: 22/22 lulus). 2026-10-19, ditambah bagian 5–7 (tindak lanjut perbaikan, bukti sebelum–sesudah, uji tugas). Hasil tes di bagian 2–3 adalah run **sebelum** perbaikan.
 - **Scope:** 21 dari 39 tes di rencana (duplikat Indonesia/Inggris dihapus; TC004 dilewati karena tidak bisa dicapai lewat UI, lihat Key Gaps #1)
 
 ---
@@ -372,3 +372,63 @@ Ukuran kartu status: 46–57% tinggi layar, berisi 32–46 kata. Kartu "Sedang d
 - **Deteksi gerak bergantung pada orang yang bergerak** di dekat perangkat. Tes menerima keadaan "diam" maupun "gerak". Ketepatan deteksi gerak tidak diukur di sini (lihat `sensor/README.md` dan commit uji CSI-Bench).
 - **Skrip run pertama (bagian 2) masih ada di folder ini.** Beberapa ID tes dipakai ulang dengan isi berbeda (misalnya TC018 dan TC039). Tabel di atas menautkan skrip run kedua.
 - **Badge Netlify (temuan #11)** tidak tercakup, karena tes berjalan di build lokal. Badge ini masih perlu dimatikan di pengaturan proyek Netlify.
+
+---
+
+## 9️⃣ Uji Ulang TestSprite: setelah login keluarga & APK (2026-10-20)
+
+**Perubahan yang diuji:** layar **Masuk ke NADI** (email + kata sandi, simulasi dengan akun di `dummy.js`), sesi yang diingat setelah muat ulang, bagian **Akun → Keluar** di Pengaturan, isian **Alamat penghubung sensor** (untuk APK), dan font Nunito yang dibundel. Build produksi (`vite preview`, port 4173) dari working tree setelah perubahan.
+
+**Kondisi:** penghubung sensor berjalan di `localhost:8765`, tapi **ESP32-S3 tidak tercolok** (penghubung melaporkan `connection: "disconnected"`, port COM23 tidak ditemukan). Instruksi ke TestSprite: masuk dulu dengan `rina@nadi.id` / `nadi1234` sebelum setiap skenario lama, dan mode sensor harus menampilkan keadaan bermasalah yang jujur ("Sensor terputus").
+
+**Rencana tes:** 3 tes baru ditambahkan ke rencana: **TC041** (masuk + sesi diingat), **TC042** (login gagal: field kosong, format email salah, kombinasi salah), **TC043** (keluar lewat Pengaturan). Ditambah 22 tes yang sama dengan bagian 8, jadi total 25 tes.
+
+**Hasil: 23/25 lulus, 1 gagal, 1 terblokir. Ketiga tes login lulus, dan tidak ada regresi akibat layar login.**
+
+| Tes | Status | Hasil |
+|---|---|---|
+| **Login keluarga (baru)** | | |
+| [TC041 Masuk dengan akun keluarga dan sesi diingat setelah muat ulang](./TC041_Masuk_dengan_akun_keluarga_dan_sesi_diingat_setelah_muat_ulang.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/efa8fdd6-a6f4-4e1f-bac9-37d6762c8420) |
+| [TC042 Login gagal menampilkan pesan yang jelas](./TC042_Login_gagal_menampilkan_pesan_yang_jelas.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7a8ab47f-d605-4b1c-a18b-181816e09868) |
+| [TC043 Keluar dari akun lewat Pengaturan](./TC043_Keluar_dari_akun_lewat_Pengaturan.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/661ead04-d404-42e5-aa05-15e2421dedf8) |
+| **Beranda (mode demo) & navigasi** | | |
+| [TC013 Melihat ringkasan dashboard demo saat pertama dibuka](./TC013_Melihat_ringkasan_dashboard_demo_saat_pertama_dibuka.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/c911c1c4-673a-4359-a8a9-57081f83d4c3) |
+| [TC026 Beralih ke setiap tab utama dari navigasi bawah](./TC026_Beralih_ke_setiap_tab_utama_dari_navigasi_bawah.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7e252b00-4f7f-4232-a090-5aa807df45e0) |
+| [TC030 Badge notifikasi muncul setelah alert baru dibuat di mode demo](./TC030_Badge_notifikasi_muncul_setelah_alert_baru_dibuat_di_mode_demo.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7863a1ca-4f50-4175-bc87-377b53c6d2a0) |
+| [TC040 Beberapa alert aktif: Darurat yang sedang dicek mengungguli Waspada baru](./TC040_Beberapa_alert_aktif_Darurat_yang_sedang_dicek_mengungguli_Waspada_baru.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/cb34323d-77d4-4e0d-9dc0-622de20aecb0) |
+| **Layar konfirmasi lansia** | | |
+| [TC020 Konfirmasi baik-baik saja menambahkan alert info](./TC020_Konfirmasi_baik_baik_saja_menambahkan_alert_info.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/8f5d638d-7acf-4653-8289-ce3b9f7aaed5) |
+| [TC010 Konfirmasi butuh bantuan menambahkan alert darurat](./TC010_Konfirmasi_butuh_bantuan_menambahkan_alert_darurat.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24416251-b70d-4800-8ec9-58339b9e358e) |
+| [TC027 Kedaluwarsa konfirmasi lansia otomatis menghubungi keluarga](./TC027_Kedaluwarsa_konfirmasi_lansia_otomatis_menghubungi_keluarga.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/5f7c6347-86ce-4dfb-a88f-73b9f789b8a0) |
+| **Detail alert & tindak lanjut** | | |
+| [TC006 Alert darurat terbuka dapat dilihat detail dan ditindaklanjuti](./TC006_Alert_darurat_terbuka_dapat_dilihat_detail_dan_ditindaklanjuti.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d055d853-a20e-4f15-9bf2-52ec7bfb671c) |
+| [TC009 Pengguna memeriksa detail alert dan menandainya selesai dari Notifikasi](./TC009_Pengguna_memeriksa_detail_alert_dan_menandainya_selesai_dari_Notifikasi.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/1c48fa80-17fd-499c-bd9b-c2e88cd6e7ef) |
+| [TC014 Menandai alert waspada sebagai sudah dicek lalu selesai](./TC014_Menandai_alert_waspada_sebagai_sudah_dicek_lalu_selesai.py) | ⚠️ Terblokir | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a55af5e7-29c6-4f4e-8ca9-c9b9fa3e500e) |
+| [TC019 Menghubungi keluarga dari alert darurat membuka modal panggilan simulasi](./TC019_Menghubungi_keluarga_dari_alert_darurat_membuka_modal_panggilan_simulasi.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/2babd39b-bcb5-4631-b1f6-22dad62ebcb7) |
+| [TC038 Membatalkan konfirmasi panggilan darurat](./TC038_Membatalkan_konfirmasi_panggilan_darurat.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/e1b71cd0-010c-4f84-b957-64c2ccd29e5f) |
+| **Riwayat** | | |
+| [TC023 Meninjau riwayat tujuh hari dan berpindah metrik](./TC023_Meninjau_riwayat_tujuh_hari_dan_berpindah_metrik.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/39fcd950-eec6-4799-9169-b207fb7b6b6b) |
+| [TC024 Riwayat menampilkan metrik harian dan perbandingan saat tanggal dipilih](./TC024_Riwayat_menampilkan_metrik_harian_dan_perbandingan_saat_tanggal_dipilih.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7431c548-d481-49ee-83c7-b0b9835043d8) |
+| **Pengaturan (mode demo)** | | |
+| [TC032 Menjeda dan melanjutkan pemantauan di mode demo mengubah status beranda](./TC032_Menjeda_dan_melanjutkan_pemantauan_di_mode_demo_mengubah_status_beranda.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/b26ef2e7-3bce-4d51-8539-e447ee02dd38) |
+| [TC035 Mengatur ulang prioritas kontak keluarga](./TC035_Mengatur_ulang_prioritas_kontak_keluarga.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/bf0ed1ee-c9c5-49d3-9834-eaa467e9fc0f) |
+| [TC037 Mereset data demo ke kondisi awal](./TC037_Mereset_data_demo_ke_kondisi_awal.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/24eb9c2b-9209-4dd0-86d8-a5d0ad03874e) |
+| **Mode sensor langsung (ESP32-S3 tidak tercolok)** | | |
+| [TC003 Mengubah sumber data ke sensor langsung menampilkan pembacaan live di Beranda](./TC003_Mengubah_sumber_data_ke_sensor_langsung_menampilkan_pembacaan_live_di_Beranda.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/7f2f21d6-cbe6-4fa3-bb17-d086c3e36a2f) |
+| [TC018 Inspect live sensor technical details](./TC018_Inspect_live_sensor_technical_details.py) | ❌ Gagal | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/76f2f3dd-9847-4f7c-a26b-33c8d9271f96) |
+| [TC005 Switch to live sensor mode and return to the home dashboard](./TC005_Switch_to_live_sensor_mode_and_return_to_the_home_dashboard.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/d23aaa71-c488-44bf-bd2c-05691ceba1b3) |
+| [TC028 Melihat batasan mode sensor langsung pada Riwayat dan Notifikasi](./TC028_Melihat_batasan_mode_sensor_langsung_pada_Riwayat_dan_Notifikasi.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/a000efac-32f8-4334-9a8b-8d571a2eebc3) |
+| [TC039 Jeda pemantauan dinonaktifkan di mode sensor langsung](./TC039_Jeda_pemantauan_dinonaktifkan_di_mode_sensor_langsung.py) | ✅ Lulus | [video & detail](https://www.testsprite.com/dashboard/mcp/tests/e4578d37-11a2-5087-9310-124ddf9ae89d/test/52334879-67de-4563-80d2-1cdca08da7f4) |
+
+**Analisis yang gagal/terblokir (keduanya bukan bug aplikasi):**
+- **TC018 ❌:** asersi "RSSI tampil dalam dBm" mengandaikan perangkat tersambung. Saat run ini ESP32 tidak tercolok, dan penghubung mengirim `rssi_dbm: null`. App menampilkan "–" dan kartu "Sensor terputus". Ini sesuai aturan AGENTS.md: data yang tidak tersedia tidak boleh tampil seolah ada. Port "COM23" dan "Perangkat (serial)" tetap terverifikasi. Di bagian 8, dengan perangkat tersambung, tes yang sama lulus.
+- **TC014 ⚠️:** langkah "Open a new warning-level alert" tidak bisa dijalankan, karena cerita demo memang dimulai tanpa Waspada "baru" (semua Waspada 22 Sep sudah "Selesai"). Tes perlu membuat dulu satu Waspada baru lewat **Fitur demo → Simulasikan pola berubah**. Di run bagian 8, agen TestSprite kebetulan menemukan langkah itu sendiri. Perbaikan: tambahkan langkah simulasi di rencana tes TC014.
+
+**Yang dibuktikan tes login:**
+- **TC041:** app dibuka di "Masuk ke NADI" tanpa navigasi bawah. Setelah masuk, Beranda tampil, dan setelah muat ulang tetap masuk.
+- **TC042:** "Isi email dulu, ya." / "Isi kata sandi dulu, ya.", "Format email belum benar…", dan satu pesan netral "Email atau kata sandi belum cocok. Coba periksa lagi." Kata sandi dikosongkan dan pengguna tetap di layar masuk.
+- **TC043:** Pengaturan → Akun menampilkan "Rina Wahyuni" dan "rina@nadi.id". "Keluar" kembali ke layar masuk dengan pesan "Kamu sudah keluar. Masuk lagi kapan saja.", dan sesi hilang setelah muat ulang.
+
+**Catatan:**
+- APK Android tidak diuji TestSprite (TestSprite menguji web lewat tunnel). APK diuji manual di emulator Android 16 (API 37): splash NADI → layar masuk → login → Beranda dengan navigasi bawah.
+- Laporan HTML (`testsprite-mcp-test-report.html`) belum diperbarui untuk bagian 9.

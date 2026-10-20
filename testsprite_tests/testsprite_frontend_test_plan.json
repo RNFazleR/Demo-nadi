@@ -404,6 +404,10 @@
       },
       {
         "type": "action",
+        "description": "On the Beranda, in the dashed \"Fitur demo\" section, click the button that simulates a changed pattern (\"Simulasi pola berubah\") to create a new Waspada alert"
+      },
+      {
+        "type": "action",
         "description": "Click the notifications tab"
       },
       {
@@ -1330,5 +1334,120 @@
       }
     ],
     "priority": "High"
+  },
+  {
+    "id": "TC041",
+    "title": "Masuk dengan akun keluarga dan sesi diingat setelah muat ulang",
+    "description": "Keluarga masuk dengan email dan kata sandi akun demo, lalu tetap masuk setelah halaman dimuat ulang.",
+    "category": "Login keluarga",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Masuk ke NADI\" is displayed and the bottom navigation is NOT displayed"
+      },
+      {
+        "type": "action",
+        "description": "Type \"rina@nadi.id\" into the \"Email\" field and \"nadi1234\" into the \"Kata sandi\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Masuk\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Beranda shows \"Status saat ini\" and the bottom navigation (Beranda, Riwayat, Notifikasi, Pengaturan) is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Reload the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Beranda is still displayed without asking to log in again"
+      }
+    ]
+  },
+  {
+    "id": "TC042",
+    "title": "Login gagal menampilkan pesan yang jelas",
+    "description": "Field kosong, format email salah, dan kata sandi salah masing-masing menampilkan pesan yang jelas dan pengguna tetap di layar masuk.",
+    "category": "Login keluarga",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Masuk\" button without filling any field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the messages \"Isi email dulu, ya.\" and \"Isi kata sandi dulu, ya.\" are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Type \"rina-nadi\" into \"Email\" and \"nadi1234\" into \"Kata sandi\", then click \"Masuk\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a message starting with \"Format email belum benar\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Replace \"Email\" with \"rina@nadi.id\" and \"Kata sandi\" with \"salah123\", then click \"Masuk\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message \"Email atau kata sandi belum cocok. Coba periksa lagi.\" is displayed, the \"Kata sandi\" field is empty, and the heading \"Masuk ke NADI\" is still displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC043",
+    "title": "Keluar dari akun lewat Pengaturan",
+    "description": "Keluarga yang sudah masuk melihat akunnya di Pengaturan, lalu keluar dan kembali ke layar masuk.",
+    "category": "Login keluarga",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Log in with \"rina@nadi.id\" / \"nadi1234\""
+      },
+      {
+        "type": "action",
+        "description": "Click \"Pengaturan\" in the bottom navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the \"Akun\" section shows \"Rina Wahyuni\" and \"rina@nadi.id\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Keluar\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Masuk ke NADI\" and the message \"Kamu sudah keluar. Masuk lagi kapan saja.\" are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Reload the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the heading \"Masuk ke NADI\" is still displayed (the session was cleared)"
+      }
+    ]
   }
 ]

@@ -40,32 +40,52 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Start the anomaly simulation using the visible “Simulasikan anomali” button.
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo untuk melanjutkan ke beranda keluarga.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo untuk melanjutkan ke beranda keluarga.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo untuk melanjutkan ke beranda keluarga.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Start the anomaly simulation from the family dashboard and inspect the response screen.
         # Simulasikan anomali button
         elem = page.get_by_role("button", name="Simulasikan anomali")
         await elem.click(timeout=10000)
         
-        # -> Select “Ya, saya baik-baik saja” and verify what the app shows next.
+        # -> Select “Ya, saya baik-baik saja” to complete the anomaly response and inspect the resulting screen.
         # Ya, saya baik-baik saja button
         elem = page.get_by_role("button", name="Ya, saya baik-baik saja")
         await elem.click(timeout=10000)
         
-        # -> Click “Kembali ke app keluarga” and verify that the family dashboard returns with an informational alert recorded.
+        # -> Click “Kembali ke app keluarga” and verify the family dashboard and informational alert appear.
         # Kembali ke app keluarga button
         elem = page.get_by_role("button", name="Kembali ke app keluarga")
         await elem.click(timeout=10000)
         
-        # -> Open “Notifikasi” and verify that an informational alert from the completed simulation is recorded.
+        # -> Buka tab “Notifikasi” dan periksa apakah alert informasi dari simulasi tercatat.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> The completed simulation’s well-being response is recorded in notifications.
+        # --> An informational alert records that Ibu Sri answered that she was doing well.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The completed simulation’s well-being response is recorded in the notification.
-        await expect(page.get_by_label("Hari ini").get_by_role("list").nth(0)).to_contain_text("Ibu Sri Wahyuni menjawab bahwa ia baik-baik saja lewat pertanyaan konfirmasi NADI.", timeout=15000), "The completed simulation\u2019s well-being response is recorded in the notification."
+        # Assert: The recorded notification is informational.
+        await expect(page.get_by_label("Hari ini").get_by_role("list").nth(0)).to_contain_text("Info", timeout=15000), "The recorded notification is informational."
+        # Assert-outcome: not verified — the export-time check could not be evaluated
+        # Assert: The informational alert records the well-being response.
+        await expect(page.get_by_label("Hari ini").get_by_role("list").nth(0)).to_contain_text("menjawab bahwa ia baik-baik saja", timeout=15000), "The informational alert records the well-being response."
         await asyncio.sleep(5)
 
     finally:

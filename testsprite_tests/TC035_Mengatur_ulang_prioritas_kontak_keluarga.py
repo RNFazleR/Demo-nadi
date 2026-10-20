@@ -40,22 +40,39 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open the Pengaturan screen and inspect the available family-contact priority controls.
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar dapat membuka Pengaturan.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar dapat membuka Pengaturan.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Masuk ke NADI menggunakan email dan kata sandi demo agar dapat membuka Pengaturan.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Buka layar “Pengaturan” melalui navigasi bawah aplikasi.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Move Budi Santoso up one position and verify the updated contact order appears on Pengaturan.
-        # Naikkan prioritas Budi Santoso button
-        elem = page.get_by_role("button", name="Naikkan prioritas Budi Santoso")
+        # -> Turunkan prioritas Rina Wahyuni sekali dan pastikan urutan kontak keluarga berubah di Pengaturan.
+        # Turunkan prioritas Rina Wahyuni button
+        elem = page.get_by_role("button", name="Turunkan prioritas Rina")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Pengaturan shows Budi Santoso at priority 1 in the updated contact order.
+        # --> Pengaturan menampilkan urutan kontak yang diperbarui: Budi Santoso sebagai prioritas 1, Rina Wahyuni sebagai prioritas 2, dan Bu Darmi sebagai prioritas 3.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The settings screen confirms Budi Santoso is now priority 1.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Budi Santoso sekarang prioritas 1", timeout=15000), "The settings screen confirms Budi Santoso is now priority 1."
+        # Assert: The settings screen shows the updated family contact priority order.
+        await expect(page.locator("#root").nth(0)).to_contain_text("1 Prioritas 1 Budi Santoso Menantu 0857-1122-3344 2 Prioritas 2 Rina Wahyuni Anak 0813-2468-1357 3 Prioritas 3 Bu Darmi Tetangga 0821-9988-7766", timeout=15000), "The settings screen shows the updated family contact priority order."
         await asyncio.sleep(5)
 
     finally:

@@ -40,34 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Start the “Simulasikan anomali” demo flow and inspect the confirmation step.
+        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Masuk ke NADI menggunakan kredensial demo yang disediakan.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Use the “Simulasikan anomali” demo control to create a new unanswered alert and inspect the resulting UI.
         # Simulasikan anomali button
         elem = page.get_by_role("button", name="Simulasikan anomali")
         await elem.click(timeout=10000)
         
-        # -> Return to the family app using “Kembali ke app keluarga” and verify the unanswered alert in Notifikasi.
+        # -> Return from the family-contact screen to the app and continue verifying the unanswered alert in Notifikasi.
         # Kembali ke app keluarga button
         elem = page.get_by_role("button", name="Kembali ke app keluarga")
         await elem.click(timeout=10000)
         
-        # -> Open the Notifikasi tab and verify that the new unanswered alert appears in the notifications list.
+        # -> Open the “Notifikasi” tab and verify the unanswered alert is listed.
         # 1 Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Badge notifikasi terlihat pada tab Notifikasi.
-        await page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0).scroll_into_view_if_needed()
+        # --> The Notifikasi tab shows a badge for one unanswered notification.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Notifikasi tab is visible.
-        await expect(page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0)).to_be_visible(timeout=15000), "The Notifikasi tab is visible."
+        # Assert: The Notifikasi badge shows one unanswered notification.
+        await expect(page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi").nth(0)).to_have_attribute("aria-label", "Notifikasi, 1 belum ditanggapi", timeout=15000), "The Notifikasi badge shows one unanswered notification."
         
-        # --> Alert baru yang belum ditanggapi muncul dalam daftar Notifikasi.
-        await page.get_by_role("button", name="Darurat Baru Ibu Sri Wahyuni").nth(0).scroll_into_view_if_needed()
+        # --> The new unanswered alert appears at the top of the notifications list.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The new unanswered alert is visible in the notifications list.
-        await expect(page.get_by_role("button", name="Darurat Baru Ibu Sri Wahyuni").nth(0)).to_be_visible(timeout=15000), "The new unanswered alert is visible in the notifications list."
+        # Assert: The new unanswered alert appears in the notifications list.
+        await expect(page.get_by_label("Perlu ditanggapi (1)").get_by_role("button").nth(0)).to_contain_text("Ibu Sri Wahyuni belum menjawab pertanyaan konfirmasi NADI dalam 20 detik.", timeout=15000), "The new unanswered alert appears in the notifications list."
         await asyncio.sleep(5)
 
     finally:

@@ -40,22 +40,39 @@ async def run_test():
         except Exception:
             pass
         
+        # -> Sign in with the provided demo account to open Beranda.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in with the provided demo account to open Beranda.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in with the provided demo account to open Beranda.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
         # --> Assertions to verify final state
         
-        # --> The demo chip “Demo · data contoh” is displayed.
+        # --> The profile displays the “Demo · data contoh” chip.
         # Assert-outcome: not verified — the export-time check could not be evaluated
         # Assert: The demo chip is displayed.
         await expect(page.locator("#root").nth(0)).to_contain_text("Demo \u00b7 data contoh", timeout=15000), "The demo chip is displayed."
         
-        # --> The status card shows “Sedang dicek keluarga” with a “Darurat” badge and a today time label.
+        # --> The status card shows “Sedang dicek keluarga” with a “Darurat” badge and “Hari ini, 09.12”.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The status card shows the expected status, badge, and today time label.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Sedang dicek keluarga Darurat Hari ini,", timeout=15000), "The status card shows the expected status, badge, and today time label."
+        # Assert: The status card shows the observed status, urgency badge, and time.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Sedang dicek keluarga Darurat Hari ini, 09.12", timeout=15000), "The status card shows the observed status, urgency badge, and time."
         
-        # --> The page displays an update label above the metric cards.
+        # --> The “Diperbarui 24 September 2026, 09.20” timestamp appears above the metric cards.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: An update label is displayed.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Diperbarui", timeout=15000), "An update label is displayed."
+        # Assert: The displayed update timestamp matches the observed text.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Diperbarui 24 September 2026, 09.20", timeout=15000), "The displayed update timestamp matches the observed text."
         await asyncio.sleep(5)
 
     finally:

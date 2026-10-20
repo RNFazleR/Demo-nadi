@@ -40,40 +40,54 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open the Riwayat page using the bottom navigation and inspect its history metrics.
+        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided demo credentials and confirm Beranda appears.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open the “Riwayat” page using the bottom navigation and inspect its history view.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Select the “Waktu aktif” metric tab and inspect the updated history view.
+        # -> Switch the Riwayat chart to the “Waktu aktif” metric and inspect the updated history.
         # Waktu aktif button
         elem = page.get_by_role("tab", name="Waktu aktif")
         await elem.click(timeout=10000)
         
-        # -> Select the “Bangun malam” metric and inspect the updated seven-day history view.
+        # -> Switch the Riwayat chart to “Bangun malam” and inspect the updated metric history.
         # Bangun malam button
         elem = page.get_by_role("tab", name="Bangun malam")
         await elem.click(timeout=10000)
         
-        # -> Select Selasa, 22 September, the day marked as unusually different, and verify its detail shows a comparison with the usual pattern.
+        # -> Select Selasa, 22 September, the day marked as unusually different, and verify its comparison with the usual pattern.
         # Sel 22 button
         elem = page.get_by_role("button", name="Selasa, 22 September: 5 kali")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Riwayat menampilkan grafik untuk tujuh hari terakhir.
+        # --> Riwayat displays the seven-day history view.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Riwayat menampilkan rentang tujuh hari terakhir.
-        await expect(page.locator("#root").nth(0)).to_contain_text("7 hari terakhir", timeout=15000), "Riwayat menampilkan rentang tujuh hari terakhir."
+        # Assert: The seven-day history view is displayed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("7 hari terakhir", timeout=15000), "The seven-day history view is displayed."
         
-        # --> Detail 22 September membandingkan bangun malam dengan pola biasanya.
+        # --> The selected day’s night-awakening detail compares its frequency with the usual pattern.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Detail menampilkan 22 September sebagai hari terpilih.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Hari terpilih \u00b7 Sel, 22 Sep", timeout=15000), "Detail menampilkan 22 September sebagai hari terpilih."
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Detail membandingkan hari terpilih dengan pola biasanya.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pola biasanya untuk 22 Sep", timeout=15000), "Detail membandingkan hari terpilih dengan pola biasanya."
+        # Assert: The selected day’s detail compares night awakenings with the usual pattern.
+        await expect(page.locator("#root").nth(0)).to_contain_text("lebih sering dari biasanya", timeout=15000), "The selected day\u2019s detail compares night awakenings with the usual pattern."
         await asyncio.sleep(5)
 
     finally:

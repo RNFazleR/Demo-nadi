@@ -40,27 +40,44 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Trigger the emergency alert using the visible “Simulasikan anomali” demo control and inspect the resulting alert state.
+        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI with the provided demo account to reach the home screen.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Trigger the demo anomaly flow using the visible “Simulasikan anomali” control and inspect its result.
         # Simulasikan anomali button
         elem = page.get_by_role("button", name="Simulasikan anomali")
         await elem.click(timeout=10000)
         
-        # -> Choose “Butuh bantuan” on the emergency confirmation prompt and inspect the available follow-up actions.
+        # -> Pilih “Butuh bantuan” pada prompt Ibu Sri untuk melanjutkan alur alert darurat.
         # Butuh bantuan button
         elem = page.get_by_role("button", name="Butuh bantuan")
         await elem.click(timeout=10000)
         
-        # -> Click “Kembali ke app keluarga” to exit the simulated call screen and verify the emergency alert’s follow-up status.
+        # -> Close the simulated call screen using “Kembali ke app keluarga” and verify the emergency alert remains in follow-up status.
         # Kembali ke app keluarga button
         elem = page.get_by_role("button", name="Kembali ke app keluarga")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Alert tetap berstatus Darurat dan meminta keluarga segera menghubungi.
+        # --> The emergency alert remains in follow-up with a prompt to contact Ibu Sri Wahyuni.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Pastikan alert Darurat tetap meminta keluarga segera menghubungi.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Darurat Butuh perhatian sekarang, segera hubungi", timeout=15000), "Pastikan alert Darurat tetap meminta keluarga segera menghubungi."
+        # Assert: The alert still shows its follow-up contact message.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Butuh perhatian sekarang, segera hubungi", timeout=15000), "The alert still shows its follow-up contact message."
         await asyncio.sleep(5)
 
     finally:

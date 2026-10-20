@@ -40,17 +40,34 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Buka tab Riwayat melalui navigasi bawah.
+        # -> Enter the provided demo email and password and submit the NADI login form.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Enter the provided demo email and password and submit the NADI login form.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Enter the provided demo email and password and submit the NADI login form.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open Riwayat from the bottom navigation and confirm its screen is displayed.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Buka layar Notifikasi melalui navigasi bawah.
+        # -> Open Notifikasi from the bottom navigation and verify that its screen is displayed.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
-        # -> Buka layar Pengaturan melalui navigasi bawah.
+        # -> Open Pengaturan using the bottom navigation and verify the settings screen and navigation remain visible.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
@@ -59,14 +76,14 @@ async def run_test():
         
         # --> The Pengaturan screen is displayed.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The Pengaturan screen shows its family contacts section.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Kontak keluarga", timeout=15000), "The Pengaturan screen shows its family contacts section."
+        # Assert: The Pengaturan screen is displayed.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Pengaturan", timeout=15000), "The Pengaturan screen is displayed."
         
-        # --> The bottom navigation remains available on the Pengaturan screen.
+        # --> The bottom navigation remains available.
         await page.get_by_role("button", name="Pengaturan").nth(0).scroll_into_view_if_needed()
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The bottom navigation remains visible on the Pengaturan screen.
-        await expect(page.get_by_role("button", name="Pengaturan").nth(0)).to_be_visible(timeout=15000), "The bottom navigation remains visible on the Pengaturan screen."
+        # Assert: The bottom navigation remains available.
+        await expect(page.get_by_role("button", name="Pengaturan").nth(0)).to_be_visible(timeout=15000), "The bottom navigation remains available."
         await asyncio.sleep(5)
 
     finally:

@@ -40,37 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open Pengaturan and inspect its visible settings options.
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Masukkan kredensial demo pada kolom Email dan Kata sandi, lalu tekan tombol Masuk.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open Pengaturan and inspect the available data-source settings.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” as the data source.
+        # -> Select “Sensor langsung (ESP32)” in the Sumber data settings and inspect the resulting sensor status.
         # data-source radio button
         elem = page.get_by_role("radio", name="Sensor langsung (ESP32)")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and verify the status card in direct sensor mode.
-        # Beranda Beranda button
-        elem = page.get_by_role("button", name="Beranda")
-        await elem.click(timeout=10000)
-        
-        # -> Open Riwayat and verify the history availability state shown on the page.
+        # -> Open the “Riwayat” tab and verify the displayed history state.
         # Riwayat Riwayat button
         elem = page.get_by_role("button", name="Riwayat")
         await elem.click(timeout=10000)
         
-        # -> Open the Notifikasi tab and verify the availability state shown there.
+        # -> Open the “Notifikasi” tab and verify the unavailable-feature state shown there.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> Notifikasi menyatakan bahwa fitur belum tersedia dalam mode sensor langsung.
+        # --> Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: Notifikasi menyatakan bahwa fitur belum tersedia dalam mode sensor langsung.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Belum tersedia di mode sensor langsung", timeout=15000), "Notifikasi menyatakan bahwa fitur belum tersedia dalam mode sensor langsung."
+        # Assert: Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Belum tersedia di mode sensor langsung", timeout=15000), "Notifikasi menampilkan state tidak tersedia dalam mode sensor langsung."
         await asyncio.sleep(5)
 
     finally:

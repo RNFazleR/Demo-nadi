@@ -40,52 +40,48 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open the Notifikasi tab and inspect the available alerts.
+        # -> Sign in to NADI using the provided demo account so the notification alert workflow can be tested.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided demo account so the notification alert workflow can be tested.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided demo account so the notification alert workflow can be tested.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open the 'Notifikasi' tab and locate a new Waspada-level alert.
         # Notifikasi Notifikasi button
         elem = page.get_by_role("button", name="Notifikasi")
         await elem.click(timeout=10000)
         
-        # -> Open Beranda and inspect the demo controls for a way to generate a new Waspada alert.
-        # Beranda Beranda button
-        elem = page.get_by_role("button", name="Beranda")
+        # -> Open the Waspada notification about reduced activity and inspect whether it offers response actions.
+        # Waspada Selesai Aktivitas Ibu hari ini jauh lebih... button
+        elem = page.get_by_role("button", name="Waspada Selesai Aktivitas Ibu")
         await elem.click(timeout=10000)
         
-        # -> Trigger “Simulasikan pola berubah” to generate a new Waspada alert, then verify the UI response.
-        # Simulasikan pola berubah button
-        elem = page.get_by_role("button", name="Simulasikan pola berubah")
-        await elem.click(timeout=10000)
-        
-        # -> Open the “Notifikasi” tab and inspect the newly generated warning alert.
-        # 1 Notifikasi Notifikasi button
-        elem = page.get_by_role("button", name="Notifikasi, 1 belum ditanggapi")
-        await elem.click(timeout=10000)
-        
-        # -> Open the new Waspada alert about Ibu Sri Wahyuni’s reduced movement to inspect its response options.
-        # Waspada Baru Pagi ini gerakan Ibu Sri Wahyuni... button
-        elem = page.get_by_role("button", name="Waspada Baru Pagi ini gerakan")
-        await elem.click(timeout=10000)
-        
-        # -> Mark the new Waspada alert as checked by selecting “Tandai sudah dicek.”
-        # Tandai sudah dicek button
-        elem = page.get_by_role("button", name="Tandai sudah dicek")
-        await elem.click(timeout=10000)
-        
-        # -> Select “Tandai selesai” for the checked Waspada alert and verify that the response is recorded and the alert is resolved.
-        # Tandai selesai button
-        elem = page.get_by_role("button", name="Tandai selesai")
+        # -> Return to Notifikasi and check whether a new Waspada alert is available to act on.
+        # Kembali button
+        elem = page.get_by_role("button", name="Kembali")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> A response is recorded for the alert.
+        # --> The visible Waspada alert is already marked “Selesai.”
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The alert shows that a response was recorded.
-        await expect(page.get_by_role("status").nth(0)).to_contain_text("Respons tercatat", timeout=15000), "The alert shows that a response was recorded."
+        # Assert: Expected the Waspada alert to show the resolved status “Selesai.”
+        await expect(page.get_by_label("Sebelumnya").get_by_role("list").nth(0)).to_contain_text("Selesai", timeout=15000), "Expected the Waspada alert to show the resolved status \u201cSelesai.\u201d"
         
-        # --> The Waspada alert is marked Selesai.
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The alert is marked Selesai.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Selesai", timeout=15000), "The alert is marked Selesai."
+        # --> Test blocked by environment/access constraints during agent run
+        # Reason: TEST BLOCKED The requested alert workflow could not be tested because no new Waspada alert is available in Notifikasi. The Waspada alerts shown are already marked “Selesai,” and the reduced-activity alert that was opened had no response actions. Observations: - Notifikasi shows an active Darurat alert marked “Sedang dicek.” - The visible Waspada alerts are marked “Selesai.” - No response record...
+        raise AssertionError("Test blocked during agent run: " + "TEST BLOCKED The requested alert workflow could not be tested because no new Waspada alert is available in Notifikasi. The Waspada alerts shown are already marked \u201cSelesai,\u201d and the reduced-activity alert that was opened had no response actions. Observations: - Notifikasi shows an active Darurat alert marked \u201cSedang dicek.\u201d - The visible Waspada alerts are marked \u201cSelesai.\u201d - No response record..." + " — the exported script cannot reproduce a PASS in this environment.")
         await asyncio.sleep(5)
 
     finally:

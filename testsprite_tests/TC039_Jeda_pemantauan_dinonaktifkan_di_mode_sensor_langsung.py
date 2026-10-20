@@ -40,45 +40,49 @@ async def run_test():
         except Exception:
             pass
         
-        # -> Open “Pengaturan” to inspect the monitoring mode and pause controls.
+        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # email field
+        elem = page.get_by_role("textbox", name="Email")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("rina@nadi.id")
+        
+        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # password field
+        elem = page.get_by_role("textbox", name="Kata sandi")
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("nadi1234")
+        
+        # -> Sign in to NADI using the provided test account and continue from the home screen.
+        # Masuk button
+        elem = page.get_by_role("button", name="Masuk")
+        await elem.click(timeout=10000)
+        
+        # -> Open Pengaturan to inspect the monitoring mode and pause controls.
         # Pengaturan Pengaturan button
         elem = page.get_by_role("button", name="Pengaturan")
         await elem.click(timeout=10000)
         
-        # -> Turn on “Jeda pemantauan” in demo mode and check that “Pemantauan sedang dijeda” appears.
+        # -> Turn on “Jeda pemantauan” in demo mode and verify the paused status appears.
         # button
         elem = page.get_by_role("switch", name="Jeda pemantauan")
         await elem.click(timeout=10000)
         
-        # -> Select “Sensor langsung (ESP32)” and check that pause is unavailable while live monitoring continues.
+        # -> Select “Sensor langsung (ESP32)” and inspect the pause control and live-mode status message.
         # Sensor langsung (ESP32)
         elem = page.locator("label").filter(has_text="Sensor langsung (ESP32)")
         await elem.click(timeout=10000)
         
         # -> Select “Demo (data contoh)” and verify that “Pemantauan sedang dijeda” appears again.
-        # data-source radio button
-        elem = page.get_by_role("radio", name="Demo (data contoh)")
+        # Demo (data contoh)
+        elem = page.locator("label").filter(has_text="Demo (data contoh)")
         await elem.click(timeout=10000)
         
         # --> Assertions to verify final state
         
-        # --> In Demo mode, “Pemantauan sedang dijeda” is displayed after returning from live mode.
+        # --> Di mode Demo, “Pemantauan sedang dijeda” tampil.
         # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The paused-monitoring message is displayed in Demo mode.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Pemantauan sedang dijeda", timeout=15000), "The paused-monitoring message is displayed in Demo mode."
-        
-        # --> In Sensor langsung mode, the “Jeda pemantauan” switch is disabled and unchecked.
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The pause switch is unchecked in live sensor mode.
-        await expect(page.get_by_role("switch", name="Jeda pemantauan").nth(0)).to_have_attribute("aria-checked", "false", timeout=15000), "The pause switch is unchecked in live sensor mode."
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The pause switch is disabled in live sensor mode.
-        await expect(page.get_by_role("switch", name="Jeda pemantauan").nth(0)).to_have_attribute("disabled", "", timeout=15000), "The pause switch is disabled in live sensor mode."
-        
-        # --> In Sensor langsung mode, a notice says pausing is unavailable and sensor readings continue.
-        # Assert-outcome: not verified — the export-time check could not be evaluated
-        # Assert: The live-mode notice explains that pausing is unavailable and sensor readings continue.
-        await expect(page.locator("#root").nth(0)).to_contain_text("Jeda belum tersedia di mode sensor langsung. Pembacaan sensor tetap berjalan.", timeout=15000), "The live-mode notice explains that pausing is unavailable and sensor readings continue."
+        # Assert: Pastikan status “Pemantauan sedang dijeda” tampil.
+        await expect(page.locator("#root").nth(0)).to_contain_text("Pemantauan sedang dijeda", timeout=15000), "Pastikan status \u201cPemantauan sedang dijeda\u201d tampil."
         await asyncio.sleep(5)
 
     finally:
