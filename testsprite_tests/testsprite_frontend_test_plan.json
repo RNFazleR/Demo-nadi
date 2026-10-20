@@ -1,9 +1,9 @@
 [
   {
     "id": "TC001",
-    "title": "Meninjau dan menindaklanjuti daftar notifikasi",
-    "description": "Pengguna dapat membuka daftar notifikasi, memilih alert baru, lalu menandainya sudah dicek atau menghubungi lansia dan layanan darurat dari detail alert.",
-    "category": "Notifikasi",
+    "title": "Membuat alert baru dari simulasi anomali",
+    "description": "Pengguna memulai simulasi anomali dari Beranda demo dan melihat alert baru tercatat setelah konfirmasi lansia selesai.",
+    "category": "Beranda",
     "steps": [
       {
         "type": "action",
@@ -11,35 +11,196 @@
       },
       {
         "type": "action",
-        "description": "Click the notifications tab"
+        "description": "Click the action to start an anomaly simulation"
       },
       {
         "type": "action",
-        "description": "Open the newest alert"
-      },
-      {
-        "type": "action",
-        "description": "Mark the alert as already checked"
+        "description": "Follow the elderly confirmation flow until it completes"
       },
       {
         "type": "assertion",
-        "description": "Verify the alert status changes to being checked or completed"
-      },
-      {
-        "type": "action",
-        "description": "Open the same alert again"
+        "description": "Verify a new alert is visible in the notifications state"
       },
       {
         "type": "assertion",
-        "description": "Verify the completed response state is shown and the action cannot be repeated"
+        "description": "Verify the home dashboard reflects the updated alert status"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC002",
-    "title": "See the main home summary on app open",
-    "description": "Memeriksa bahwa pengguna dapat membuka Beranda dan melihat status lansia, tiga metrik harian, serta aktivitas terakhir yang menjadi ringkasan utama.",
+    "title": "Simulate an anomaly and confirm it from the elderly view",
+    "description": "This verifies that a simulated anomaly can be confirmed from the elderly confirmation screen and creates a new alert in the family app.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the anomaly simulation from the home dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the event from the elderly confirmation screen"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new alert is displayed in notifications"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert is marked as new"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Mengubah sumber data ke sensor langsung menampilkan pembacaan live di Beranda",
+    "description": "Pengguna teknis dapat mengaktifkan mode sensor langsung dari Pengaturan dan melihat pembacaan live beserta detail teknis pada Beranda.",
+    "category": "Pengaturan",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the Pengaturan tab"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Sensor langsung (ESP32)\""
+      },
+      {
+        "type": "action",
+        "description": "Open the Beranda tab and wait up to 10 seconds"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chip \"Sensor langsung\" is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the \"Sensor gerak\" card title is either \"Belum ada gerakan terdeteksi\" or \"Gerakan terdeteksi di area pemantauan\" and is NOT \"Penghubung sensor tidak terjangkau\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Gerakan terakhir\" and \"Data terakhir diterima\" are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no \"Rekaman uji\" chip is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Mengubah sumber data ke sensor langsung dan melihat pembacaan live",
+    "description": "Pengguna mengubah sumber data ke sensor langsung dari Pengaturan, kembali ke Beranda, dan melihat pembacaan live beserta detail teknis.",
+    "category": "Pengaturan",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the settings tab"
+      },
+      {
+        "type": "action",
+        "description": "Choose the direct sensor data source"
+      },
+      {
+        "type": "action",
+        "description": "Return to the home dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify live sensor readings are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify technical connection details are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Switch to live sensor mode and return to the home dashboard",
+    "description": "This verifies that selecting the ESP32 live sensor source in settings updates the home dashboard to show live sensor status and technical details.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the settings tab"
+      },
+      {
+        "type": "action",
+        "description": "Select the live sensor data source"
+      },
+      {
+        "type": "action",
+        "description": "Return to the home dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the live sensor chip is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the sensor status card is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Alert darurat terbuka dapat dilihat detail dan ditindaklanjuti",
+    "description": "Pengguna dapat membuka detail alert darurat dari dashboard dan melakukan tindak lanjut sehingga status penanganan terlihat di layar.",
+    "category": "Dashboard (Beranda), demo mode",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Trigger an emergency alert from the demo flow"
+      },
+      {
+        "type": "action",
+        "description": "Open the alert detail or follow-up view"
+      },
+      {
+        "type": "action",
+        "description": "Mark the alert as checked or completed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert detail view is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert is marked as handled"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Melihat ringkasan beranda demo",
+    "description": "Pengguna melihat ringkasan status harian di Beranda dalam mode demo dan memahami kondisi pemantauan saat ini.",
     "category": "Beranda",
     "steps": [
       {
@@ -48,102 +209,19 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the home summary shows the current status, three daily metrics, and the latest activity"
+        "description": "Verify the home dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the daily status summary is visible"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC003",
-    "title": "Buka dashboard dan melihat ringkasan utama",
-    "description": "Pengguna dapat membuka aplikasi dan langsung melihat status lansia, tiga metrik harian, serta aktivitas terakhir di Beranda.",
-    "category": "Dashboard (Beranda)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the dashboard shows the current status and daily summary"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the last activity information is displayed"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC004",
-    "title": "Mark an alert as checked and see the response recorded",
-    "description": "Memeriksa bahwa alert berstatus baru atau waspada dapat ditandai sudah dicek dan status serta catatan respons ikut berubah.",
-    "category": "Detail alert",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the notifications tab"
-      },
-      {
-        "type": "action",
-        "description": "Click one alert that can still be acted on"
-      },
-      {
-        "type": "action",
-        "description": "Mark the alert as checked"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert status updates and the response recorded note appears"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC005",
-    "title": "Menindaklanjuti alert baru dari dashboard",
-    "description": "Pengguna dapat membuka detail alert baru dari Beranda saat status berubah menjadi waspada atau darurat, lalu melihat detail tindak lanjutnya.",
-    "category": "Dashboard (Beranda)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the control to simulate an anomaly"
-      },
-      {
-        "type": "action",
-        "description": "Select the option indicating help is needed"
-      },
-      {
-        "type": "action",
-        "description": "Return to the family app"
-      },
-      {
-        "type": "action",
-        "description": "Click the control to view and follow up the current alert"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert detail is displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert status is shown as newly reported"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC006",
-    "title": "Lihat status beranda dan ringkasan harian",
-    "description": "Pengguna membuka aplikasi dan memverifikasi Beranda menampilkan status lansia, tiga metrik harian, dan aktivitas terakhir.",
+    "id": "TC008",
+    "title": "View daily status on the home dashboard",
+    "description": "This verifies that the home dashboard shows the current daily status summary and priority status card in demo mode.",
     "category": "Settings (Pengaturan)",
     "steps": [
       {
@@ -156,15 +234,15 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the current status, daily summary metrics, and recent activity are displayed"
+        "description": "Verify the current daily status summary is displayed"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC007",
-    "title": "Open an alert from notifications",
-    "description": "Memeriksa bahwa pengguna dapat memilih sebuah alert dari daftar Notifikasi dan masuk ke detail alert yang sesuai.",
+    "id": "TC009",
+    "title": "Pengguna memeriksa detail alert dan menandainya selesai dari Notifikasi",
+    "description": "Operator dapat membuka alert penting dari daftar Notifikasi, melihat detailnya, lalu menandai alert sebagai sudah dicek atau selesai.",
     "category": "Notifikasi",
     "steps": [
       {
@@ -173,48 +251,31 @@
       },
       {
         "type": "action",
-        "description": "Click the notifications tab"
+        "description": "Open the Notifikasi tab"
       },
       {
         "type": "action",
-        "description": "Click one alert in the list"
+        "description": "Open an alert that needs attention"
+      },
+      {
+        "type": "action",
+        "description": "Mark the alert as checked or completed"
       },
       {
         "type": "assertion",
-        "description": "Verify the alert detail view is displayed"
+        "description": "Verify the alert detail is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert status changes to handled"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC008",
-    "title": "Simulasikan anomali lalu konfirmasi kondisi lansia",
-    "description": "Pengguna menjalankan simulasi anomali dari Beranda, memilih respons lansia di layar konfirmasi, dan kembali ke app keluarga dengan alert baru muncul.",
-    "category": "Settings (Pengaturan)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the simulate anomaly action from the home screen"
-      },
-      {
-        "type": "action",
-        "description": "Choose the option indicating the elder is okay"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the family app shows a new alert and the notifications badge increases"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC009",
-    "title": "Menyelesaikan simulasi anomali dengan respons lansia",
-    "description": "Pengguna dapat memicu simulasi anomali, memberikan jawaban dari sisi lansia, lalu kembali ke aplikasi keluarga dengan alert baru yang tercatat.",
+    "id": "TC010",
+    "title": "Konfirmasi butuh bantuan menambahkan alert darurat",
+    "description": "Pengguna dapat menyelesaikan simulasi anomali dengan respons butuh bantuan dan melihat alert darurat baru tercatat di app keluarga.",
     "category": "Elder confirmation screen (simulated elder phone)",
     "steps": [
       {
@@ -223,15 +284,11 @@
       },
       {
         "type": "action",
-        "description": "Click the control to simulate an anomaly"
+        "description": "Click the button to simulate an anomaly"
       },
       {
         "type": "action",
-        "description": "Select the option indicating everything is okay"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a thank-you confirmation is visible"
+        "description": "Choose that the elder needs help"
       },
       {
         "type": "action",
@@ -239,15 +296,19 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the family dashboard is displayed with the updated alert state"
+        "description": "Verify the dashboard is shown again"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new emergency alert is recorded"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC010",
-    "title": "Open the notifications list and view alert grouping",
-    "description": "Memeriksa bahwa pengguna dapat membuka Notifikasi dan melihat alert yang dikelompokkan sesuai waktunya dengan urutan terbaru terlebih dahulu.",
+    "id": "TC011",
+    "title": "Membuka detail alert terbaru dari notifikasi",
+    "description": "Pengguna membuka Notifikasi, memilih alert paling baru di bagian perlu ditanggapi, dan melihat detail level, status, waktu, serta isi alert.",
     "category": "Notifikasi",
     "steps": [
       {
@@ -259,16 +320,24 @@
         "description": "Click the notifications tab"
       },
       {
+        "type": "action",
+        "description": "Click the most recent alert in the action-needed section"
+      },
+      {
         "type": "assertion",
-        "description": "Verify alerts are grouped into the current attention group, today, yesterday, and earlier sections"
+        "description": "Verify the alert detail screen is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert level, status, time, and detected event details are visible"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC011",
-    "title": "Tindak lanjuti alert baru dari notifikasi",
-    "description": "Pengguna membuka alert baru dari Notifikasi lalu menandai sudah dicek agar status alert ter-update kembali ke daftar.",
+    "id": "TC012",
+    "title": "Open alert details and mark an alert as checked",
+    "description": "This verifies that an operator can open an alert from notifications, review the details, and mark it as already checked.",
     "category": "Settings (Pengaturan)",
     "steps": [
       {
@@ -277,11 +346,11 @@
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for notifications"
+        "description": "Open the notifications tab"
       },
       {
         "type": "action",
-        "description": "Open a new alert from the notifications list"
+        "description": "Open an alert that requires attention"
       },
       {
         "type": "action",
@@ -289,15 +358,353 @@
       },
       {
         "type": "assertion",
-        "description": "Verify the alert detail reflects the updated status and the notifications badge changes accordingly"
+        "description": "Verify the alert is no longer in the open state"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert detail remains accessible"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC012",
-    "title": "Review the seven-day history summary",
-    "description": "Memeriksa bahwa pengguna dapat membuka Riwayat dan melihat grafik tujuh hari beserta detail hari yang dipilih.",
+    "id": "TC013",
+    "title": "Melihat ringkasan dashboard demo saat pertama dibuka",
+    "description": "Pengguna melihat status harian utama, metrik ringkas, dan aktivitas terakhir pada Beranda dalam mode demo.",
+    "category": "Dashboard (Beranda), demo mode",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chip \"Demo · data contoh\" is displayed under the profile"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the status card title is \"Sedang dicek keluarga\" with a \"Darurat\" badge and \"Hari ini, 09.12\" (it must NOT say \"Normal\")"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the text \"Diperbarui 24 September 2026, 09.20\" is displayed above the metric cards"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Menandai alert waspada sebagai sudah dicek lalu selesai",
+    "description": "Pengguna menindaklanjuti alert Waspada baru dari Notifikasi dengan menandainya sudah dicek lalu selesai, dan melihat respons tercatat.",
+    "category": "Alert detail and follow-up",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the notifications tab"
+      },
+      {
+        "type": "action",
+        "description": "Open a new warning-level alert"
+      },
+      {
+        "type": "action",
+        "description": "Mark the alert as checked"
+      },
+      {
+        "type": "action",
+        "description": "Mark the alert as finished"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a recorded response is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert shows as resolved"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Contact family from an urgent alert",
+    "description": "This verifies that an operator can open an urgent alert and use the family contact follow-up action from the alert detail.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications tab"
+      },
+      {
+        "type": "action",
+        "description": "Open an urgent alert"
+      },
+      {
+        "type": "action",
+        "description": "Start the family contact follow-up action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a call follow-up modal is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert remains visible behind the follow-up flow"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Simulasi anomali menampilkan layar konfirmasi lansia",
+    "description": "Pengguna dapat memulai simulasi anomali dari Beranda dan melihat layar konfirmasi lansia dengan penghitung waktu dan pilihan respons.",
+    "category": "Elder confirmation screen (simulated elder phone)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the button to simulate an anomaly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the elder confirmation screen is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the countdown and response options are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Menghubungi kontak keluarga dari alert darurat",
+    "description": "Pengguna membuka detail alert Darurat, memulai panggilan ke keluarga, mengakhiri panggilan, dan melihat respons tercatat kembali di detail alert.",
+    "category": "Alert detail and follow-up",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the notifications tab"
+      },
+      {
+        "type": "action",
+        "description": "Open an emergency-level alert"
+      },
+      {
+        "type": "action",
+        "description": "Start the family contact call"
+      },
+      {
+        "type": "action",
+        "description": "End the call"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a call response is recorded"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert detail remains available after the call"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Inspect live sensor technical details",
+    "description": "This verifies that the live sensor mode exposes technical device information, including the serial port and data source.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the settings tab"
+      },
+      {
+        "type": "action",
+        "description": "Select the live sensor data source"
+      },
+      {
+        "type": "action",
+        "description": "Return to the home dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Expand the technical details section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Port\" shows \"COM23\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Sumber\" shows \"Perangkat (serial)\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify \"Kekuatan sinyal (RSSI)\" shows a value in dBm"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Menghubungi keluarga dari alert darurat membuka modal panggilan simulasi",
+    "description": "Pengguna dapat memulai tindakan panggilan dari alert darurat dan menutup modal untuk kembali ke status tindak lanjut yang benar.",
+    "category": "Dashboard (Beranda), demo mode",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Trigger an emergency alert from the demo flow"
+      },
+      {
+        "type": "action",
+        "description": "Click the button to contact the family member"
+      },
+      {
+        "type": "action",
+        "description": "Close the simulated call modal"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the call modal was shown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert remains in a follow-up state"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Konfirmasi baik-baik saja menambahkan alert info",
+    "description": "Pengguna dapat menyelesaikan simulasi anomali dengan respons baik-baik saja dan melihat kembali ke app keluarga dengan alert info tercatat.",
+    "category": "Elder confirmation screen (simulated elder phone)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the button to simulate an anomaly"
+      },
+      {
+        "type": "action",
+        "description": "Choose that the elder is doing well"
+      },
+      {
+        "type": "action",
+        "description": "Return to the family app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is shown again"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an informational alert is recorded"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Pengguna membuka detail alert dan memilih langkah hubungi keluarga",
+    "description": "Operator dapat menindaklanjuti alert dari Notifikasi dengan opsi menghubungi keluarga dan melihat bahwa status tindak lanjut diperbarui.",
+    "category": "Notifikasi",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the Notifikasi tab"
+      },
+      {
+        "type": "action",
+        "description": "Open an emergency alert"
+      },
+      {
+        "type": "action",
+        "description": "Choose to contact the family member"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alert detail is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the follow-up state is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "Reorder family contacts and pause monitoring in demo mode",
+    "description": "This verifies that changing contact priority and enabling monitoring pause in settings updates the home dashboard state in demo mode.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the settings tab"
+      },
+      {
+        "type": "action",
+        "description": "Move one family contact higher in priority"
+      },
+      {
+        "type": "action",
+        "description": "Enable monitoring pause"
+      },
+      {
+        "type": "action",
+        "description": "Return to the home dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the monitoring paused state is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated contact priority is reflected in settings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Meninjau riwayat tujuh hari dan berpindah metrik",
+    "description": "Pengguna masuk ke Riwayat, berpindah antar tab metrik, memilih hari tertentu, dan melihat detail perbandingan pola biasanya.",
     "category": "Riwayat",
     "steps": [
       {
@@ -309,16 +716,69 @@
         "description": "Click the history tab"
       },
       {
+        "type": "action",
+        "description": "Switch to the sleep duration metric tab"
+      },
+      {
+        "type": "action",
+        "description": "Switch to the activity time metric tab"
+      },
+      {
+        "type": "action",
+        "description": "Switch to the night awakenings metric tab"
+      },
+      {
+        "type": "action",
+        "description": "Select the day with an unusual marker"
+      },
+      {
         "type": "assertion",
-        "description": "Verify the seven-day history chart and the selected day detail are displayed"
+        "description": "Verify the seven-day history view is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected day detail shows a comparison against usual patterns"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC013",
-    "title": "Hubungi lansia atau layanan darurat dari detail alert",
-    "description": "Pengguna membuka detail alert lalu memulai tindakan lanjut untuk menghubungi lansia atau layanan darurat dengan dialog konfirmasi.",
+    "id": "TC024",
+    "title": "Riwayat menampilkan metrik harian dan perbandingan saat tanggal dipilih",
+    "description": "Pengguna dapat membuka Riwayat, berpindah tab metrik, memilih hari tertentu, dan melihat pola hari itu dibandingkan biasanya.",
+    "category": "Riwayat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the Riwayat tab"
+      },
+      {
+        "type": "action",
+        "description": "Switch between the sleep duration, active time, and night wake-ups metrics"
+      },
+      {
+        "type": "action",
+        "description": "Select a specific day in the history view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected day's history data is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a comparison against the usual pattern is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Browse seven-day history by metric and day",
+    "description": "This verifies that the user can open the seven-day history view, switch between metric tabs, and inspect a selected day’s pattern comparison.",
     "category": "Settings (Pengaturan)",
     "steps": [
       {
@@ -327,126 +787,31 @@
       },
       {
         "type": "action",
-        "description": "Open a new alert from the notifications list"
+        "description": "Open the history tab"
       },
       {
         "type": "action",
-        "description": "Start the action to contact the elder or emergency services"
+        "description": "Select a sleep duration metric tab"
+      },
+      {
+        "type": "action",
+        "description": "Select a different day in the seven-day history"
       },
       {
         "type": "assertion",
-        "description": "Verify a confirmation dialog is shown"
+        "description": "Verify history data for the selected day is displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the alert detail remains accessible after the action is initiated"
+        "description": "Verify a pattern comparison is displayed"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC014",
-    "title": "Membiarkan hitung mundur selesai pada layar konfirmasi lansia",
-    "description": "Pengguna dapat membiarkan layar konfirmasi lansia tanpa jawaban sampai hitung mundur habis dan melihat bahwa keluarga sedang dihubungi.",
-    "category": "Elder confirmation screen (simulated elder phone)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the control to simulate an anomaly"
-      },
-      {
-        "type": "action",
-        "description": "Wait for the countdown to finish"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the family-is-being-contacted message is visible"
-      },
-      {
-        "type": "action",
-        "description": "Return to the family app"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert appears as a new emergency alert"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC015",
-    "title": "Start and end a simulated call to the family contact",
-    "description": "Memeriksa bahwa pengguna dapat menghubungi kontak keluarga dari detail alert darurat dan menutup panggilan simulasi dengan benar.",
-    "category": "Detail alert",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the notifications tab"
-      },
-      {
-        "type": "action",
-        "description": "Click one emergency alert"
-      },
-      {
-        "type": "action",
-        "description": "Start the simulated call to the family contact"
-      },
-      {
-        "type": "action",
-        "description": "End the simulated call"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert detail remains visible after the call is ended"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC016",
-    "title": "Confirm or cancel an emergency call from alert detail",
-    "description": "Memeriksa bahwa dialog konfirmasi panggilan darurat dapat dibatalkan atau dilanjutkan dari detail alert darurat.",
-    "category": "Detail alert",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the notifications tab"
-      },
-      {
-        "type": "action",
-        "description": "Click one emergency alert"
-      },
-      {
-        "type": "action",
-        "description": "Open the emergency call confirmation"
-      },
-      {
-        "type": "action",
-        "description": "Cancel the confirmation dialog"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert detail remains visible and no call is started"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC017",
-    "title": "Berpindah antar tab utama aplikasi",
-    "description": "Pengguna dapat berpindah antara Beranda, Riwayat, Notifikasi, dan Pengaturan melalui navigasi bawah.",
+    "id": "TC026",
+    "title": "Beralih ke setiap tab utama dari navigasi bawah",
+    "description": "Pengguna dapat berpindah antar layar utama aplikasi keluarga melalui navigasi bawah dan melihat layar yang sesuai.",
     "category": "Bottom navigation",
     "steps": [
       {
@@ -455,305 +820,32 @@
       },
       {
         "type": "action",
-        "description": "Click the history tab"
+        "description": "Click the tab for Riwayat"
       },
       {
         "type": "action",
-        "description": "Click the notifications tab"
+        "description": "Click the tab for Notifikasi"
       },
       {
         "type": "action",
-        "description": "Click the settings tab"
+        "description": "Click the tab for Pengaturan"
       },
       {
         "type": "assertion",
-        "description": "Verify the settings screen is displayed"
+        "description": "Verify the Pengaturan screen is displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the bottom navigation reflects the active tab"
+        "description": "Verify the bottom navigation remains available"
       }
     ],
     "priority": "High"
-  },
-  {
-    "id": "TC018",
-    "title": "Meninjau riwayat 7 hari dan mengganti metrik",
-    "description": "Pengguna membuka Riwayat, meninjau data 7 hari, lalu mengganti metrik untuk melihat perubahan tampilan riwayat.",
-    "category": "Settings (Pengaturan)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the bottom tab for history"
-      },
-      {
-        "type": "action",
-        "description": "Select the sleep duration metric"
-      },
-      {
-        "type": "action",
-        "description": "Select the active time metric"
-      },
-      {
-        "type": "action",
-        "description": "Select the night awakenings metric"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the seven-day history and the selected metric data are displayed"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC019",
-    "title": "Switch history metrics and see the day summary update",
-    "description": "Memeriksa bahwa pengguna dapat mengganti metrik di Riwayat dan melihat grafik serta detail hari menyesuaikan pilihan metrik.",
-    "category": "Riwayat",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the history tab"
-      },
-      {
-        "type": "action",
-        "description": "Select the active time metric tab"
-      },
-      {
-        "type": "action",
-        "description": "Select the night awakenings metric tab"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the history chart and day detail update for the selected metric"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC020",
-    "title": "Inspect a different day in history",
-    "description": "Memeriksa bahwa pengguna dapat memilih hari lain di Riwayat dan detail harian ikut berubah.",
-    "category": "Riwayat",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the history tab"
-      },
-      {
-        "type": "action",
-        "description": "Select another day in the history timeline"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the day detail card updates to the selected day"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC021",
-    "title": "Membuka detail alert dari riwayat",
-    "description": "Pengguna dapat membuka detail alert langsung dari riwayat hari tertentu dan melihat konteks tindak lanjutnya.",
-    "category": "Riwayat 7 hari",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the history tab"
-      },
-      {
-        "type": "action",
-        "description": "Select the date with an alert"
-      },
-      {
-        "type": "action",
-        "description": "Open the alert from the selected day"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert detail is displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert came from the selected history day"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC022",
-    "title": "Buka detail hari yang berbeda jauh dari biasanya",
-    "description": "Pengguna memilih tanggal 22 September di Riwayat untuk melihat penanda berbeda jauh dari biasanya dan masuk ke detail alert dari hari itu.",
-    "category": "Settings (Pengaturan)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the bottom tab for history"
-      },
-      {
-        "type": "action",
-        "description": "Select 22 September from the history view"
-      },
-      {
-        "type": "action",
-        "description": "Open the alert from that day's detail view"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the unusual-day indicator is shown and the alert detail opens"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC023",
-    "title": "Beralih ke sumber data sensor langsung dan melihat mode yang sesuai",
-    "description": "Pengguna dapat memilih sumber data Sensor langsung dari Pengaturan lalu melihat bahwa aplikasi menampilkan mode sensor langsung di layar yang relevan.",
-    "category": "Pengaturan",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the settings tab"
-      },
-      {
-        "type": "action",
-        "description": "Select the live sensor data source"
-      },
-      {
-        "type": "action",
-        "description": "Click the notifications tab"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the app shows the live sensor mode message"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the screen indicates some features are unavailable in live sensor mode"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC024",
-    "title": "Open an alert from a history day detail",
-    "description": "Memeriksa bahwa alert yang tercantum pada detail hari di Riwayat dapat dibuka ke detail alert.",
-    "category": "Riwayat",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the history tab"
-      },
-      {
-        "type": "action",
-        "description": "Select a day that contains an alert"
-      },
-      {
-        "type": "action",
-        "description": "Click the alert in the day detail"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the alert detail view is displayed"
-      }
-    ],
-    "priority": "High"
-  },
-  {
-    "id": "TC025",
-    "title": "Menjeda pemantauan dan melihat status jeda di Beranda",
-    "description": "Pengguna dapat mengaktifkan jeda pemantauan dari Pengaturan lalu melihat Beranda menampilkan bahwa pemantauan sedang dijeda.",
-    "category": "Pengaturan",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the settings tab"
-      },
-      {
-        "type": "action",
-        "description": "Enable monitoring pause"
-      },
-      {
-        "type": "action",
-        "description": "Click the dashboard tab"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the dashboard shows monitoring is paused"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the paused state is reflected in the main status area"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC026",
-    "title": "Pause monitoring and see the home state change",
-    "description": "Memeriksa bahwa Jeda pemantauan dapat diaktifkan dan Beranda menampilkan status pemantauan dijeda.",
-    "category": "Pengaturan",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the settings tab"
-      },
-      {
-        "type": "action",
-        "description": "Enable monitoring pause"
-      },
-      {
-        "type": "action",
-        "description": "Click the home tab"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the home screen shows monitoring is paused"
-      }
-    ],
-    "priority": "Medium"
   },
   {
     "id": "TC027",
-    "title": "Menyalakan jeda pemantauan lalu melihat status di Beranda",
-    "description": "Pengguna mengaktifkan Jeda pemantauan dari Pengaturan dan memverifikasi Beranda menampilkan status pemantauan dijeda.",
-    "category": "Settings (Pengaturan)",
+    "title": "Kedaluwarsa konfirmasi lansia otomatis menghubungi keluarga",
+    "description": "Pengguna melihat bahwa jika tidak ada respons pada layar konfirmasi lansia hingga waktu habis, sistem menandai keluarga sedang dihubungi dan mencatat alert darurat.",
+    "category": "Elder confirmation screen (simulated elder phone)",
     "steps": [
       {
         "type": "action",
@@ -761,27 +853,31 @@
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for settings"
+        "description": "Click the button to simulate an anomaly"
       },
       {
         "type": "action",
-        "description": "Turn on monitoring pause"
+        "description": "Wait for the confirmation timer to expire"
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for home"
+        "description": "Return to the family app"
       },
       {
         "type": "assertion",
-        "description": "Verify the home dashboard shows monitoring paused"
+        "description": "Verify the family-contacting state is shown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new emergency alert is recorded"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC028",
-    "title": "Mengelola urutan kontak keluarga",
-    "description": "Pengguna dapat mengubah urutan kontak keluarga di Pengaturan dan melihat daftar tersusun sesuai pilihan.",
+    "title": "Melihat batasan mode sensor langsung pada Riwayat dan Notifikasi",
+    "description": "Pengguna mengaktifkan mode sensor langsung lalu membuka Riwayat dan Notifikasi untuk memastikan fitur yang tidak tersedia menampilkan state batasan yang sesuai.",
     "category": "Pengaturan",
     "steps": [
       {
@@ -794,28 +890,32 @@
       },
       {
         "type": "action",
-        "description": "Change the family contact order to ascending"
+        "description": "Choose the direct sensor data source"
       },
       {
         "type": "action",
-        "description": "Change the family contact order to descending"
+        "description": "Open the history tab"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications tab"
       },
       {
         "type": "assertion",
-        "description": "Verify the contact list is displayed"
+        "description": "Verify the unavailable history state is displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the contact order reflects the selected sort direction"
+        "description": "Verify the unavailable notifications state is displayed"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC029",
-    "title": "Switch to live sensor mode and see the unavailable state",
-    "description": "Memeriksa bahwa pengguna dapat memilih sumber data Sensor langsung dan melihat state sensor yang tidak terjangkau beserta pesan mode yang sesuai.",
-    "category": "Pengaturan",
+    "title": "See history and notifications unavailable in live sensor mode",
+    "description": "This verifies that history and notifications are disabled with an explanation when the app is set to live sensor mode.",
+    "category": "Settings (Pengaturan)",
     "steps": [
       {
         "type": "action",
@@ -823,7 +923,7 @@
       },
       {
         "type": "action",
-        "description": "Click the settings tab"
+        "description": "Open the settings tab"
       },
       {
         "type": "action",
@@ -831,20 +931,28 @@
       },
       {
         "type": "action",
-        "description": "Click the notifications tab"
+        "description": "Open the history tab"
       },
       {
         "type": "assertion",
-        "description": "Verify the live sensor mode message and the sensor unavailable state are displayed"
+        "description": "Verify a live sensor mode unavailable message is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a live sensor mode unavailable message is displayed"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC030",
-    "title": "Ubah urutan kontak keluarga",
-    "description": "Pengguna mengubah prioritas kontak keluarga di Pengaturan dan melihat urutan daftar kontak berubah.",
-    "category": "Settings (Pengaturan)",
+    "title": "Badge notifikasi muncul setelah alert baru dibuat di mode demo",
+    "description": "Pengguna melihat jumlah notifikasi bertambah saat alert baru belum ditangani di mode demo.",
+    "category": "Bottom navigation",
     "steps": [
       {
         "type": "action",
@@ -852,23 +960,27 @@
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for settings"
+        "description": "Create a new unanswered alert from the demo flow"
       },
       {
         "type": "action",
-        "description": "Decrease the priority of Rina Wahyuni"
+        "description": "Open the Notifikasi tab"
       },
       {
         "type": "assertion",
-        "description": "Verify the contact order updates in the family contacts list"
+        "description": "Verify a notification badge is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new alert appears in the notifications list"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC031",
-    "title": "Kembali ke mode demo dari sensor langsung",
-    "description": "Pengguna dapat kembali ke mode demo setelah berada di sensor langsung dan melihat kembali alur demo yang tersedia.",
+    "title": "Menjeda pemantauan pada mode demo dan melihat dampaknya",
+    "description": "Pengguna mengaktifkan jeda pemantauan di mode demo dari Pengaturan dan melihat bahwa status Beranda berubah sesuai kondisi dijeda.",
     "category": "Pengaturan",
     "steps": [
       {
@@ -881,27 +993,27 @@
       },
       {
         "type": "action",
-        "description": "Select the live sensor data source"
+        "description": "Pause monitoring in demo mode"
       },
       {
         "type": "action",
-        "description": "Return to demo mode"
+        "description": "Return to the home dashboard"
       },
       {
         "type": "assertion",
-        "description": "Verify the demo mode is active again"
+        "description": "Verify the paused monitoring state is displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the standard family app screens are available"
+        "description": "Verify the home dashboard no longer shows an active monitoring state"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC032",
-    "title": "Reorder family contacts in settings",
-    "description": "Memeriksa bahwa pengguna dapat mengubah urutan kontak keluarga dari Pengaturan.",
+    "title": "Menjeda dan melanjutkan pemantauan di mode demo mengubah status beranda",
+    "description": "Pengguna dapat menjeda pemantauan di mode demo dan melihat perubahan status di Beranda, lalu melanjutkannya kembali.",
     "category": "Pengaturan",
     "steps": [
       {
@@ -910,23 +1022,31 @@
       },
       {
         "type": "action",
-        "description": "Click the settings tab"
+        "description": "Open the Pengaturan tab"
       },
       {
         "type": "action",
-        "description": "Change the order of family contacts"
+        "description": "Pause monitoring in demo mode"
+      },
+      {
+        "type": "action",
+        "description": "Return to the Beranda tab"
       },
       {
         "type": "assertion",
-        "description": "Verify the family contact order is updated"
+        "description": "Verify the paused monitoring state is displayed on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard no longer shows the paused state after monitoring is resumed"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC033",
-    "title": "Beralih ke sensor langsung dan kembali ke mode demo",
-    "description": "Pengguna memilih Sensor langsung (ESP32), melihat tampilan mode sensor langsung yang sesuai, lalu kembali ke mode demo dari layar yang menawarkannya.",
+    "title": "Reset demo data to the initial state",
+    "description": "This verifies that resetting demo data restores the app to the initial demo story and home dashboard state.",
     "category": "Settings (Pengaturan)",
     "steps": [
       {
@@ -935,31 +1055,31 @@
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for settings"
+        "description": "Open the settings tab"
       },
       {
         "type": "action",
-        "description": "Select live sensor mode"
+        "description": "Trigger the demo data reset"
       },
       {
         "type": "action",
-        "description": "Click the bottom tab for history"
-      },
-      {
-        "type": "action",
-        "description": "Return to demo mode from the live mode notice"
+        "description": "Return to the home dashboard"
       },
       {
         "type": "assertion",
-        "description": "Verify the app returns to demo mode and the live mode notice is no longer shown"
+        "description": "Verify the home dashboard shows the initial demo state"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify prior demo changes are no longer present"
       }
     ],
-    "priority": "Medium"
+    "priority": "High"
   },
   {
     "id": "TC034",
-    "title": "Return from live sensor mode to the demo flow",
-    "description": "Memeriksa bahwa pengguna dapat kembali ke mode demo dari mode sensor langsung dan melanjutkan alur demo normal.",
+    "title": "Mode sensor langsung menonaktifkan riwayat dan notifikasi yang tidak berlaku",
+    "description": "Pengguna melihat batasan mode sensor langsung saat membuka Riwayat dan Notifikasi sehingga layar yang tidak relevan menampilkan state kosong atau nonaktif.",
     "category": "Pengaturan",
     "steps": [
       {
@@ -968,7 +1088,7 @@
       },
       {
         "type": "action",
-        "description": "Click the settings tab"
+        "description": "Open the Pengaturan tab"
       },
       {
         "type": "action",
@@ -976,23 +1096,81 @@
       },
       {
         "type": "action",
-        "description": "Switch back to demo mode"
+        "description": "Open the Riwayat tab"
       },
       {
         "type": "action",
-        "description": "Click the home tab"
+        "description": "Open the Notifikasi tab"
       },
       {
         "type": "assertion",
-        "description": "Verify the demo home summary is displayed again"
+        "description": "Verify the history screen shows a disabled or empty state"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the notifications screen shows a disabled or empty state"
       }
     ],
     "priority": "Medium"
   },
   {
     "id": "TC035",
-    "title": "Mereset data demo dan kembali ke state awal",
-    "description": "Pengguna dapat mereset data demo dari Pengaturan dan melihat aplikasi kembali ke keadaan awal setelah dimuat ulang.",
+    "title": "Mengatur ulang prioritas kontak keluarga",
+    "description": "Pengguna membuka Pengaturan, mengubah urutan kontak keluarga, dan melihat susunan prioritas yang baru tersimpan di layar.",
+    "category": "Pengaturan",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the settings tab"
+      },
+      {
+        "type": "action",
+        "description": "Reorder the family contact priorities"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated contact order is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the settings screen reflects the new priority order"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC036",
+    "title": "Mengatur prioritas kontak keluarga memperbarui urutan tampilannya",
+    "description": "Pengguna dapat mengubah urutan kontak keluarga di Pengaturan dan melihat urutan baru tersimpan di layar yang sama.",
+    "category": "Pengaturan",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the Pengaturan tab"
+      },
+      {
+        "type": "action",
+        "description": "Reorder the family contacts"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contacts appear in the updated order"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC037",
+    "title": "Mereset data demo ke kondisi awal",
+    "description": "Pengguna menggunakan reset data demo dari Pengaturan dan melihat aplikasi kembali ke cerita awal mode demo.",
     "category": "Pengaturan",
     "steps": [
       {
@@ -1009,107 +1187,24 @@
       },
       {
         "type": "action",
-        "description": "Reload the page"
+        "description": "Return to the home dashboard"
       },
       {
         "type": "assertion",
-        "description": "Verify the dashboard returns to the initial demo state"
+        "description": "Verify the demo data returns to its initial state"
       },
       {
         "type": "assertion",
-        "description": "Verify previously changed alerts and settings are cleared"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC036",
-    "title": "Reset data demo ke kondisi awal",
-    "description": "Pengguna menekan Reset data demo dan melihat konfirmasi bahwa seluruh data demo kembali ke kondisi awal.",
-    "category": "Settings (Pengaturan)",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the bottom tab for settings"
-      },
-      {
-        "type": "action",
-        "description": "Reset the demo data"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a reset confirmation message is shown"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the app state has returned to the initial demo condition"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC037",
-    "title": "View the unusual pattern marker on 22 September",
-    "description": "Memeriksa bahwa tanggal 22 September ditandai sebagai berbeda jauh dari biasanya dan dapat dipilih dari Riwayat.",
-    "category": "Riwayat",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the history tab"
-      },
-      {
-        "type": "action",
-        "description": "Select 22 September in the history timeline"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the unusual pattern indicator is shown for the selected day"
+        "description": "Verify the home dashboard reflects the reset demo story"
       }
     ],
     "priority": "Medium"
   },
   {
     "id": "TC038",
-    "title": "Reloading resets demo state to default",
-    "description": "Memeriksa bahwa state demo kembali ke kondisi awal setelah halaman dimuat ulang.",
-    "category": "Beranda",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click the settings tab"
-      },
-      {
-        "type": "action",
-        "description": "Enable monitoring pause"
-      },
-      {
-        "type": "action",
-        "description": "Reload the page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the app returns to the default demo state"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC039",
-    "title": "Menutup dialog konfirmasi dengan batal atau Escape",
-    "description": "Pengguna dapat membatalkan dialog konfirmasi tindakan dan kembali tanpa menjalankan aksi tersebut.",
-    "category": "Notifikasi",
+    "title": "Membatalkan konfirmasi panggilan darurat",
+    "description": "Pengguna membuka dialog konfirmasi panggilan darurat dari detail alert dan membatalkannya tanpa meninggalkan layar detail.",
+    "category": "Alert detail and follow-up",
     "steps": [
       {
         "type": "action",
@@ -1121,21 +1216,119 @@
       },
       {
         "type": "action",
-        "description": "Open an alert action that requires confirmation"
+        "description": "Open an emergency-level alert"
       },
       {
         "type": "action",
-        "description": "Close the confirmation dialog using Escape or cancel"
+        "description": "Open the emergency service confirmation dialog"
+      },
+      {
+        "type": "action",
+        "description": "Cancel the confirmation dialog"
       },
       {
         "type": "assertion",
-        "description": "Verify the confirmation dialog is closed"
+        "description": "Verify the emergency confirmation dialog is closed"
       },
       {
         "type": "assertion",
-        "description": "Verify the alert detail remains open"
+        "description": "Verify the alert detail screen remains visible"
       }
     ],
     "priority": "Low"
+  },
+  {
+    "id": "TC039",
+    "title": "Jeda pemantauan dinonaktifkan di mode sensor langsung",
+    "description": "Di mode sensor langsung switch jeda tidak bisa dipakai dan tidak boleh tampil dijeda, karena pembacaan sensor tetap berjalan.",
+    "category": "Settings (Pengaturan)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the Pengaturan tab"
+      },
+      {
+        "type": "action",
+        "description": "Turn on the \"Jeda pemantauan\" switch"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the text \"Pemantauan sedang dijeda\" is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Sensor langsung (ESP32)\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the \"Jeda pemantauan\" switch is disabled and not checked"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the text \"Jeda belum tersedia di mode sensor langsung. Pembacaan sensor tetap berjalan.\" is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the text \"Pemantauan sedang dijeda\" is NOT displayed"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Demo (data contoh)\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the text \"Pemantauan sedang dijeda\" is displayed again"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC040",
+    "title": "Beberapa alert aktif: Darurat yang sedang dicek mengungguli Waspada baru",
+    "description": "Kartu status memilih alert terbuka paling serius dari gabungan Baru dan Sedang dicek.",
+    "category": "Dashboard (Beranda), demo mode",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the status card title is \"Sedang dicek keluarga\" with a \"Darurat\" badge"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down and click \"Simulasikan pola berubah\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the status card still shows \"Sedang dicek keluarga\" with a \"Darurat\" badge (not the new Waspada)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the \"Notifikasi\" tab shows a badge with 1"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Lihat & tindak lanjuti\" on the status card, then click \"Tandai selesai\", then click \"Kembali\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the status card now shows \"Ada pola yang berubah dari biasanya, perlu dicek\" (the Waspada)"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Lihat & tindak lanjuti\", click \"Tandai sudah dicek\", click \"Tandai selesai\", click \"Kembali\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the status card shows \"Normal\" and \"Pola keseharian terlihat seperti biasanya\""
+      }
+    ],
+    "priority": "High"
   }
 ]
