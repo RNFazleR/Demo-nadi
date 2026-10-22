@@ -11,7 +11,7 @@ const FIELD =
 
 // Layar masuk keluarga. Validasi dulu di sini (error prevention), lalu satu pesan netral
 // kalau kombinasi email + kata sandi salah (tidak membocorkan mana yang salah).
-export default function Login() {
+export default function Login({ onOpenUji }) {
   const { login, justSignedOut } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -142,6 +142,18 @@ export default function Login() {
       </form>
 
       <p className="mt-auto pt-8 text-center text-body text-ink-soft">{copy.app.disclaimer}</p>
+
+      {/* Alat bantu pengembang (Fase 0), bukan bagian dari app */}
+      <div className="mt-6 flex flex-col items-center gap-2 border-t border-dashed border-line pt-5">
+        <span className="rounded-full bg-surface-muted px-3 py-0.5 text-body text-ink-soft">{copy.uji.demoTag}</span>
+        <button
+          type="button"
+          onClick={onOpenUji}
+          className="flex min-h-tap w-full items-center justify-center rounded-btn border-2 border-line px-4 text-body-lg font-bold text-ink"
+        >
+          {copy.uji.entry}
+        </button>
+      </div>
     </div>
   )
 }

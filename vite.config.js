@@ -6,4 +6,8 @@ export default defineConfig({
   // (mis. GitHub Pages: https://<user>.github.io/Demo-nadi/)
   base: './',
   plugins: [react()],
+  server: {
+    // Build firmware (ESP-IDF) & Android menulis ribuan file sementara; jangan dipantau dev server
+    watch: { ignored: ['**/firmware/**', '**/android/**', '**/sensor/**'] },
+  },
 })

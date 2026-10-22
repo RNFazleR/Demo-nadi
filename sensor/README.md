@@ -82,9 +82,9 @@ Fixture **sintetis** hanya menguji alur perangkat lunak — bukan bukti akurasi 
 Project firmware ada di [`firmware/csi_receiver`](../firmware/csi_receiver/README.md) (kredensial di
 `wifi_secrets.h` yang tidak di-commit). Catatan yang tersisa:
 
-1. **`first_word_invalid`** dari `wifi_csi_info_t` belum diteruskan. Bila `true`, 4 byte pertama CSI
-   tidak valid. Saran: kirim sebagai field tambahan (format baru, mis. `CSI_DATA2`) atau nolkan 4 byte
-   tersebut. Subcarrier tepi kemungkinan sudah tersaring kalibrasi subcarrier aktif, belum diverifikasi.
+1. **`first_word_invalid`**: sejak Fase 1, firmware menolkan 4 byte pertama CSI bila `true`
+   (baris `CSI_DATA` dan paket UDP). Firmware Fase 1 juga mengirim CSI langsung ke HP Pusat lewat UDP dan
+   menerima perintah `PAUSE`/`RESUME`/`RECAL`/`FORGET` lewat USB — lihat README firmware.
 2. **Antrean penuh** membuang paket secara diam-diam, tetapi `seq` tetap naik — penghubung memakai celah
    `seq` ini sebagai `packets_dropped`.
 3. `rx_ctrl.timestamp` = mikrodetik sejak perangkat menyala (32-bit, berputar ±71 menit), bukan waktu

@@ -1,41 +1,52 @@
-# Firmware CSI receiver (ESP32-S3)
+# Firmware NADI (ESP32-S3) — Fase 1
 
-Mengambil CSI dari paket balasan ping ke gateway hotspot HP, lalu mencetaknya lewat USB:
+Alat dipasang ke **HP Pusat lewat BLE**, lalu mengirim CSI mentah langsung ke HP Pusat lewat
+**UDP** di hotspot HP itu. Laptop hanya sumber daya + terminal (baris `CSI_DATA` tetap dicetak ke USB
+untuk `sensor/csi_bridge.py`). Diuji dengan ESP-IDF **v6.1**. Latar belakang: [docs/uji-fase0.md](../../docs/uji-fase0.md).
 
-```
-CSI_DATA,seq,rssi,timestamp,len,v0 v1 v2 ...
-```
+## Alur
 
-Dibaca oleh `sensor/csi_bridge.py`. Diuji dengan ESP-IDF **v6.1** pada ESP32-S3 (USB Serial/JTAG bawaan).
+1. Boot → BLE beriklan sebagai `NADI-XXXX` (4 digit akhir MAC).
+2. App mengirim `nama\tsandi` hotspot ke karakteristik **wifi** → disimpan di NVS → alat menyambung.
+3. Tersambung → ping gateway (= HP Pusat) tiap 20 ms → CSI tiap balasan → UDP ke `gateway:5005`.
+4. **5 dtk setelah tersambung BLE dimatikan** (BLE aktif memaksa power save WiFi: CSI ±22/dtk → ±43–50/dtk).
+5. Hotspot hilang > 30 dtk → BLE menyala lagi untuk dipasang ulang. Restart → tersambung lagi dari NVS.
+
+## BLE (layanan `4e414449-0000-4000-8000-00000000a000`)
+
+| Karakteristik | UUID akhiran | Isi |
+|---|---|---|
+| status | `…a001` baca + notify | `menunggu`, `menyambung`, `tersambung ip=… gw=…`, `gagal:<reason>` (201 = hotspot tak ketemu/5 GHz, 15/202 = sandi salah) |
+| wifi | `…a002` tulis | `nama\tsandi` hotspot |
+| cmd | `…a003` tulis | `PAUSE`, `RESUME`, `RECAL`, `FORGET` |
+
+## Perintah lewat USB (satu baris, diakhiri Enter)
+
+`PAUSE` / `RESUME` (jeda/lanjut; saat jeda dikirim paket UDP kosong ber-flag tiap 1 dtk),
+`RECAL` (nomor sesi kalibrasi di header naik → pengolah kalibrasi ulang), `FORGET` (lupakan hotspot, BLE menyala).
+
+## Paket UDP
+
+Header 24 byte little-endian: `"NADI"` · versi `1` · flag (bit0 = jeda) · MAC (6) · seq u32 · rssi i8 ·
+sesi kalibrasi u8 · timestamp u32 · len u16, lalu `int8[len]` (pasangan [imag, real]). Dekoder: `src/lib/csiPacket.js`.
+Laju dibatasi rata-rata ≤ 50/dtk (token bucket, toleran jitter). 4 byte awal dinolkan bila `first_word_invalid`.
 
 ## Build & flash
-
-1. Salin `main/wifi_secrets.example.h` menjadi `main/wifi_secrets.h`, lalu isi nama & password hotspot.
-   File ini ada di `.gitignore` — **jangan di-commit**.
-2. Hotspot HP **wajib band 2,4 GHz** dan sebaiknya matikan "hotspot mati otomatis".
-3. Dari terminal ESP-IDF:
 
 ```powershell
 idf.py set-target esp32s3     # sekali saja
 idf.py -p COMx flash          # cek nomor port: python sensor/csi_bridge.py --list-ports
 ```
 
-## Perbedaan dengan `csi_receiver.c` versi percobaan awal
-
-| Perubahan | Alasan |
-|---|---|
-| Kredensial dipindah ke `wifi_secrets.h` | Supaya SSID/password tidak tertulis di kode yang dibagikan |
-| `CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y`, konsol sekunder dimatikan (`sdkconfig.defaults`) | Sebelumnya output juga dicetak ke UART0 115200 baud yang terlalu lambat → antrean penuh → **±38% paket hilang** (~31 dari 50 pkt/dtk). Setelah diubah: **0 paket hilang, ±50 pkt/dtk** (uji 6 Okt 2026) |
-| `esp_wifi_set_country_code("ID", true)` | Memindai channel 1–13; hotspot di channel 12/13 tidak lagi gagal ditemukan |
-| `CONFIG_ESP_WIFI_CSI_ENABLED=y` | Wajib agar `esp_wifi_set_csi()` berfungsi |
-
-Logika CSI (filter BSSID hotspot, antrean, LLTF saja, ping 20 ms) tidak diubah.
+`main/wifi_secrets.h` **opsional** (cadangan pengembangan, di `.gitignore`): bila ada dan NVS kosong,
+alat memakai kredensial itu. Hotspot HP **wajib 2,4 GHz**.
 
 ## Pemecahan masalah
 
-| Gejala (terminal `csi_bridge.py`) | Penyebab umum |
+| Gejala | Penyebab umum |
 |---|---|
-| `[log ESP] ... reason 201` | Hotspot tidak ditemukan: mati, band **5 GHz**, atau nama tidak persis sama |
-| `reason 15` / `202` | Password salah |
+| Status BLE `gagal:201` / log `reason 201` | Hotspot mati, band **5 GHz**, atau nama tidak persis sama |
+| `gagal:15` / `gagal:202` | Sandi salah |
+| `NADI-XXXX` tidak muncul di HP | Alat sudah tersambung (BLE sengaja mati) → kirim `FORGET` lewat USB atau matikan hotspot > 30 dtk |
 | `port tidak ditemukan` | Nomor COM berubah setelah USB dicabut/pindah lubang — cek `--list-ports` |
-| Build gagal acak (`ranlib: No such file`, `CMAKE_C_COMPILER not set`) di Windows | Biasanya antivirus memindai file baru; jalankan ulang perintah yang sama |
+| Build gagal acak di Windows | Biasanya antivirus memindai file baru; jalankan ulang perintah yang sama |

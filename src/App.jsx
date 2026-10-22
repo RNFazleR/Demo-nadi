@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import PhoneFrame from './components/PhoneFrame.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import Dashboard from './screens/Dashboard.jsx'
@@ -15,6 +15,9 @@ import { AlertsProvider } from './state/AlertsContext.jsx'
 import { SensorProvider, useSensor } from './state/SensorContext.jsx'
 import { readStored } from './lib/storage.js'
 import { AuthProvider, useAuth } from './state/AuthContext.jsx'
+
+// Alat bantu pengembang (Fase 0); dimuat terpisah supaya BLE/Firebase tidak masuk app utama
+const UjiFase0 = lazy(() => import('./screens/UjiFase0.jsx'))
 
 export default function App() {
   return (
@@ -37,11 +40,22 @@ export default function App() {
 // (di prototipe, alert dari HP Pusat terlihat di Cabang pada perangkat yang sama).
 function AuthGate() {
   const { user, linkedPusat } = useAuth()
+  const [uji, setUji] = useState(false)
   if (user?.peran === 'pusat') return <PusatApp />
   if (user && linkedPusat) return <FamilyApp />
   return (
     <PhoneFrame>
-      <main className="flex flex-1 flex-col">{user ? <LinkPusat /> : <Login />}</main>
+      <main className="flex flex-1 flex-col">
+        {user ? (
+          <LinkPusat />
+        ) : uji ? (
+          <Suspense fallback={null}>
+            <UjiFase0 onBack={() => setUji(false)} />
+          </Suspense>
+        ) : (
+          <Login onOpenUji={() => setUji(true)} />
+        )}
+      </main>
     </PhoneFrame>
   )
 }

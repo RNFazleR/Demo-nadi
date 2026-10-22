@@ -2,3 +2,5 @@ build/
 sdkconfig
 sdkconfig.old
 main/wifi_secrets.h
+build-log.txt
+flash-log.txt
